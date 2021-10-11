@@ -1,0 +1,93 @@
+{
+    "name": "laravel/laravel",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=7.2.5",
+        "appstract/laravel-options": "^2.2",
+        "barryvdh/laravel-dompdf": "^0.8.0",
+        "bensampo/laravel-enum": "^3.4",
+        "chriskonnertz/string-calc": "^1.0",
+        "consoletvs/charts": "6.*",
+        "doctrine/dbal": "^3.1",
+        "fideloper/proxy": "~4.0",
+        "filp/whoops": "^2.1",
+        "geo-sot/laravel-env-editor": "^0.9.11",
+        "guzzlehttp/guzzle": "^7.3",
+        "imliam/laravel-env-set-command": "1.0.0",
+        "intervention/image": "^2.5",
+        "ixudra/curl": "^6.16",
+        "jackiedo/dotenv-editor": "1.*",
+        "jenssegers/agent": "^2.6",
+        "joedixon/laravel-translation": "^1.1",
+        "kirschbaum-development/eloquent-power-joins": "^2.3",
+        "larapack/config-writer": "1.*",
+        "laravel-lang/lang": "~8.0",
+        "laravel/framework": "^8.0",
+        "laravel/legacy-factories": "^1.1",
+        "laravel/sanctum": "^2.9",
+        "laravel/telescope": "^4.4",
+        "laravel/tinker": "^2.6",
+        "laravel/ui": "^3.0",
+        "laravelcollective/html": "^6.0",
+        "laravolt/avatar": "^4.0",
+        "livewire/livewire": "^2.3",
+        "maatwebsite/excel": "^3.1",
+        "mehradsadeghi/laravel-filter-querystring": "^1.1",
+        "nwidart/laravel-modules": "^5.0",
+        "rap2hpoutre/fast-excel": "^2.0",
+        "thedevsaddam/laravel-schema": "^2.0",
+        "vkovic/laravel-custom-casts": "^1.1",
+        "wildside/userstamps": "^2.1",
+        "yajra/laravel-datatables-oracle": "^9.0"
+    },
+    "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.2",
+        "fzaninotto/faker": "^1.9",
+        "mockery/mockery": "^1.3.1",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Seeders\\": "database/seeds/",
+            "Modules\\": "Modules/",
+            "Alkhachatryan\\LaravelWebConsole\\": "plugin/alkhachatryan/laravel-web-console/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover",
+            "@php artisan copy:console",
+            "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}

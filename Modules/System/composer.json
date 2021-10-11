@@ -1,0 +1,33 @@
+{
+    "name": "itoktoni/system",
+    "description": "for creating system",
+    "authors": [{
+        "name": "Itok toni laksono",
+        "email": "itok.toni@gmail.com"
+    }],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\System\\Providers\\ModuleServiceProvider",
+                "Modules\\System\\Providers\\CacheableAuthUserServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\System\\": ""
+        },
+        "files": [
+            "plugins/Views.php",
+            "plugins/Helper.php",
+            "plugins/Notes.php",
+            "plugins/Alert.php",
+            "plugins/Response.php",
+            "plugins/Lang.php",
+            "plugins/Debug.php"
+        ]
+    }
+}

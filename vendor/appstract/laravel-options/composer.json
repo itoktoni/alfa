@@ -1,0 +1,53 @@
+{
+    "name": "appstract/laravel-options",
+    "description": "Global options loaded from the database",
+    "keywords": [
+        "appstract",
+        "laravel-options"
+    ],
+    "homepage": "https://github.com/appstract/laravel-options",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gijs Jorissen",
+            "email": "hello@appstract.team",
+            "homepage": "https://appstract.team",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6"
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.0"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "Appstract\\Options\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Appstract\\Options\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Appstract\\Options\\OptionsServiceProvider"
+            ],
+            "aliases": {
+                "Option": "Appstract\\Options\\OptionFacade"
+            }
+        }
+    }
+}

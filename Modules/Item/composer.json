@@ -1,0 +1,33 @@
+{
+    "name": "itoktoni/item",
+    "description": "for creating Item",
+    "authors": [{
+        "name": "Itok toni laksono",
+        "email": "itok.toni@gmail.com"
+    }],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Item\\Providers\\ModuleServiceProvider",
+                "Modules\\Item\\Providers\\CacheableAuthUserServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Item\\": ""
+        },
+        "files": [
+            "plugins/Views.php",
+            "plugins/Helper.php",
+            "plugins/Notes.php",
+            "plugins/Alert.php",
+            "plugins/Response.php",
+            "plugins/Lang.php",
+            "plugins/Debug.php"
+        ]
+    }
+}

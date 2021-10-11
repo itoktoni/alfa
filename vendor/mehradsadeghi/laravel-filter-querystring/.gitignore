@@ -1,0 +1,7 @@
+todo
+notes
+.idea
+vendor
+docker
+docker-compose.yaml
+.phpunit.result.cache

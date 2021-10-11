@@ -1,0 +1,202 @@
+.print-only {
+    display: none !important
+}
+
+* {
+    background: transparent !important;
+    color: black !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-filter: none !important;
+    filter: none !important;
+    -ms-filter: none !important
+}
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+a {
+    color: black !important;
+}
+
+a,
+a:visited {
+    text-decoration: underline
+}
+
+a[href]:after {
+    content: " (" attr(href) ")"
+}
+
+abbr[title]:after {
+    content: " (" attr(title) ")"
+}
+
+.ir a:after,
+a[href^="javascript:"]:after,
+a[href^="#"]:after {
+    content: ""
+}
+
+pre,
+blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid
+}
+
+strong {
+    background: transparent !important;
+    color: black !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-filter: none !important;
+    filter: none !important;
+    -ms-filter: none !important
+}
+
+thead {
+    display: table-header-group;
+    vertical-align: middle;
+}
+
+tr,
+img {
+    page-break-inside: avoid
+}
+
+img {
+    margin: 5px;
+    vertical-align: middle;
+}
+
+table {
+    border-collapse: collapse
+}
+
+th,
+td {
+    border: solid 1px #333;
+    padding: 0.1em 8px;
+    vertical-align: middle;
+}
+
+td p {
+    margin: -10px 0px;
+}
+
+dl {
+    margin: 0
+}
+
+dd {
+    margin: 0
+}
+
+@page {
+    margin: 1.25cm 0.5cm
+}
+
+p,
+h2,
+h3 {
+    orphans: 3;
+    widows: 3
+}
+
+h2,
+h3 {
+    page-break-after: avoid
+}
+
+.hide-on-print {
+    display: none !important
+}
+
+.print-only {
+    display: block !important
+}
+
+.hide-for-print {
+    display: none !important
+}
+
+.show-for-print {
+    display: inherit !important
+}
+
+.break-page-after {
+    page-break-after: always;
+    page-break-inside: avoid
+}
+
+html {
+    overflow-x: visible
+}
+
+body {
+    font-size: 12px;
+    line-height: 1.5;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Arial, sans-serif;
+    padding: 0
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: normal
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    font-weight: inherit
+}
+
+h2 {
+    font-size: 2em;
+    line-height: 1.5;
+    margin-bottom: 0.75em
+}
+
+h3 {
+    font-size: 1.5em;
+    line-height: 1;
+    margin-top: 2em;
+    margin-bottom: 1em
+}
+
+h4 {
+    font-size: 1.25em;
+    line-height: 2.4
+}
+
+h5 {
+    font-weight: bold;
+    margin-top: 2.25em;
+    margin-bottom: 0.75em
+}
+
+h6 {
+    text-transform: uppercase;
+    margin-top: 2.25em;
+    margin-bottom: 0.75em
+}
+
+hr {
+    height: 2px !important;
+    background-color: red;
+    width: 100%;
+}

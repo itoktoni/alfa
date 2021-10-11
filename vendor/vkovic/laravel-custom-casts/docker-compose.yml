@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/app/Dockerfile
+    volumes:
+      - ./:/var/www/html/
+    command:
+      - /bin/bash
+      - -c
+      - |
+        [ -d vendor/bin ] || composer install

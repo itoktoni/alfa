@@ -1,0 +1,22 @@
+<?php
+return [
+    'name' => env('WEBSITE_NAME','newcore'),
+    'logo' => env('WEBSITE_LOGO'),
+    'favicon' => env('WEBSITE_FAVICON'),
+    'description' => env('WEBSITE_DESCRIPTION'),
+    'owner' => env('WEBSITE_OWNER', 'John Doe'),
+    'email' => env('WEBSITE_EMAIL', 'john.doe@test.com'),
+    'phone' => '0812-8849-5099',
+    'address' => env('WEBSITE_ADDRESS'),
+    'developer_setting' => env('GROUP_DEVELOPER', 'developer'),
+    'backend' => env('TEMPLATE_ADMIN','default'),
+    'frontend' => env('TEMPLATE_FRONTEND', 'default'),
+    'secure' => env('ENABLE_HTTPS', true),
+    'autonumber' => env('WEBSITE_AUTONUMBER', 10),
+    'pagination' => env('WEBSITE_PAGINATION', 10),
+    'pjax' => env('ENABLE_PJAX', true),
+    'loading' => env('ENABLE_LOADING', true),
+    'application' => env('ENABLE_FRONTEND', true),
+    'notification' => env('ENABLE_NOTIFICATION', false),
+    'information' => env('ENABLE_INFORMATION', false),
+];

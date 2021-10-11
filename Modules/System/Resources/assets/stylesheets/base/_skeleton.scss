@@ -1,0 +1,401 @@
+/*
+Name: 			Theme Base
+Written by: 	Okler Themes - (http://www.okler.net)
+Theme Version: 	@@version
+*/
+
+html,
+body {
+	background: $body-color;
+	width: 100%;
+}
+
+html {
+	font-size: $root-font-size + 0px;
+	overflow-x: hidden !important;
+	overflow-y: scroll !important;
+}
+
+body {
+	color: #777;
+	font-family: $font-primary;
+	line-height: 22px;
+	margin: 0;
+	font-size: $body-font-size + 0px;
+}
+
+a {
+	color: $color-primary;
+}
+
+a:hover, a:focus {
+	color: lighten($color-primary, 5% );
+}
+
+a:active {
+	color: darken($color-primary, 5% );
+}
+
+// LAYOUT STYLE - SCROLL
+// -----------------------------------------------------------------------------
+
+/* Layout Base - Main Wrapper  */
+.body {
+	min-height: 100vh;
+	width: 100%;
+}
+
+// HEADER
+// -----------------------------------------------------------------------------
+
+/* Layout Base - Header */
+.header {
+	height: $header-height;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+// INNER WRAPPER
+// -----------------------------------------------------------------------------
+
+/* Layout Base - Inner Wrapper */
+.inner-wrapper {
+	display: table;
+	min-height: 100vh;
+	padding-top: $header-height;
+	table-layout: fixed;
+	overflow: hidden;
+	margin-bottom:-30px;
+	width: 100%;
+}
+
+// MAIN CONTENT
+// -----------------------------------------------------------------------------
+
+/* Layout Base - Content Body */
+.content-body {
+	display: table-cell;
+	padding: $content-body-padding;
+	position: relative;
+	vertical-align: top;
+
+	> .row + .row {
+		padding-top: 10px;
+	}
+}
+
+// PAGE HEADER
+// -----------------------------------------------------------------------------
+
+/* Layout Base - Page Header */
+.page-header {
+	background: $color-dark;
+	border-bottom: none;
+	border-left: $page-header-border-left-width solid $page-header-border-left-color;
+	// box-shadow: 1px ($page-header-border-bottom-width - 1) 0 1px $page-header-border-bottom-color;
+	height: $page-header-height;
+	margin: (-$content-body-padding) (-$content-body-padding) 0px (-$content-body-padding);
+	padding: 0;
+}
+
+// SIDEBAR LEFT
+// -----------------------------------------------------------------------------
+
+/* Layout Base - Sidebar Left */
+.sidebar-left {
+	color: $color-default-inverse;
+	display: table-cell;
+	position: relative;
+	vertical-align: top;
+	width: $sidebar-left-full-width;
+	z-index: $sidebar-left-z-index;
+}
+
+/* Layout Base - Sidebar Left Opened ( Larger than mobile ) */
+@media only screen and (min-width: 768px) {
+	html.sidebar-left-collapsed {
+		.sidebar-left {
+			width: $sidebar-left-collapsed-width;
+		}
+	}
+}
+
+// SIDEBAR RIGHT
+// -----------------------------------------------------------------------------
+
+/* Layout Base - Sidebar Right */
+.sidebar-right {
+	background: $sidebar-right-background;
+	bottom: 0;
+	margin-right: -$sidebar-right-width;
+	min-height: 100vh;
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: $sidebar-right-width;
+}
+
+/* Layout Base - Sidebar Right Opened ( Larger than mobile ) */
+@media only screen and (min-width: 768px) {
+	html.sidebar-right-opened {
+		.header {
+			margin-left: -$sidebar-right-width;
+			margin-right: $sidebar-right-width;
+		}
+
+		.inner-wrapper {
+			margin-left: -$sidebar-right-width;
+		}
+
+		.sidebar-right {
+			margin-right: 0;
+		}
+
+		&.has-top-menu:not(.has-left-sidebar-half) {
+			.inner-wrapper {
+				margin-left: 0;
+				padding-right: $sidebar-right-width;
+			}
+		}
+	}
+}
+
+// FLEXBOX SUPPORTED
+// -----------------------------------------------------------------------------
+
+/* Layout Base - Flexbox supported */
+@media only screen and (min-width: 768px) {
+	html.flexbox,
+	html.flexboxlegacy {
+		.inner-wrapper {
+			@include display(flex);
+		}
+
+		.sidebar-left,
+		.content-body {
+			display: block;
+			@include flex-shrink(0);
+		}
+
+		.content-body {
+			@include flex(2);
+			min-width: 1px;
+		}
+
+		/* Tab Navigation */
+		&.has-tab-navigation {
+			.inner-wrapper {
+				flex-direction: column;
+			}
+		}
+	}
+}
+
+// LAYOUT MOBILE
+// -----------------------------------------------------------------------------
+
+@media only screen and (max-width: 767px) {
+	html,
+	body {
+		background: $body-color;
+	}
+
+	html.mobile-device {
+		.sidebar-left,
+		.sidebar-right {
+			overflow-y: scroll;
+			overflow-x: hidden;
+			-webkit-overflow-scrolling: touch;
+		}
+	}
+
+	body {
+		min-height: 100vh;
+	}
+
+	.inner-wrapper,
+	.sidebar-left,
+	.content-body {
+		display: block;
+	}
+
+	.body {
+		min-height: 0;
+		overflow: visible;
+	}
+
+	.header {
+		background: none;
+		border: none;
+		height: auto;
+		position: static;
+
+		.logo-container {
+			height: $header-height;
+			left: 0;
+			position: fixed;
+			right: 0;
+			top: 0;
+			z-index: 99;
+		}
+
+		.header-right {
+			background: #FFF;
+			float: none !important;
+			height: $header-height;
+			margin-top: $header-height;
+			width: 100%;
+		}
+	}
+
+	.inner-wrapper {
+		min-height: 0;
+		padding-top: 0;
+	}
+
+	.content-body {
+		padding: 0 15px 15px;
+	}
+
+	.page-header {
+		margin: 0 -15px 20px;
+	}
+
+	.sidebar-left {
+		bottom: 0;
+		left: -100%;
+		min-height: 0;
+		min-width: 100%;
+		min-width: 100vw;
+		padding-top: $header-height;
+		padding-bottom: 50px;
+		position: fixed;
+		overflow: hidden;
+		top: 0;
+		z-index: 98 !important;
+	}
+
+	.sidebar-right {
+		bottom: 0;
+		left: auto;
+		right: -100%;
+		min-height: 0;
+		margin-right: 0;
+		min-width: 100%;
+		min-width: 100vw;
+		top: 0;
+		z-index: 100;
+	}
+
+	html.csstransforms {
+		.sidebar-left,
+		.sidebar-right {
+			/* performs better but native android browser
+			has problems with translate and percentage
+			@include transition-property(transform);
+			*/
+			@include transition-property( margin );
+			@include transition-duration( .25s );
+			@include transition-timing-function( ease-out );
+			@include transition-delay( 0 );
+		}
+		.sidebar-left {
+			/* performs better but native android browser
+			has problems with translate and percentage
+			@include transform( translateX(0) );
+			*/
+			margin-left: -25px;
+		}
+
+		.sidebar-right {
+			/* performs better but native android browser
+			has problems with translate and percentage
+			@include transform( translateX(0) );
+			*/
+			margin-right: -25px;
+		}
+	}
+
+	/* If desktop is seeing mobile res, fix scrollbars */
+	html.no-mobile-device {
+		body {
+			min-height: 0;
+		}
+
+		.body {
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		.inner-wrapper {
+			overflow-y: auto;
+		}
+
+		&.sidebar-left-opened,
+		&.sidebar-right-opened {
+			&,
+			& body {
+				overflow: hidden;
+			}
+		}
+	}
+
+	/* Layout Mobile - Sidebar Left Opened */
+	html.sidebar-left-opened {
+		&.no-csstransforms {
+			.sidebar-left {
+				left: 0;
+			}
+		}
+
+		&.csstransforms {
+			.sidebar-left {
+				/* performs better but native android browser
+				has problems with translate and percentage
+				@include transform( translateX(100%) );
+				*/
+				margin-left: 100%;
+			}
+		}
+	}
+
+	/* Layout Mobile - Sidebar Right Opened */
+	html.sidebar-right-opened {
+		&.no-csstransforms {
+			.sidebar-right {
+				right: 0;
+			}
+		}
+
+		&.csstransforms {
+			.sidebar-right {
+				/* performs better but native android browser
+				has problems with translate and percentage
+				@include transform( translateX(-100%) );
+				*/
+				margin-right: 100%;
+			}
+		}
+	}
+
+	/* Layout Mobile - Sidebar Left Collapsed & Sidebar Right Opened */
+	html.sidebar-left-collapsed.sidebar-right-opened {
+		.sidebar-left {
+			margin-left: -$sidebar-left-full-width;
+		}
+	}
+}
+
+/* iOS10 Content Width Fix */
+@media (min-width: 768px) {
+	html.mobile-device.flexbox:not(.has-tab-navigation) .content-body {
+		width: calc(100vw - 300px) !important;
+	}
+}
+
+/* Fix IE Scrollbar Overlaying content */
+@-ms-viewport {
+	width: auto !important;
+}

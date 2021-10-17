@@ -38,6 +38,11 @@ class Location extends Model
         '1' => ['Show', 'info'],
         '0' => ['Hide', 'warning'],
     ];
+    
+    public function getMaskLocationNameAttribute()
+    {
+        return $this->location_name;
+    }
 
     public function company()
 	{

@@ -30,7 +30,7 @@ class LogCardKotorListener
     public function handle(CreateKotorEvent $event)
     {
         $grouped = $event->linen->mapToGroups(function ($item, $key) {
-            $combile = $item[KotorDetailFacades::mask_company_scan()].$item[KotorDetailFacades::mask_location_scan()].$item[KotorDetailFacades::mask_product_id()];
+            $combile = $item[KotorDetailFacades::mask_company_ori()].$item[KotorDetailFacades::mask_location_ori()].$item[KotorDetailFacades::mask_product_id()];
             return [
                 $combile => $item
             ];
@@ -42,7 +42,7 @@ class LogCardKotorListener
                 $product = $group->first();
                 $total = $group->count();
 
-                Cards::Log($product->linen_kotor_detail_scan_company_id, $product->linen_kotor_detail_scan_location_id, $product->linen_kotor_detail_product_id, TransactionStatus::Kotor);
+                Cards::Log($product->linen_kotor_detail_ori_company_id, $product->linen_kotor_detail_ori_location_id, $product->linen_kotor_detail_product_id, TransactionStatus::Kotor);
             }
         }
     }

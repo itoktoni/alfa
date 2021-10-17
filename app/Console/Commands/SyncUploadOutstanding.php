@@ -53,15 +53,19 @@ class SyncUploadOutstanding extends Command
             'linen_outstanding_created_by',
             'linen_outstanding_deleted_by',
             'linen_outstanding_session',
+            'linen_outstanding_scan_location_id',
+            'linen_outstanding_scan_location_name',
             'linen_outstanding_scan_company_id',
             'linen_outstanding_scan_company_name',
             'linen_outstanding_product_id',
             'linen_outstanding_product_name',
+            'linen_outstanding_ori_location_id',
+            'linen_outstanding_ori_location_name',
             'linen_outstanding_ori_company_id',
             'linen_outstanding_ori_company_name',
             'linen_outstanding_description',
         ])
-            ->where('linen_outstanding_description', LinenStatus::BedaRs)
+            ->where('linen_outstanding_description', LinenStatus::BelumDiScan)
             ->whereNull('linen_outstanding_uploaded_at')
             ->limit(env('SYNC_UPLOAD', 100))
             ->get();

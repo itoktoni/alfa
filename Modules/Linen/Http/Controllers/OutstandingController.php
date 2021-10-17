@@ -42,19 +42,8 @@ class OutstandingController extends Controller
 
     private function share($data = [])
     {
-        $status = collect(TransactionStatus::getOptions([
-        TransactionStatus::Kotor,
-            TransactionStatus::Gate,
-            TransactionStatus::Pending,
-            TransactionStatus::Hilang,
-            TransactionStatus::Retur,
-            TransactionStatus::Rewash,
-        ]))->prepend('- Select Transaksi -', '');
-        $description = collect(LinenStatus::getOptions([
-            LinenStatus::BedaRuangan,
-            LinenStatus::BedaRs,
-            LinenStatus::Sesuai
-        ]))->prepend('- Select Description -','');
+        $status = TransactionStatus::getOptions();
+        $description = LinenStatus::getOptions();
         $product = Views::option(new ProductRepository());
         $location = Views::option(new LocationRepository());
         $company = Views::option(new CompanyRepository());

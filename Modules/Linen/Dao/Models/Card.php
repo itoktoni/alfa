@@ -89,6 +89,7 @@ class Card extends Model
         'linen_card_stock_return' => [true => 'Return', 'width' => 40],
         'linen_card_stock_rewash' => [true => 'Rewash', 'width' => 50],
         'linen_card_stock_saldo' => [true => 'Saldo', 'width' => 40],
+        'linen_card_stock_notes' => [false => 'Notes', 'width' => 50],
         'linen_card_status' => [true => 'Notes', 'width' => 50],
     ];
     

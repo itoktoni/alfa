@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Modules\Item\Dao\Facades\LinenDetailFacades;
+use Modules\Item\Dao\Facades\LinenFacades;
+use Modules\Item\Dao\Models\Linen;
 use Modules\Item\Http\Controllers\LinenController;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
@@ -43,6 +46,10 @@ if (Cache::has('routing')) {
             OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->update([
                 'linen_outstanding_downloaded_at' => date('Y-m-d H:i:s'),
             ]);
+
+            $check = Linen::whereIn('item_linen_rfid', $rfid)->update([
+                LinenFacades::mask_latest() => LinenStatus::LinenDownload,
+            ]);
         });
 
         Route::post('sync_outstanding_download', function () {
@@ -76,6 +83,21 @@ if (Cache::has('routing')) {
             ])->whereNull('linen_outstanding_downloaded_at')->limit($limit)->get();
 
             $id = $outstanding->pluck('linen_outstanding_rfid');
+            
+            $map = $outstanding->map(function($item){
+                $data = [
+                    'item_linen_detail_rfid' => $item->linen_kotor_detail_rfid,
+                    'item_linen_detail_status' => LinenStatus::LinenDownload,
+                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenDownload),
+                    'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
+                    'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
+                    'item_linen_detail_updated_by' => auth()->user()->id,
+                    'item_linen_detail_created_by' => auth()->user()->id,
+                ];
+                return $data;
+            });
+            
+            LinenDetailFacades::insert($map->unique()->toArray());
 
             return $outstanding->toArray();
 
@@ -87,6 +109,25 @@ if (Cache::has('routing')) {
             $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->update([
                 'linen_outstanding_status' => LinenStatus::Gate,
             ]);
+            
+            $map = collect($rfid)->map(function($item){
+                $data = [
+                    'item_linen_detail_rfid' => $item,
+                    'item_linen_detail_status' => LinenStatus::LinenUpdate,
+                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenUpdate),
+                    'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
+                    'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
+                    'item_linen_detail_updated_by' => auth()->user()->id,
+                    'item_linen_detail_created_by' => auth()->user()->id,
+                ];
+                return $data;
+            });
+            
+            LinenDetailFacades::insert($map->unique()->toArray());
+            
+            $check = Linen::whereIn('item_linen_rfid', $rfid)->update([
+                LinenFacades::mask_latest() => LinenStatus::LinenUpdate,
+            ]);
 
             return $rfid;
 
@@ -96,12 +137,33 @@ if (Cache::has('routing')) {
 
             $insert = request()->get('insert');
             $collect = collect($insert)->pluck('linen_outstanding_rfid');
+
+            $map = collect($collect)->map(function($item){
+                $data = [
+                    'item_linen_detail_rfid' => $item,
+                    'item_linen_detail_status' => LinenStatus::LinenUpdate,
+                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenUpdate),
+                    'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
+                    'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
+                    'item_linen_detail_updated_by' => auth()->user()->id,
+                    'item_linen_detail_created_by' => auth()->user()->id,
+                ];
+                return $data;
+            });
+            
+            LinenDetailFacades::insert($map->unique()->toArray());
+
             $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $collect);
             if (!empty($check)) {
                 $check->delete();
             }
 
             OutstandingFacades::insert($insert);
+
+            $check = Linen::whereIn('item_linen_rfid', $collect)->update([
+                LinenFacades::mask_latest() => LinenStatus::LinenUpload,
+            ]);
+
             return $insert;
 
         })->name('sync_outstanding_upload');

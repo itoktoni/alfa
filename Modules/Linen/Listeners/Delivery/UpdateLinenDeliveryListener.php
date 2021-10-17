@@ -38,6 +38,19 @@ class UpdateLinenDeliveryListener
                 LinenFacades::mask_qty() => 1,
                 LinenFacades::mask_latest() => LinenStatus::Bersih,
             ]);
+
+            $map = $rfid->map(function($item){
+                $data = [
+                    'item_linen_detail_rfid' => $item,
+                    'item_linen_detail_status' => LinenStatus::Bersih,
+                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::Bersih),
+                    'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
+                    'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
+                    'item_linen_detail_updated_by' => auth()->user()->id,
+                    'item_linen_detail_created_by' => auth()->user()->id,
+                ];
+                return $data;
+            });
         }
     }
 }

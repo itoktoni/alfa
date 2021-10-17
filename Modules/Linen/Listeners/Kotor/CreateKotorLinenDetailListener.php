@@ -33,8 +33,8 @@ class CreateKotorLinenDetailListener
             $map = $event->linen->map(function($item){
                 $data = [
                     'item_linen_detail_rfid' => $item->linen_kotor_detail_rfid,
-                    'item_linen_detail_status' => LinenStatus::Kotor,
-                    'item_linen_detail_description' => 'Scan Kotor',
+                    'item_linen_detail_status' => LinenStatus::LinenKotor,
+                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenKotor),
                     'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_by' => auth()->user()->id,

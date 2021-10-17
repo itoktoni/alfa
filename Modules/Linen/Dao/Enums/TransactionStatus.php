@@ -10,15 +10,16 @@ class TransactionStatus extends Enum
 {
     use StatusTrait;
 
+    const Transaction   =   null;
     const Register      =   1;
-    const Kotor         =   20;
-    const Gate          =   30;
-    const Grouping      =   40;
-    const Bersih        =   50;
-    const Pending       =   60;
-    const Hilang        =   70;
-    const Retur         =   80;
-    const Rewash        =   90;
+    const Kotor         =   2;
+    const Gate          =   3;
+    const Grouping      =   4;
+    const Bersih        =   5;
+    const Pending       =   6;
+    const Hilang        =   7;
+    const Retur         =   8;
+    const Rewash        =   9;
 
     public static function colors()
     {

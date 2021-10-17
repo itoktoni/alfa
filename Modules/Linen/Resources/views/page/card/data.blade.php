@@ -88,19 +88,27 @@
                                 <div class="col-md-3 col-sm-2">
                                     <div class="row input-group filter-search space-sm">
                                     <span class="input-group-addon">
-                                        {{ __('Original R.S') }}
+                                        {{ __('Rumah Sakit') }}
                                     </span>
-                                    {{ Form::select('linen_stock_company_id', $company, null, ['class'=> 'form-control ']) }}
+                                    {{ Form::select('linen_card_company_id', $company, null, ['class'=> 'form-control ']) }}
                                     </div>
                                 </div>
 
+                                <div class="col-md-3 col-sm-2">
+                                    <div class="row input-group filter-search space-sm">
+                                    <span class="input-group-addon">
+                                        {{ __('Location') }}
+                                    </span>
+                                    {{ Form::select('linen_card_location_id', $location, null, ['class'=> 'form-control ']) }}
+                                    </div>
+                                </div>
                                
                                 <div class="col-md-3 col-sm-2">
                                     <div class="row input-group filter-search space-sm">
                                     <span class="input-group-addon">
                                         {{ __('Product Name') }}
                                     </span>
-                                    {{ Form::select('linen_stock_item_product_id', $product, null, ['class'=> 'form-control ']) }}
+                                    {{ Form::select('linen_card_product_id', $product, null, ['class'=> 'form-control ']) }}
                                     </div>
                                 </div>
 

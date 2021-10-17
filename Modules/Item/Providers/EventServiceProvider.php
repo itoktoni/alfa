@@ -20,8 +20,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         RegisterLinenEvent::class => [
             UpdateLinenListener::class,
-            // CreateLinenDetailListener::class,
-            // CreateLinenStockDetailListener::class,
+            CreateLinenDetailListener::class,
             RealisasiCompanyProductListener::class,
             CreateLinenStockCardListener::class
         ],

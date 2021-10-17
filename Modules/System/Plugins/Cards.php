@@ -2,10 +2,13 @@
 
 namespace Modules\System\Plugins;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Item\Dao\Facades\ProductFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\ProductStatus;
+use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\CardFacades;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Facades\StockDetailFacades;
@@ -26,19 +29,19 @@ class Cards
 
         $bersih = $stock->mask_qty ?? 0;
 
-        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_scan(), $company_id)
-            ->where(OutstandingFacades::mask_location_scan(), $location_id)
+        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $company_id)
+            ->where(OutstandingFacades::mask_location_ori(), $location_id)
             ->where(OutstandingFacades::mask_product_id(), $product_id)->get();
 
-        $kotor = $outstanding->whereIn(OutstandingFacades::mask_status(), [LinenStatus::Kotor, LinenStatus::Gate, LinenStatus::Grouping, LinenStatus::Bersih])->count();
-        $pending = $outstanding->where(OutstandingFacades::mask_status(), LinenStatus::Pending)->count();
-        $hilang = $outstanding->where(OutstandingFacades::mask_status(), LinenStatus::Hilang)->count();
-        $retur = $outstanding->where(OutstandingFacades::mask_status(), LinenStatus::Retur)->count();
-        $rewash = $outstanding->where(OutstandingFacades::mask_status(), LinenStatus::Rewash)->count();
+        $kotor = $outstanding->whereIn(OutstandingFacades::mask_description(), [LinenStatus::LinenKotor, LinenStatus::BedaRs])->count();
+        $retur = $outstanding->whereIn(OutstandingFacades::mask_description(), [LinenStatus::ChipRusak, LinenStatus::LinenRusak, LinenStatus::KelebihanStock])->count();
+        $rewash = $outstanding->whereIn(OutstandingFacades::mask_description(), [LinenStatus::Bernoda, LinenStatus::BahanUsang])->count();
+        $pending = $outstanding->where(OutstandingFacades::mask_description(), LinenStatus::Pending)->count();
+        $hilang = $outstanding->where(OutstandingFacades::mask_description(), LinenStatus::Hilang)->count();
 
         $saldo = $bersih + $kotor + $pending + $retur + $rewash;
 
-        $description = LinenStatus::getDescription($status);
+        $description = TransactionStatus::getDescription($status);
 
         CardFacades::create([
             'linen_card_company_id' => $company_id,

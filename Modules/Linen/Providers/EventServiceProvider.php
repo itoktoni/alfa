@@ -26,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         CreateKotorEvent::class => [
             UpdateLinenKotorListener::class,
-            // CreateKotorLinenDetailListener::class,
+            CreateKotorLinenDetailListener::class,
             // RemoveStockDetailKotorListener::class,
             LogCardKotorListener::class,
         ],

@@ -22,7 +22,7 @@ class CheckOutstandingHilang extends Command
      *
      * @var string
      */
-    protected $signature = 'outstanding:pending';
+    protected $signature = 'outstanding:hilang';
 
     /**
      * The console command description.
@@ -48,13 +48,27 @@ class CheckOutstandingHilang extends Command
      */
     public function handle()
     {
-
-
-        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_status(), TransactionStatus::Pending)->where(OutstandingFacades::mask_created_at(), '<=', Carbon::now()->subDays(3)->toDateTimeString())->get();
+        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_status(), TransactionStatus::Pending)
+        ->where(OutstandingFacades::mask_created_at(), '<=', Carbon::now()->subDays(4)->toDateString())
+        ->get();
 
         $rfid = $outstanding->pluck(OutstandingFacades::mask_rfid());
 
-        OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid->toArray())->update([
+        $map = $rfid->map(function($item){
+            $data = [
+                'item_linen_detail_rfid' => $item,
+                'item_linen_detail_status' => LinenStatus::Hilang,
+                'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::Hilang),
+                'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
+                'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
+                'item_linen_detail_updated_by' => auth()->user()->id,
+                'item_linen_detail_created_by' => auth()->user()->id,
+            ];
+            return $data;
+        });
+
+        OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid->toArray())
+        ->update([
             OutstandingFacades::mask_status() => TransactionStatus::Hilang
         ]);
 
@@ -62,17 +76,26 @@ class CheckOutstandingHilang extends Command
             LinenFacades::mask_latest() => LinenStatus::Hilang
         ]);
 
-        $grouped = $outstanding->linen->unique(function ($item) {
-            return $item['linen_outstanding_product_id'] . $item['linen_outstanding_ori_company_id'] . $item['linen_outstanding_ori_location_id'];
-        });
+        $grouped = $outstanding->mapToGroups(function ($item) {
 
+            $combile = $item['linen_outstanding_product_id'] . $item['linen_outstanding_ori_company_id'] . $item['linen_outstanding_ori_location_id'];
+            return [
+                $combile => $item
+            ];
+
+        })->toArray();
+        
         if ($grouped) {
-            foreach ($grouped as $group) {
+            foreach ($grouped as $groups) {
+                
+                $group = $groups[0] ?? false;
+                if($group){
 
-                Cards::Log($group['linen_outstanding_ori_company_id'], $group['linen_outstanding_ori_location_id'], $group['linen_outstanding_product_id'], TransactionStatus::Hilang);
+                    Cards::Log($group['linen_outstanding_ori_company_id'], $group['linen_outstanding_ori_location_id'], $group['linen_outstanding_product_id'], TransactionStatus::Hilang);
+                }
+
             }
         }
-
 
         $this->info('The system has been copied successfully!');
     }

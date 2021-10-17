@@ -134,7 +134,7 @@ class Outstanding extends Model
 
     public function mask_location_ori()
     {
-        return 'linen_outstanding_ori_company_id';
+        return 'linen_outstanding_ori_location_id';
     }
 
     public function setMaskLocationOriAttribute($value)

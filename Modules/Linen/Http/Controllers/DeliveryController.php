@@ -99,7 +99,7 @@ class DeliveryController extends Controller
 
     public function edit($code)
     {
-        $data = $this->get($code, ['detail']);
+        $data = $this->get($code, ['has_detail']);
         return view(Views::update())->with($this->share([
             'model' => $data,
             'detail' => $data->detail ?? [],

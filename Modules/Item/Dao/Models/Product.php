@@ -63,6 +63,36 @@ class Product extends Model
         'item_product_updated_at' => 'datetime:Y-m-d',
         'item_product_deleted_at' => 'datetime:Y-m-d',
     ];
+    
+    public function mask_category_id()
+    {
+        return 'item_product_category_id';
+    }
+
+    public function setMaskCategoryIdAttribute($value)
+    {
+        $this->attributes[$this->mask_category_id()] = $value;
+    }
+
+    public function getMaskCategoryIdAttribute()
+    {
+        return $this->{$this->mask_category_id()};
+    }
+
+    public function mask_unit_id()
+    {
+        return 'item_product_unit_id';
+    }
+
+    public function setMaskUnitIdAttribute($value)
+    {
+        $this->attributes[$this->mask_unit_id()] = $value;
+    }
+
+    public function getMaskProductNameAttribute()
+    {
+        return $this->item_product_name;
+    }
 
     public static function boot()
     {
@@ -78,23 +108,13 @@ class Product extends Model
         parent::boot();
     }
 
-    public function getForeignKeyCategory()
-    {
-        return 'item_product_category_id';
-    }
-
-    public function getForeignKeyUnit()
-    {
-        return 'item_product_unit_id';
-    }
-
     public function has_category()
     {
-        return $this->hasOne(Category::class, CategoryFacades::getKeyName(), $this->getForeignKeyCategory());
+        return $this->hasOne(Category::class, CategoryFacades::getKeyName(), $this->mask_category_id());
     }
 
     public function has_unit()
     {
-        return $this->hasOne(Unit::class, UnitFacades::getKeyName(), $this->getForeignKeyUnit());
+        return $this->hasOne(Unit::class, UnitFacades::getKeyName(), $this->mask_unit_id());
     }
 }

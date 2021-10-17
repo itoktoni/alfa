@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Models\Grouping;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\LocationFacades;
@@ -39,15 +40,15 @@ class KotorRequest extends GeneralRequest
 
         $kotor = $linen->map(function ($item) use($company, $location, $key) {
             $user = auth()->user();
-            $description = LinenStatus::Sesuai;
+            $description = LinenStatus::LinenKotor;
             if($company->company_id != $item->item_linen_company_id){
 
                 $description = LinenStatus::BedaRs;
             }
-            else if($company->company_id == $item->mask_company_id && $location->location_id != $item->mask_location_id){
+            // else if($company->company_id == $item->mask_company_id && $location->location_id != $item->mask_location_id){
 
-                $description = LinenStatus::BedaRuangan;
-            }
+            //     $description = LinenStatus::BedaRuangan;
+            // }
             $data = [
 
                 'linen_kotor_detail_rfid' => $item->item_linen_rfid,
@@ -77,7 +78,7 @@ class KotorRequest extends GeneralRequest
 
             $user = auth()->user();
 
-            $description = LinenStatus::Sesuai;
+            $description = LinenStatus::LinenKotor;
             if($company->company_id != $item->item_linen_company_id){
 
                 $description = LinenStatus::BedaRs;
@@ -101,7 +102,7 @@ class KotorRequest extends GeneralRequest
                 'linen_outstanding_created_name' => $user->name ?? '',
                 'linen_outstanding_key' => $key ?? '',
                 'linen_outstanding_session' => $session ?? '',
-                'linen_outstanding_status' => LinenStatus::Kotor ?? '',
+                'linen_outstanding_status' => TransactionStatus::Kotor ?? '',
                 'linen_outstanding_description' => $description,
             ];
 

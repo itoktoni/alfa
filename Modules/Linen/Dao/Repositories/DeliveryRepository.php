@@ -20,7 +20,7 @@ class DeliveryRepository extends Delivery implements CrudInterface
     public function dataRepository()
     {
         $list = Helper::dataColumn($this->datatable);
-        return $this->select($list)->leftJoinRelationship('user');
+        return $this->select($list)->leftJoinRelationship('has_user');
     }
 
     public function saveRepository($request)

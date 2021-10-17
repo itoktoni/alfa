@@ -12,6 +12,7 @@ use Wildside\Userstamps\Userstamps;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Mehradsadeghi\FilterQueryString\FilterQueryString;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Events\RegisterLinenEvent;
 use Modules\System\Dao\Models\Company;
 
@@ -81,16 +82,16 @@ class Linen extends Model
         'item_linen_product_id' => [false => 'Product Id'],
         'item_linen_product_name' => [true => 'Product Name'],
         'item_linen_company_id' => [false => 'Company Id'],
-        'item_linen_company_name' => [true => 'Company Name'],
+        'item_linen_company_name' => [true => 'Company'],
         'item_linen_location_id' => [false => 'Location Id'],
-        'item_linen_location_name' => [true => 'Location Name'],
+        'item_linen_location_name' => [true => 'Location'],
         'item_linen_session' => [false => 'Key'],
         'item_linen_created_name' => [false => 'Key'],
         'item_linen_counter' => [true => 'Cuci', 'width' => 30],
         'item_linen_created_at' => [false => 'Created At'],
         'item_linen_rent' => [true => 'Rental', 'width' => 50, 'class' => 'text-center', 'status' => 'rent'],
-        'item_linen_status' => [true => 'Status', 'width' => 150, 'class' => 'text-center', 'status' => 'status'],
-        'item_linen_latest' => [true => 'Latest', 'width' => 80, 'class' => 'text-center', 'latest' => 'latest'],
+        'item_linen_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center', 'status' => 'status'],
+        'item_linen_latest' => [true => 'Latest', 'width' => 150, 'class' => 'text-center', 'latest' => 'latest'],
     ];
 
     protected $casts = [
@@ -332,7 +333,7 @@ class Linen extends Model
 
     public function has_detail()
     {
-        return $this->hasMany(LinenDetail::class,);   
+        return $this->hasMany(LinenDetail::class, LinenDetailFacades::mask_rfid(), $this->getKeyName());   
     }
 
     public static function boot()

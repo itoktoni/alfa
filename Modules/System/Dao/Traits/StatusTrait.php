@@ -7,19 +7,22 @@ trait StatusTrait
     public static function getOptions($value = false): array
     {
         $collect = collect(self::getInstances());
-        if (is_array($value)) 
+
+        if ($value && is_array($value)) 
         {
             $collect = $collect->whereIn('value', $value);
         }
-        
-        $collect = $collect->pluck('value', 'description')->flip();
-        
-        if (self::name()) 
+        else if ($value && is_integer($value)) 
         {
-            $collect = $collect->prepend('- Select ' . self::name() . ' -', '');
+            $collect = $collect->where('value', $value);
+        }
+
+        $data = [];
+        foreach($collect as $item){
+            $data[$item->value] = $item->description;
         }
         
-        return $collect->toArray();
+        return $data;
     }
 
     abstract public static function colors();

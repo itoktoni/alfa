@@ -48,13 +48,30 @@ class CheckOutstandingPending extends Command
      */
     public function handle()
     {
-
-
-        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_status(), TransactionStatus::Gate)->where(OutstandingFacades::mask_created_at(), '<=', Carbon::now()->subDays(1)->toDateTimeString())->get();
+        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_status(), TransactionStatus::Gate)
+        ->where(OutstandingFacades::mask_created_at(), '>=', Carbon::now()->subDays(1)->toDateString())
+        ->where(OutstandingFacades::mask_created_at(), '<=', Carbon::now()->toDateString())
+        ->get();
 
         $rfid = $outstanding->pluck(OutstandingFacades::mask_rfid());
 
-        OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid->toArray())->update([
+        $map = $rfid->map(function($item){
+            $data = [
+                'item_linen_detail_rfid' => $item,
+                'item_linen_detail_status' => LinenStatus::Pending,
+                'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::Pending),
+                'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
+                'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
+                'item_linen_detail_updated_by' => auth()->user()->id,
+                'item_linen_detail_created_by' => auth()->user()->id,
+            ];
+            return $data;
+        });
+        
+        LinenDetailFacades::insert($map->unique()->toArray());
+
+        OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid->toArray())
+        ->update([
             OutstandingFacades::mask_status() => TransactionStatus::Pending
         ]);
 
@@ -62,14 +79,24 @@ class CheckOutstandingPending extends Command
             LinenFacades::mask_latest() => LinenStatus::Pending
         ]);
 
-        $grouped = $outstanding->linen->unique(function ($item) {
-            return $item['linen_outstanding_product_id'] . $item['linen_outstanding_ori_company_id'] . $item['linen_outstanding_ori_location_id'];
-        });
+        $grouped = $outstanding->mapToGroups(function ($item) {
 
+            $combile = $item['linen_outstanding_product_id'] . $item['linen_outstanding_ori_company_id'] . $item['linen_outstanding_ori_location_id'];
+            return [
+                $combile => $item
+            ];
+
+        })->toArray();
+        
         if ($grouped) {
-            foreach ($grouped as $group) {
+            foreach ($grouped as $groups) {
+                
+                $group = $groups[0] ?? false;
+                if($group){
 
-                Cards::Log($group['linen_outstanding_ori_company_id'], $group['linen_outstanding_ori_location_id'], $group['linen_outstanding_product_id'], TransactionStatus::Pending);
+                    Cards::Log($group['linen_outstanding_ori_company_id'], $group['linen_outstanding_ori_location_id'], $group['linen_outstanding_product_id'], TransactionStatus::Pending);
+                }
+
             }
         }
 

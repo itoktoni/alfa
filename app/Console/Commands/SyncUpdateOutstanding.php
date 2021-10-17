@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Linen\Dao\Enums\TransactionStatus;
 
 class SyncUpdateOutstanding extends Command
 {
@@ -42,8 +43,8 @@ class SyncUpdateOutstanding extends Command
     public function handle()
     {
         $outstanding = DB::connection('server')->table('linen_outstanding')
-            ->where('linen_outstanding_status', LinenStatus::Kotor)
-            ->where('linen_outstanding_description', '!=', LinenStatus::BedaRs)
+            ->where('linen_outstanding_status', TransactionStatus::Kotor)
+            ->where('linen_outstanding_description', '!=', LinenStatus::BelumDiScan)
             ->whereNull('linen_outstanding_uploaded_at')
             ->limit(env('SYNC_LIMIT', 100))
             ->get()

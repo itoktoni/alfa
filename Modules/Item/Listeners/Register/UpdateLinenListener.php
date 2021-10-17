@@ -30,7 +30,7 @@ class UpdateLinenListener
     {
         $linen = LinenFacades::find($event->rfid)->update([
             LinenFacades::mask_latest() => LinenStatus::Register,
-            LinenFacades::mask_qty() => 0
+            LinenFacades::mask_qty() => 1
         ]);
     }
 }

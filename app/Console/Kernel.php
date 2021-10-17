@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CheckOutstandingHilang;
+use App\Console\Commands\CheckOutstandingPending;
 use App\Console\Commands\CleanGroupingConsole;
 use App\Console\Commands\CleanKotorConsole;
 use App\Console\Commands\CleanRegisterConsole;
@@ -24,6 +26,8 @@ class Kernel extends ConsoleKernel {
         CleanRegisterConsole::class,
         CleanKotorConsole::class,
         CleanGroupingConsole::class,
+        CheckOutstandingPending::class,
+        CheckOutstandingHilang::class,
     ];
 
     /**

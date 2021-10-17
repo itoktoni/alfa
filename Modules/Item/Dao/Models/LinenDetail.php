@@ -87,6 +87,21 @@ class LinenDetail extends Model
         return $this->{$this->mask_status()};
     }
 
+    public function mask_description()
+    {
+        return 'item_linen_detail_description';
+    }
+
+    public function setMaskDescriptionAttribute($value)
+    {
+        $this->attributes[$this->mask_description()] = $value;
+    }
+
+    public function getMaskDescriptionAttribute()
+    {
+        return $this->{$this->mask_description()};
+    }
+
     public function mask_rfid()
     {
         return 'item_linen_detail_rfid';
@@ -100,6 +115,21 @@ class LinenDetail extends Model
     public function getMaskRfidAttribute()
     {
         return $this->{$this->mask_rfid()};
+    }
+
+    public function mask_created_at()
+    {
+        return 'item_linen_detail_created_at';
+    }
+
+    public function setMaskCreatedAtAttribute($value)
+    {
+        $this->attributes[$this->mask_created_at()] = $value;
+    }
+
+    public function getMaskCreatedAtAttribute()
+    {
+        return $this->{$this->mask_created_at()};
     }
 
     public static function boot()

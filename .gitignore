@@ -12,5 +12,4 @@ yarn-error.log
 /node_modules
 /public/files
 .env
-.htaccess
 /resources/lang/*

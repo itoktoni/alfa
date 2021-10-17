@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Modules\Item\Dao\Facades\LinenDetailFacades;
+use Modules\Linen\Dao\Enums\LinenStatus;
 
 class SyncDownloadOutstanding extends Command
 {
@@ -52,6 +55,7 @@ class SyncDownloadOutstanding extends Command
 
         $outstanding = json_decode($curl, true);
         $collect = collect($outstanding)->pluck('linen_outstanding_rfid');
+
 
         if (isset($outstanding)) {
             $sql = DB::connection('server')->table('linen_outstanding')->whereIn('linen_outstanding_rfid', $collect);

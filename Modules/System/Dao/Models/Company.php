@@ -53,6 +53,11 @@ class Company extends Model
         '1' => ['Show', 'info'],
         '0' => ['Hide', 'warning'],
     ];
+
+    public function getMaskCompanyNameAttribute()
+    {
+        return $this->company_name;
+    }
     
     public function has_location()
 	{

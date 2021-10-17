@@ -52,8 +52,8 @@ class LinenController extends Controller
         $location = Views::option(new LocationRepository());
         $company = Views::option(new CompanyRepository());
         $user = Views::option(new TeamRepository());
-        $rent = collect(LinenStatus::getOptions([LinenStatus::Cuci, LinenStatus::Rental]))->prepend('- Select Status - ', '');
-        $status = collect(LinenStatus::getOptions([LinenStatus::Register, LinenStatus::GantiChip]))->prepend('- Select Rental -', '');
+        $rent = LinenStatus::getOptions([LinenStatus::Cuci, LinenStatus::Rental]);
+        $status = LinenStatus::getOptions([LinenStatus::Register, LinenStatus::GantiChip]);
 
         if(request()->get('company_id') || isset($data['model'])){
 
@@ -129,6 +129,10 @@ class LinenController extends Controller
     {
         return $service
             ->setModel(self::$model)
+            ->EditAction([
+                'page'      => config('page'),
+                'folder'    => config('folder'),
+            ])
             ->EditStatus([
                 self::$model->mask_status() => LinenStatus::class,
                 self::$model->mask_rent() => LinenStatus::class,
@@ -151,9 +155,9 @@ class LinenController extends Controller
 
     public function show($code)
     {
-        return view(Views::show())->with($this->share([
+        return view(Views::show(config('page'), config('folder')))->with($this->share([
             'fields' => Helper::listData(self::$model->datatable),
-            'model' => $this->get($code),
+            'model' => $this->get($code, 'has_detail'),
         ]));
     }
 

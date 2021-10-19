@@ -4,15 +4,17 @@ namespace Modules\Linen\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Modules\Item\Dao\Repositories\ProductRepository;
-use Modules\Linen\Dao\Models\Grouping;
-use Modules\Linen\Dao\Models\GroupingDetail;
+use Modules\Linen\Dao\Enums\TransactionStatus;
+use Modules\Linen\Dao\Facades\BalanceFacades;
+use Modules\Linen\Dao\Facades\OpnameFacades;
+use Modules\Linen\Dao\Facades\OpnameSummaryFacades;
+use Modules\Linen\Dao\Models\OpnameDetail;
 use Modules\Linen\Dao\Repositories\OpnameRepository;
+use Modules\Linen\Http\Requests\GroupBatchRequest;
 use Modules\Linen\Http\Requests\OpnameRequest;
 use Modules\Linen\Http\Requests\OutstandingBatchRequest;
 use Modules\Linen\Http\Requests\OutstandingMasterRequest;
-use Modules\Linen\Http\Services\OpnameBatchService;
 use Modules\Linen\Http\Services\OpnameCreateService;
-use Modules\Linen\Http\Services\OpnameDataService;
 use Modules\Linen\Http\Services\OpnameSingleService;
 use Modules\Linen\Http\Services\OutstandingBatchService;
 use Modules\Linen\Http\Services\OutstandingMasterService;
@@ -21,6 +23,7 @@ use Modules\System\Dao\Repositories\LocationRepository;
 use Modules\System\Dao\Repositories\TeamRepository;
 use Modules\System\Http\Requests\DeleteRequest;
 use Modules\System\Http\Requests\GeneralRequest;
+use Modules\System\Http\Services\CreateService;
 use Modules\System\Http\Services\DataService;
 use Modules\System\Http\Services\DeleteService;
 use Modules\System\Http\Services\SingleService;
@@ -65,62 +68,45 @@ class OpnameController extends Controller
 
     public function index()
     {
-        return view(Views::index(config('page'), config('folder')))->with($this->share([
+        return view(Views::index())->with([
             'fields' => Helper::listData(self::$model->datatable),
-        ]));
+        ]);
     }
 
-    public function create()
-    {
-        return view(Views::create())->with($this->share());
-    }
+    // public function create()
+    // {
+    //     return view(Views::create())->with($this->share());
+    // }
 
-    public function save(GeneralRequest $request, OpnameCreateService $service)
-    {
-        $data = $service->save(self::$model, $request);
-        $route_name = config('module').'_edit';
-        $code = $data['data']->linen_opname_key ?? null;
-        
-        if($code){
-
-            return Response::redirectToRoute($data, $route_name, ['code' => $code]);
-        }
-
-        return Response::redirectBack($data);
-    }
-
-    public function batch(OpnameRequest $request, OpnameBatchService $service)
+    public function save(OpnameRequest $request, OpnameCreateService $service)
     {
         $data = $service->save(self::$model, $request);
         return Response::redirectBack($data);
     }
 
-    public function data(OpnameDataService $service)
+    public function data(DataService $service)
     {
         return $service
-            ->EditStatus([
-                'linen_opname_status' => self::$model->status,
+            ->EditAction([
+                'page' => config('page'),
+                'folder' => config('folder'),
             ])
             ->setModel(self::$model)->make();
     }
 
     public function deleteDetail($code)
     {
-
-        $data = Grouping::where('linen_grouping_barcode', $code)->delete();
-        $data = GroupingDetail::where('linen_grouping_detail_barcode', $code)->delete();
+        OpnameDetail::findOrFail($code)->delete();
         Alert::delete($code);
         return Response::redirectBack($code);
     }
 
     public function edit($code)
     {
-        $data = $this->get($code, ['summary', 'detail']);
-
+        $data = $this->get($code, ['has_detail']);
         return view(Views::update())->with($this->share([
             'model' => $data,
-            'summary' => $data->summary ?? [],
-            'detail' => $data->detail ?? [],
+            'detail' => $data->has_detail ?? [],
         ]));
     }
 
@@ -132,13 +118,21 @@ class OpnameController extends Controller
 
     public function show($code)
     {
-        return view(Views::show())->with($this->share([
+        $model = $this->get($code, ['has_detail']);
+        $detail = $model->has_detail ?? false;
+
+        $data = BalanceFacades::where(BalanceFacades::mask_location_id(), $model->mask_location_id)
+        ->where(BalanceFacades::mask_company_id(), $model->mask_company_id)->get();
+
+        return view(Views::show(config('page'), config('folder')))->with($this->share([
             'fields' => Helper::listData(self::$model->datatable),
-            'model' => $this->get($code),
+            'model' => $model,
+            'detail' => $detail,
+            'data' => $data,
         ]));
     }
 
-    public function get($code = null, $relation = null)
+    public function get($code = null, $relation = ['has_detail'])
     {
         $relation = $relation ?? request()->get('relation');
         if ($relation) {

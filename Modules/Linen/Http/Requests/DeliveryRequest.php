@@ -5,6 +5,7 @@ namespace Modules\Linen\Http\Requests;
 use App\Models\User;
 use Carbon\Carbon;
 use Modules\Item\Dao\Facades\LinenFacades;
+use Modules\Linen\Dao\Facades\GroupingDetailFacades;
 use Modules\Linen\Dao\Models\Grouping;
 use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\System\Dao\Facades\CompanyFacades;
@@ -25,10 +26,10 @@ class DeliveryRequest extends GeneralRequest
     {
         $company = CompanyFacades::find($this->linen_delivery_company_id);
 
-        $grouping = GroupingDetail::whereIn('linen_grouping_detail_barcode', $this->barcode)->get();
-        $data = $grouping->pluck('linen_grouping_detail_rfid')->unique() ?? [];
+        $grouping = GroupingDetail::whereIn(GroupingDetailFacades::mask_barcode(), $this->barcode)->get();
+        $data = $grouping->pluck(GroupingDetailFacades::mask_rfid())->unique() ?? [];
         $stock = $grouping->mapToGroups(function($item){
-            return [$item->linen_grouping_detail_product_id => $item];
+            return [$item->mask_product_id => $item];
         });
         
         $driver = User::find($this->linen_delivery_driver_id);
@@ -47,7 +48,7 @@ class DeliveryRequest extends GeneralRequest
             'stock' => $stock,
             'linen_delivery_company_name' => $company->company_name ?? '',
             'linen_delivery_driver_name' => $driver->name ?? '',
-            'linen_delivery_total' => count($data),
+            'linen_delivery_total' => count($grouping),
             'linen_delivery_total_detail' => count($data),
             'linen_delivery_reported_date' => $report_date->format('Y-m-d'),
         ]);
@@ -66,6 +67,7 @@ class DeliveryRequest extends GeneralRequest
         return [
             'linen_delivery_key' => 'required|unique:linen_delivery',
             'linen_delivery_company_id' => 'required|exists:system_company,company_id',
+            'linen_delivery_status' => 'required',
             'barcode.*' => 'required|exists:linen_grouping,linen_grouping_barcode',
         ];
     }

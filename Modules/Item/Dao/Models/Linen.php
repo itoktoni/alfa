@@ -139,6 +139,11 @@ class Linen extends Model
     {
         return $this->{$this->mask_company_id()};
     }
+    
+    public function getMaskCompanyNameAttribute()
+    {
+        return $this->item_linen_company_name;
+    }
       
     /**
      * product id
@@ -160,7 +165,11 @@ class Linen extends Model
     {
         return $this->{$this->mask_location_id()};
     }
-
+    
+    public function getMaskLocationNameAttribute()
+    {
+        return $this->item_linen_location_name;
+    }
 
     
     /**
@@ -183,6 +192,12 @@ class Linen extends Model
     {
         return $this->{$this->mask_product_id()};
     }
+
+    public function getMaskProductNameAttribute()
+    {
+        return $this->item_linen_product_name;
+    }
+    
 
     /**
      * product id

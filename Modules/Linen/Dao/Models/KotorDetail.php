@@ -115,6 +115,11 @@ class KotorDetail extends Model
         return $this->{$this->mask_location_scan()};
     }
 
+    public function getMaskLocationScanNameAttribute()
+    {
+        return $this->linen_kotor_detail_scan_location_name;
+    }
+
     public function mask_location_ori()
     {
         return 'linen_kotor_detail_ori_location_id';
@@ -128,6 +133,11 @@ class KotorDetail extends Model
     public function getMaskLocationOriAttribute()
     {
         return $this->{$this->mask_location_ori()};
+    }
+
+    public function getMaskLocationOriNameAttribute()
+    {
+        return $this->linen_kotor_detail_ori_location_name;
     }
 
     // end location
@@ -146,6 +156,11 @@ class KotorDetail extends Model
     {
         return $this->{$this->mask_company_scan()};
     }
+
+    public function getMaskCompanyScanNameAttribute()
+    {
+        return $this->linen_kotor_detail_scan_company_name;
+    }
     
     public function mask_company_ori()
     {
@@ -162,6 +177,11 @@ class KotorDetail extends Model
         return $this->{$this->mask_company_ori()};
     }
     
+    public function getMaskCompanyOriNameAttribute()
+    {
+        return $this->linen_kotor_detail_ori_company_name;
+    }
+    
     /**
      * product id
      *
@@ -173,14 +193,19 @@ class KotorDetail extends Model
         return 'linen_kotor_detail_product_id';
     }
 
-    public function setProductAttribute($value)
+    public function setMaskProductIdAttribute($value)
     {
         $this->attributes[$this->mask_product_id()] = $value;
     }
 
-    public function getProductAttribute()
+    public function getMaskProductIdAttribute()
     {
         return $this->{$this->mask_product_id()};
+    }
+
+    public function getMaskProductNameAttribute()
+    {
+        return $this->linen_kotor_detail_product_name;
     }
 
     public function has_user(){

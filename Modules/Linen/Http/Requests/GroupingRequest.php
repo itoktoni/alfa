@@ -3,6 +3,7 @@
 namespace Modules\Linen\Http\Requests;
 
 use Modules\Item\Dao\Facades\LinenFacades;
+use Modules\Linen\Dao\Facades\GroupingFacades;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\System\Dao\Facades\CompanyFacades;
@@ -34,16 +35,15 @@ class GroupingRequest extends GeneralRequest
         $validate = $linen->map(function ($item) use($company, $location) {
 
             $user = auth()->user();
-
             $data = [
-                'linen_grouping_detail_rfid' => $item->linen_outstanding_rfid,
-                'linen_grouping_detail_product_id' => $item->linen_outstanding_product_id ?? '',
-                'linen_grouping_detail_product_name' => $item->linen_outstanding_product_name ?? '',
-                'linen_grouping_detail_barcode' => $this->linen_grouping_barcode,
-                'linen_grouping_detail_ori_company_id' => $item->linen_outstanding_ori_company_id ?? '',
-                'linen_grouping_detail_ori_company_name' => $item->linen_outstanding_ori_company_name ?? '',
-                'linen_grouping_detail_ori_location_id' => $item->linen_outstanding_ori_location_id ?? '',
-                'linen_grouping_detail_ori_location_name' => $item->linen_outstanding_ori_location_name ?? '', 
+                'linen_grouping_detail_rfid' => $item->mask_rfid,
+                'linen_grouping_detail_product_id' => $item->mask_product_id ?? '',
+                'linen_grouping_detail_product_name' => $item->mask_product_name ?? '',
+                'linen_grouping_detail_barcode' => $this->{GroupingFacades::getKeyName()},
+                'linen_grouping_detail_ori_company_id' => $item->mask_company_ori ?? '',
+                'linen_grouping_detail_ori_company_name' => $item->mask_company_ori_name ?? '',
+                'linen_grouping_detail_ori_location_id' => $item->mask_location_ori ?? '',
+                'linen_grouping_detail_ori_location_name' => $item->mask_location_ori ?? '', 
                 'linen_grouping_detail_scan_company_id' => $company->company_id ?? '',
                 'linen_grouping_detail_scan_company_name' => $company->company_name ?? '',
                 'linen_grouping_detail_scan_location_id' => $location->location_id ?? '',
@@ -58,8 +58,6 @@ class GroupingRequest extends GeneralRequest
             return $data;
 
         })->toArray();
-
-        // dd($validate);
 
         $this->merge([  
             'detail' => $validate,
@@ -90,6 +88,7 @@ class GroupingRequest extends GeneralRequest
             'linen_grouping_barcode' => 'required|unique:linen_grouping',
             'linen_grouping_location_id' => 'required|exists:system_location,location_id',
             'linen_grouping_company_id' => 'required|exists:system_company,company_id',
+            'linen_grouping_status' => 'required',
             'rfid.*' => 'required|exists:linen_outstanding,linen_outstanding_rfid',
         ];
     }

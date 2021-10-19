@@ -31,6 +31,8 @@ class Kotor extends Model
         'linen_kotor_created_name',
         'linen_kotor_deleted_by',
         'linen_kotor_key',
+        'linen_kotor_status',
+        'linen_kotor_description',
         'linen_kotor_company_id',
         'linen_kotor_company_name',
         'linen_kotor_location_id',
@@ -55,6 +57,8 @@ class Kotor extends Model
         'linen_kotor_updated_at' => 'datetime:Y-m-d H:i:s',
         'linen_kotor_deleted_at' => 'datetime:Y-m-d H:i:s',
         'linen_kotor_total' => 'integer',
+        'linen_kotor_status' => 'integer',
+        'linen_kotor_description' => 'integer',
     ];
 
     protected $dates = [
@@ -75,7 +79,24 @@ class Kotor extends Model
         'linen_kotor_created_by' => [false => 'Created At'],
         'linen_kotor_created_at' => [true => 'Created At'],
         'name' => [true => 'Created By'],
+        'linen_kotor_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center'],
+        'linen_kotor_description' => [true => 'Description', 'width' => 80, 'class' => 'text-center'],
     ];
+
+    public function mask_total()
+    {
+        return 'linen_kotor_total';
+    }
+
+    public function setMaskTotalAttribute($value)
+    {
+        $this->attributes[$this->mask_total()] = $value;
+    }
+
+    public function getMaskTotalAttribute()
+    {
+        return $this->{$this->mask_total()};
+    }
 
     public function mask_company_id()
     {
@@ -90,6 +111,41 @@ class Kotor extends Model
     public function getMaskCompanyIdAttribute()
     {
         return $this->{$this->mask_company_id()};
+    }
+
+    public function getMaskCompanyNameAttribute()
+    {
+        return $this->linen_kotor_company_name;
+    }
+    
+    public function mask_status()
+    {
+        return 'linen_kotor_status';
+    }
+
+    public function setMaskStatusAttribute($value)
+    {
+        $this->attributes[$this->mask_status()] = $value;
+    }
+
+    public function getMaskStatusAttribute()
+    {
+        return $this->{$this->mask_status()};
+    }
+
+    public function mask_description()
+    {
+        return 'linen_kotor_description';
+    }
+
+    public function setMaskDescriptionAttribute($value)
+    {
+        $this->attributes[$this->mask_description()] = $value;
+    }
+
+    public function getMaskDescriptionAttribute()
+    {
+        return $this->{$this->mask_description()};
     }
       
     /**
@@ -111,6 +167,11 @@ class Kotor extends Model
     public function getMaskLocationIdAttribute()
     {
         return $this->{$this->mask_location_id()};
+    }
+
+    public function getMaskLocationNameAttribute()
+    {
+        return $this->linen_kotor_location_name;
     }
 
     public function has_user(){

@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Item\Dao\Facades\ProductFacades;
+use Modules\Linen\Dao\Facades\OpnameDetailFacades;
+use Modules\Linen\Dao\Facades\OpnameFacades;
+use Modules\Linen\Dao\Facades\OpnameSummaryFacades;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\LocationFacades;
 use Modules\System\Dao\Facades\TeamFacades;
@@ -21,7 +24,6 @@ class Opname extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'linen_opname_id',
         'linen_opname_created_at',
         'linen_opname_updated_at',
         'linen_opname_deleted_at',
@@ -31,12 +33,10 @@ class Opname extends Model
         'linen_opname_key',
         'linen_opname_status',
         'linen_opname_company_id',
-        'linen_opname_company_name',
-        'linen_opname_date',
-        'linen_opname_petugas_id',
-        'linen_opname_petugas_name',
-        'linen_opname_item_product_id',
-        'linen_opname_item_product_name',
+        'linen_opname_company_name',        
+        'linen_opname_location_id',
+        'linen_opname_location_name',
+        'linen_opname_total',
     ];
 
     // public $with = ['module'];
@@ -44,8 +44,7 @@ class Opname extends Model
     public $timestamps = true;
     public $incrementing = false;
     public $rules = [
-        'linen_opname_date' => 'required',
-        'linen_opname_company_id' => 'required',
+        'linen_opname_key' => 'required',
     ];
 
     const CREATED_AT = 'linen_opname_created_at';
@@ -60,7 +59,6 @@ class Opname extends Model
         'linen_opname_created_at' => 'datetime:Y-m-d H:i:s',
         'linen_opname_updated_at' => 'datetime:Y-m-d H:i:s',
         'linen_opname_deleted_at' => 'datetime:Y-m-d H:i:s',
-        'linen_opname_status' => 'string',
     ];
 
     protected $dates = [
@@ -71,43 +69,105 @@ class Opname extends Model
 
     public $searching = 'linen_opname_key';
     public $datatable = [
-        'linen_opname_id' => [false => 'Code', 'width' => 50],
         'linen_opname_key' => [true => 'No. Opname'],
         'linen_opname_company_id' => [false => 'Company'],
         'linen_opname_company_name' => [true => 'Company'],
-        'linen_opname_petugas_id' => [false => 'Company'],
-        'linen_opname_petugas_name' => [true => 'Petugas'],
-        'linen_opname_item_product_id' => [false => 'Product'],
-        'linen_opname_item_product_name' => [false => 'Product'],
+        'linen_opname_location_id' => [false => 'Location'],
+        'linen_opname_location_name' => [true => 'Location'],
         'linen_opname_created_by' => [false => 'Created At'],
-        'linen_opname_date' => [true => 'Tanggal Opname'],
         'linen_opname_created_at' => [true => 'Created At'],
-        'linen_opname_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center'],
+        // 'linen_opname_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center'],
     ];
 
-    public $status = [
-        '1' => ['Register', 'primary'],
-        '2' => ['Opname', 'warning'],
-        '3' => ['Done', 'success'],
-    ];
-
-    public function status(){
-        return $this->status;
+    public function mask_company_id()
+    {
+        return 'linen_opname_company_id';
     }
 
-    public function user(){
+    public function setMaskCompanyIdAttribute($value)
+    {
+        $this->attributes[$this->mask_company_id()] = $value;
+    }
+
+    public function getMaskCompanyIdAttribute()
+    {
+        return $this->{$this->mask_company_id()};
+    }
+
+    public function getMaskCompanyNameAttribute()
+    {
+        return $this->linen_opname_company_name;
+    }
+
+    public function mask_location_id()
+    {
+        return 'linen_opname_location_id';
+    }
+
+    public function setMaskLocationIdAttribute($value)
+    {
+        $this->attributes[$this->mask_location_id()] = $value;
+    }
+
+    public function getMaskLocationIdAttribute()
+    {
+        return $this->{$this->mask_location_id()};
+    }
+
+    public function getMaskLocationNameAttribute()
+    {
+        return $this->linen_opname_location_name;
+    }
+
+    public function mask_created_by()
+    {
+        return self::CREATED_BY;
+    }
+
+    public function setMaskCreatedByAttribute($value)
+    {
+        $this->attributes[$this->mask_created_by()] = $value;
+    }
+
+    public function getMaskCreatedByAttribute()
+    {
+        return $this->{$this->mask_created_by()};
+    }
+
+    public function getMaskCreatedNameAttribute()
+    {
+        return $this->linen_opname_location_name;
+    }
+
+    public function mask_total()
+    {
+        return 'linen_opname_total';
+    }
+
+    public function setMaskTotalAttribute($value)
+    {
+        $this->attributes[$this->mask_total()] = $value;
+    }
+
+    public function getMaskTotalAttribute()
+    {
+        return $this->{$this->mask_total()};
+    }
+
+
+    public function has_user(){
 
 		return $this->hasOne(User::class, TeamFacades::getKeyName(), self::CREATED_BY);
     }
 
-    public function summary(){
+    public function has_summary(){
 
-		return $this->hasMany(OpnameSummary::class, 'linen_opname_summary_master_id', 'linen_opname_key');
+		return $this->hasMany(OpnameSummary::class, OpnameSummaryFacades::getKeyName(), $this->getKeyName());
     }
 
-    public function detail(){
+    public function has_detail(){
 
-		return $this->hasMany(OpnameDetail::class, 'linen_opname_detail_key', 'linen_opname_key');
+		return $this->hasMany(OpnameDetail::class, OpnameDetailFacades::mask_key(), OpnameFacades::getKeyName());
     }
     
     public static function boot()
@@ -117,24 +177,9 @@ class Opname extends Model
         parent::saving(function($model){
 
             $company = $model->linen_opname_company_id;
-            $model->linen_opname_company_name = CompanyFacades::find($company)->company_name ?? '';
-            
-            if($model->linen_opname_item_product_id){
-                
-                $model->linen_opname_item_product_name = ProductFacades::find($model->linen_opname_item_product_id)->item_product_name ?? '';
-            }
+            $model->linen_opname_company_name = CompanyFacades::find($model->mask_company_id)->company_name ?? '';
+            $model->linen_opname_location_name = LocationFacades::find($model->mask_location_id)->location_name ?? '';
 
-            if($model->linen_opname_petugas_id){
-                
-                $model->linen_opname_petugas_name = TeamFacades::find($model->linen_opname_petugas_id)->name ?? '';
-            }
-
-        });
-
-        parent::creating(function($model){
-
-            $model->linen_opname_status = 1;
-            $model->linen_opname_key = Helper::autoNumber($model->getTable(), $model->getKeyName(),'OPN', env('WEBSITE_AUTONUMBER', 10));
         });
     }    
 }

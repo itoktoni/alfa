@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Linen\Listeners\Kotor;
+namespace Modules\Linen\Listeners\Delivery;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -43,14 +43,11 @@ class LogCardDeliveryListener
         
         if($grouped){
             foreach($grouped as $group){
-
                 // $product = $group->first();
                 // $total = $group->count();
 
                 Cards::Log($group['linen_grouping_detail_ori_company_id'], $group['linen_grouping_detail_ori_location_id'], $group['linen_grouping_detail_product_id'], TransactionStatus::Bersih);
             }
         }
-
-        
     }
 }

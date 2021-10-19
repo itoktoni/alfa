@@ -40,9 +40,7 @@ class LogCardKotorListener
             foreach($grouped as $group){
 
                 $product = $group->first();
-                $total = $group->count();
-
-                Cards::Log($product->linen_kotor_detail_ori_company_id, $product->linen_kotor_detail_ori_location_id, $product->linen_kotor_detail_product_id, TransactionStatus::Kotor);
+                Cards::Log($product->linen_kotor_detail_ori_company_id, $product->linen_kotor_detail_ori_location_id, $product->linen_kotor_detail_product_id, $event->model->mask_status);
             }
         }
     }

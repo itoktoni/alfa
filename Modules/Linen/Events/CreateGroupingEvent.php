@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Modules\Linen\Dao\Facades\GroupingDetailFacades;
 use Modules\Linen\Dao\Facades\GroupingFacades;
 use Modules\Linen\Dao\Facades\KotorFacades;
 
@@ -31,7 +32,7 @@ class CreateGroupingEvent
         $this->id = $id;
         $this->model = GroupingFacades::with('has_detail')->find($id) ?? false;
         $this->linen = $this->model->has_detail ?? false;
-        $this->rfid = $this->linen->pluck('linen_grouping_detail_rfid')->unique() ?? false;
+        $this->rfid = $this->linen->pluck(GroupingDetailFacades::mask_rfid())->unique() ?? false;
     }
 
     /**

@@ -25,14 +25,14 @@ class TransactionStatus extends Enum
     {
         return [
             self::Register => ColorType::Primary,
-            self::Kotor => ColorType::Danger,
-            self::Gate => ColorType::Danger,
-            self::Grouping => ColorType::Danger,
-            self::Pending => ColorType::Danger,
-            self::Bersih => ColorType::Danger,
+            self::Kotor => ColorType::Pink,
+            self::Gate => ColorType::Brown,
+            self::Grouping => ColorType::Success,
+            self::Bersih => ColorType::Grey,
+            self::Pending => ColorType::Warning,
             self::Hilang => ColorType::Danger,
-            self::Retur => ColorType::Danger,
-            self::Rewash => ColorType::Danger,
+            self::Retur => ColorType::Tosca,
+            self::Rewash => ColorType::Violet,
         ];
     }
 

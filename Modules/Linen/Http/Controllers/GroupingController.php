@@ -4,6 +4,8 @@ namespace Modules\Linen\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Modules\Item\Dao\Repositories\ProductRepository;
+use Modules\Linen\Dao\Enums\TransactionStatus;
+use Modules\Linen\Dao\Facades\GroupingFacades;
 use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\Linen\Dao\Repositories\GroupingRepository;
 use Modules\Linen\Http\Requests\GroupBatchRequest;
@@ -49,7 +51,7 @@ class GroupingController extends Controller
         $location = Views::option(new LocationRepository());
         $company = Views::option(new CompanyRepository());
         $user = Views::option(new TeamRepository());
-        
+
         $view = [
             'status' => $status,
             'description' => $description,
@@ -58,16 +60,16 @@ class GroupingController extends Controller
             'company' => $company,
             'user' => $user,
         ];
-        
+
         return array_merge($view, $data);
     }
 
-    // public function index()
-    // {
-    //     return view(Views::index())->with([
-    //         'fields' => Helper::listData(self::$model->datatable),
-    //     ]);
-    // }
+    public function index()
+    {
+        return view(Views::index())->with([
+            'fields' => Helper::listData(self::$model->datatable),
+        ]);
+    }
 
     // public function create()
     // {
@@ -80,35 +82,21 @@ class GroupingController extends Controller
         return Response::redirectBack($data);
     }
 
-    public function master(OutstandingMasterRequest $request, OutstandingMasterService $service)
-    {
-        $data = $service->save(self::$model, $request);
-        return Response::redirectBack($data);
-    }
-
-    public function batch(OutstandingBatchRequest $request, OutstandingBatchService $service)
-    {
-        if(request()->get('type') == 'update'){
-
-            $data = $service->update(self::$model, $request);
-
-        }
-        else{
-
-            $data = $service->save(self::$model, $request);
-        }
-
-        return Response::redirectBack($data);
-    }
-
     public function data(DataService $service)
     {
         return $service
+            ->EditAction([
+                'page' => config('page'),
+                'folder' => config('folder'),
+            ])
+            ->EditStatus([
+                GroupingFacades::mask_status() => TransactionStatus::class,
+            ])
             ->setModel(self::$model)->make();
     }
 
-    public function deleteDetail($code){
-
+    public function deleteDetail($code)
+    {
         GroupingDetail::findOrFail($code)->delete();
         Alert::delete($code);
         return Response::redirectBack($code);
@@ -116,7 +104,7 @@ class GroupingController extends Controller
 
     public function edit($code)
     {
-        $data = $this->get($code,['detail']);
+        $data = $this->get($code, ['has_detail']);
         return view(Views::update())->with($this->share([
             'model' => $data,
             'detail' => $data->detail ?? [],
@@ -131,13 +119,17 @@ class GroupingController extends Controller
 
     public function show($code)
     {
-        return view(Views::show())->with($this->share([
+        $model = $this->get($code);
+        $detail = $model->has_detail ?? false;
+
+        return view(Views::show(config('page'), config('folder')))->with($this->share([
             'fields' => Helper::listData(self::$model->datatable),
-            'model' => $this->get($code),
+            'model' => $model,
+            'detail' => $detail,
         ]));
     }
 
-    public function get($code = null, $relation = ['detail'])
+    public function get($code = null, $relation = ['has_detail'])
     {
         $relation = $relation ?? request()->get('relation');
         if ($relation) {

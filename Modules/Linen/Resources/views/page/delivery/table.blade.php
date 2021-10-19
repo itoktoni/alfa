@@ -30,7 +30,7 @@
         });
         @endphp
 
-        @foreach (old('detail') ?? $detail as $key => $barcode)
+        @foreach ($detail as $key => $barcode)
         <tr>
             <td colspan="5">
                 <h5>
@@ -44,36 +44,28 @@
         @if(!empty($barcode))
         @foreach($barcode as $item)
         <tr>
-            <td data-title="Product">
-                <input type="hidden" value="{{ $item['temp_id'] ?? $item->linen_grouping_detail_rfid ?? '' }}"
-                    name="detail[{{ $loop->index }}][temp_id]">
-
+            <td data-title="RFID">
                 <input type="text" readonly class="form-control"
-                    value="{{ $item['temp_product'] ?? $item->linen_grouping_detail_rfid ?? old('temp_id') }}"
+                    value="{{ $item['temp_product'] ?? $item->mask_rfid ?? old('temp_id') }}"
                     name="detail[{{ $loop->index }}][temp_product]">
 
             </td>
             <td data-title="Description">
             <input type="text" readonly class="form-control"
-                    value="{{ $item['temp_product'] ?? $item->linen_grouping_detail_product_name ?? old('temp_id') }}"
+                    value="{{ $item['temp_product'] ?? $item->mask_product_name ?? old('temp_id') }}"
                     name="detail[{{ $loop->index }}][temp_product]">
             </td>
             <td data-title="Qty" class="text-right col-lg-1">
                 <input type="text" tabindex="{{ $loop->iteration }}1" name="detail[{{ $loop->index }}][temp_qty]"
                     class="form-control" readonly
-                    value="{{ $item['temp_qty'] ?? $item->linen_grouping_detail_scan_company_name }}">
+                    value="{{ $item->mask_company_ori_name ?? '' }}">
             </td>
             <td data-title="Send" class="text-right col-lg-1">
                 <input type="text" tabindex="{{ $loop->iteration }}2" name="detail[{{ $loop->index }}][temp_out]"
                     class="form-control" readonly
-                    value="{{ $item['temp_qty'] ?? $item->linen_grouping_detail_scan_location_name }}">
+                    value="{{ $item->mask_location_ori_name ?? '' }}">
 
             </td>
-            <!-- <td data-title="Send" class="text-right col-lg-1">
-                
-                <a class="btn btn-danger btn-block" href="{{ route('linen_grouping_delete_detail', ['code' => $item->linen_grouping_detail_id]) }}">Delete</a>
-
-            </td> -->
         </tr>
 
         @endforeach

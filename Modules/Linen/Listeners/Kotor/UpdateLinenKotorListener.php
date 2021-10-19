@@ -32,7 +32,7 @@ class UpdateLinenKotorListener
         if($rfid = $event->rfid){
 
             $sql = LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid)
-            ->increment(LinenFacades::mask_counter(), 1, [
+            ->update([
                 LinenFacades::mask_latest() => LinenStatus::LinenKotor,
                 LinenFacades::mask_qty() => 0,
             ]);

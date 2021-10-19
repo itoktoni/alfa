@@ -68,10 +68,10 @@ class OutstandingController extends Controller
         ]));
     }
 
-    public function create()
-    {
-        return view(Views::create())->with($this->share());
-    }
+    // public function create()
+    // {
+    //     return view(Views::create())->with($this->share());
+    // }
 
     public function save(GeneralRequest $request, CreateService $service)
     {
@@ -107,6 +107,7 @@ class OutstandingController extends Controller
             ->EditStatus([
                 OutstandingFacades::mask_status() => TransactionStatus::class,
                 OutstandingFacades::mask_description() => LinenStatus::class,
+                OutstandingFacades::mask_process() => TransactionStatus::class,
             ])->make();
     }
 

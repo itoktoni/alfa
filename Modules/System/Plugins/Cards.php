@@ -33,17 +33,20 @@ class Cards
             ->where(OutstandingFacades::mask_location_ori(), $location_id)
             ->where(OutstandingFacades::mask_product_id(), $product_id)->get();
 
-        $kotor = $outstanding->whereIn(OutstandingFacades::mask_description(), [LinenStatus::LinenKotor, LinenStatus::BedaRs])->count();
-        $retur = $outstanding->whereIn(OutstandingFacades::mask_description(), [LinenStatus::ChipRusak, LinenStatus::LinenRusak, LinenStatus::KelebihanStock])->count();
-        $rewash = $outstanding->whereIn(OutstandingFacades::mask_description(), [LinenStatus::Bernoda, LinenStatus::BahanUsang])->count();
-        $pending = $outstanding->where(OutstandingFacades::mask_description(), LinenStatus::Pending)->count();
-        $hilang = $outstanding->where(OutstandingFacades::mask_description(), LinenStatus::Hilang)->count();
+        $list_kotor = [LinenStatus::LinenKotor, LinenStatus::BedaRs];
+        $list_retur = [LinenStatus::ChipRusak, LinenStatus::LinenRusak, LinenStatus::KelebihanStock];
+        $list_rewash = [LinenStatus::Bernoda, LinenStatus::BahanUsang];
+
+        $kotor = $outstanding->whereIn(OutstandingFacades::mask_description(), $list_kotor)->count();
+        $retur = $outstanding->whereIn(OutstandingFacades::mask_description(), $list_retur)->count();
+        $rewash = $outstanding->whereIn(OutstandingFacades::mask_description(), $list_rewash)->count();
+        $pending = $outstanding->where(OutstandingFacades::mask_status(), TransactionStatus::Pending)->count();
+        $hilang = $outstanding->where(OutstandingFacades::mask_status(), TransactionStatus::Hilang)->count();
 
         $saldo = $bersih + $kotor + $pending + $retur + $rewash;
 
         $description = TransactionStatus::getDescription($status);
-
-        CardFacades::create([
+        $save = [
             'linen_card_company_id' => $company_id,
             'linen_card_location_id' => $location_id,
             'linen_card_product_id' => $product_id,
@@ -57,6 +60,7 @@ class Cards
             'linen_card_stock_hilang' => $hilang,
             'linen_card_stock_saldo' => $saldo,
             'linen_card_stock_notes' => $description,
-        ]);
+        ];
+        CardFacades::create($save);
     }
 }

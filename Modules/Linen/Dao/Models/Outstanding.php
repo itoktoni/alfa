@@ -44,6 +44,7 @@ class Outstanding extends Model
         'linen_outstanding_deleted_by',
         'linen_outstanding_session',
         'linen_outstanding_key',
+        'linen_outstanding_process',
         'linen_outstanding_scan_location_id',
         'linen_outstanding_scan_location_name',
         'linen_outstanding_scan_company_id',
@@ -81,6 +82,7 @@ class Outstanding extends Model
         'linen_outstanding_deleted_at' => 'datetime:Y-m-d H:i:s',
         'linen_outstanding_status' => 'integer',
         'linen_outstanding_description' => 'integer',
+        'linen_outstanding_process' => 'integer',
     ];
 
     protected $dates = [
@@ -97,13 +99,18 @@ class Outstanding extends Model
         'linen_outstanding_rfid' => [true => 'No. Seri RFID', 'width' => 180],
         'linen_outstanding_product_id' => [false => 'Product'],
         'linen_outstanding_product_name' => [true => 'Product'],
+        'linen_outstanding_scan_company_id' => [false => 'Scan R.S'],
         'linen_outstanding_scan_company_name' => [false => 'Scan R.S'],
+        'linen_outstanding_scan_location_id' => [false => 'Scan R.S'],
+        'linen_outstanding_scan_location_name' => [false => 'Scan R.S'],
+        'linen_outstanding_ori_company_id' => [false => 'Rumah Sakit'],
         'linen_outstanding_ori_company_name' => [true => 'Rumah Sakit'],
         'linen_outstanding_ori_location_id' => [false => 'Location'],
         'linen_outstanding_ori_location_name' => [true => 'Ruangan'],
         'linen_outstanding_created_at' => [false => 'Created At'],
         'name' => [true => 'Operator'],
         'linen_outstanding_status' => [true => 'Status', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
+        'linen_outstanding_process' => [true => 'Process', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
         'linen_outstanding_description' => [true => 'Description', 'width' => 100, 'class' => 'text-center', 'status' => 'description'],
     ];
 
@@ -179,6 +186,11 @@ class Outstanding extends Model
         return $this->{$this->mask_company_ori()};
     }
     
+    public function getMaskCompanyOriNameAttribute()
+    {
+        return $this->linen_outstanding_ori_company_name;
+    }
+
     /**
      * product id
      *
@@ -190,14 +202,19 @@ class Outstanding extends Model
         return 'linen_outstanding_product_id';
     }
 
-    public function setProductAttribute($value)
+    public function setMaskProductIdAttribute($value)
     {
         $this->attributes[$this->mask_product_id()] = $value;
     }
 
-    public function getProductAttribute()
+    public function getMaskProductIdAttribute()
     {
         return $this->{$this->mask_product_id()};
+    }
+    
+    public function getMaskProductNameAttribute()
+    {
+        return $this->linen_outstanding_product_name;
     }
 
     public function mask_status()
@@ -213,6 +230,21 @@ class Outstanding extends Model
     public function getMaskStatusAttribute()
     {
         return $this->{$this->mask_status()};
+    }
+
+    public function mask_process()
+    {
+        return 'linen_outstanding_process';
+    }
+
+    public function setMaskProcessAttribute($value)
+    {
+        $this->attributes[$this->mask_process()] = $value;
+    }
+
+    public function getMaskProcessAttribute()
+    {
+        return $this->{$this->mask_process()};
     }
 
     public function mask_description()

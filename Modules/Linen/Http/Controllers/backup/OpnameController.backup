@@ -4,18 +4,16 @@ namespace Modules\Linen\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Modules\Item\Dao\Repositories\ProductRepository;
-use Modules\Linen\Dao\Enums\LinenStatus;
-use Modules\Linen\Dao\Enums\TransactionStatus;
-use Modules\Linen\Dao\Facades\KotorFacades;
-use Modules\Linen\Dao\Models\kotor;
-use Modules\Linen\Dao\Models\kotorDetail;
-use Modules\Linen\Dao\Repositories\KotorRepository;
-use Modules\Linen\Http\Requests\KotorRequest;
+use Modules\Linen\Dao\Models\Grouping;
+use Modules\Linen\Dao\Models\GroupingDetail;
+use Modules\Linen\Dao\Repositories\OpnameRepository;
+use Modules\Linen\Http\Requests\OpnameRequest;
 use Modules\Linen\Http\Requests\OutstandingBatchRequest;
 use Modules\Linen\Http\Requests\OutstandingMasterRequest;
-use Modules\Linen\Http\Services\KotorCreateService;
-use Modules\Linen\Http\Services\KotorDataService;
-use Modules\Linen\Http\Services\KotorSingleService;
+use Modules\Linen\Http\Services\OpnameBatchService;
+use Modules\Linen\Http\Services\OpnameCreateService;
+use Modules\Linen\Http\Services\OpnameDataService;
+use Modules\Linen\Http\Services\OpnameSingleService;
 use Modules\Linen\Http\Services\OutstandingBatchService;
 use Modules\Linen\Http\Services\OutstandingMasterService;
 use Modules\System\Dao\Repositories\CompanyRepository;
@@ -32,13 +30,13 @@ use Modules\System\Plugins\Helper;
 use Modules\System\Plugins\Response;
 use Modules\System\Plugins\Views;
 
-class KotorController extends Controller
+class OpnameController extends Controller
 {
     public static $template;
     public static $service;
     public static $model;
 
-    public function __construct(KotorRepository $model, SingleService $service)
+    public function __construct(OpnameRepository $model, SingleService $service)
     {
         self::$model = self::$model ?? $model;
         self::$service = self::$service ?? $service;
@@ -72,45 +70,57 @@ class KotorController extends Controller
         ]));
     }
 
-    // public function create()
-    // {
-    //     return view(Views::create())->with($this->share());
-    // }
+    public function create()
+    {
+        return view(Views::create())->with($this->share());
+    }
 
-    public function save(KotorRequest $request, KotorCreateService $service)
+    public function save(GeneralRequest $request, OpnameCreateService $service)
+    {
+        $data = $service->save(self::$model, $request);
+        $route_name = config('module').'_edit';
+        $code = $data['data']->linen_opname_key ?? null;
+        
+        if($code){
+
+            return Response::redirectToRoute($data, $route_name, ['code' => $code]);
+        }
+
+        return Response::redirectBack($data);
+    }
+
+    public function batch(OpnameRequest $request, OpnameBatchService $service)
     {
         $data = $service->save(self::$model, $request);
         return Response::redirectBack($data);
     }
 
-    public function data(KotorDataService $service)
+    public function data(OpnameDataService $service)
     {
         return $service
-            ->EditAction([
-                'page' => config('page'),
-                'folder' => config('folder'),
-            ])
             ->EditStatus([
-                KotorFacades::mask_status() => TransactionStatus::class,
-                KotorFacades::mask_description() => LinenStatus::class,
+                'linen_opname_status' => self::$model->status,
             ])
             ->setModel(self::$model)->make();
     }
 
     public function deleteDetail($code)
     {
-        $data = Kotor::where('linen_kotor_barcode', $code)->delete();
-        $data = kotorDetail::where('linen_kotor_detail_barcode', $code)->delete();
+
+        $data = Grouping::where('linen_grouping_barcode', $code)->delete();
+        $data = GroupingDetail::where('linen_grouping_detail_barcode', $code)->delete();
         Alert::delete($code);
         return Response::redirectBack($code);
     }
 
     public function edit($code)
     {
-        $data = $this->get($code, ['has_detail']);
+        $data = $this->get($code, ['summary', 'detail']);
+
         return view(Views::update())->with($this->share([
             'model' => $data,
-            'detail' => $data->has_detail ?? [],
+            'summary' => $data->summary ?? [],
+            'detail' => $data->detail ?? [],
         ]));
     }
 
@@ -122,19 +132,9 @@ class KotorController extends Controller
 
     public function show($code)
     {
-        $model = $this->get($code);
-        $detail = false;
-        if($map = $model->has_detail){
-
-            $detail = $map->mapToGroups(function($item){
-                return [$item->mask_product_name => $item];
-            });
-        }
-        
-        return view(Views::show(config('page'), config('folder')))->with($this->share([
+        return view(Views::show())->with($this->share([
             'fields' => Helper::listData(self::$model->datatable),
-            'model' => $model,
-            'detail' => $detail,
+            'model' => $this->get($code),
         ]));
     }
 

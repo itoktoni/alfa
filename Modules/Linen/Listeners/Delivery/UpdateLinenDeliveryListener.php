@@ -5,8 +5,10 @@ namespace Modules\Linen\Listeners\Delivery;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
+use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Events\CreateDeliveryEvent;
 use Modules\Linen\Events\CreateGroupingEvent;
 use Modules\Linen\Events\CreateKotorEvent;
@@ -33,17 +35,28 @@ class UpdateLinenDeliveryListener
     {
         if($rfid = $event->rfid){
 
+            $status = null;
+            if($event->model->mask_status == TransactionStatus::Bersih){
+                $status = LinenStatus::Bersih;
+            }
+            else if($event->model->mask_status == TransactionStatus::Retur){
+                $status = LinenStatus::Retur;
+            }
+            else if($event->model->mask_status == TransactionStatus::Rewash){
+                $status = LinenStatus::Rewash;
+            }
+
             $sql = LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid)
-            ->update([
+            ->increment(LinenFacades::mask_counter(), 1, [
+                LinenFacades::mask_latest() =>  $status,
                 LinenFacades::mask_qty() => 1,
-                LinenFacades::mask_latest() => LinenStatus::Bersih,
             ]);
 
-            $map = $rfid->map(function($item){
+            $map = $rfid->map(function($item) use ($status){
                 $data = [
                     'item_linen_detail_rfid' => $item,
-                    'item_linen_detail_status' => LinenStatus::Bersih,
-                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::Bersih),
+                    'item_linen_detail_status' => $status,
+                    'item_linen_detail_description' => LinenStatus::getDescription($status),
                     'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_by' => auth()->user()->id,
@@ -51,6 +64,8 @@ class UpdateLinenDeliveryListener
                 ];
                 return $data;
             });
+
+            LinenDetailFacades::insert($map->unique()->toArray());
         }
     }
 }

@@ -4,6 +4,8 @@ namespace Modules\Linen\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Modules\Item\Dao\Repositories\ProductRepository;
+use Modules\Linen\Dao\Enums\TransactionStatus;
+use Modules\Linen\Dao\Facades\DeliveryFacades;
 use Modules\Linen\Dao\Models\Grouping;
 use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\Linen\Dao\Repositories\DeliveryRepository;
@@ -86,6 +88,9 @@ class DeliveryController extends Controller
                 'page' => config('page'),
                 'folder' => config('folder'),
             ])
+            ->EditStatus([
+                DeliveryFacades::mask_status() => TransactionStatus::class,
+            ])
             ->setModel(self::$model)->make();
     }
 
@@ -102,7 +107,7 @@ class DeliveryController extends Controller
         $data = $this->get($code, ['has_detail']);
         return view(Views::update())->with($this->share([
             'model' => $data,
-            'detail' => $data->detail ?? [],
+            'detail' => $data->has_detail ?? [],
         ]));
     }
 

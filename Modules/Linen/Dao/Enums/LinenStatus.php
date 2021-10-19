@@ -35,6 +35,8 @@ class LinenStatus extends Enum
     const Bersih            = 17;
     const Pending           = 18;
     const Hilang            = 19;
+    const Retur             = 20;
+    const Rewash            = 21;
 
     public static function colors()
     {
@@ -53,6 +55,12 @@ class LinenStatus extends Enum
             self::KelebihanStock => ColorType::Primary,
             self::Bernoda => ColorType::Primary,
             self::BahanUsang => ColorType::Primary,
+            self::Grouping => ColorType::Primary,
+            self::Bersih => ColorType::Primary,
+            self::Pending => ColorType::Primary,
+            self::Hilang => ColorType::Primary,
+            self::Retur => ColorType::Primary,
+            self::Rewash => ColorType::Primary,
         ];
     }
 

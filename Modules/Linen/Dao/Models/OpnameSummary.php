@@ -14,67 +14,134 @@ use Wildside\Userstamps\Userstamps;
 
 class OpnameSummary extends Model
 {
-    protected $table = 'linen_opname_summary';
-    protected $primaryKey = 'linen_opname_summary_id';
-    // protected $keyType = 'string';
-
-    protected $fillable = [
-        'linen_opname_summary_id',
-        'linen_opname_summary_master_id',
-        'linen_opname_summary_item_product_id',
-        'linen_opname_summary_item_product_name',
-        'linen_opname_summary_qty_stock',
-        'linen_opname_summary_qty_opname',
-        'linen_opname_summary_qty_realisasi',
-        'linen_opname_summary_qty_target',
-    ];
-
-    // public $with = ['module'];
+    protected $table = 'view_opname';
+    protected $primaryKey = 'view_key';
+    protected $keyType = 'string';
 
     public $timestamps = false;
     public $incrementing = false;
-    public $rules = [
-        'linen_opname_date' => 'required',
-        'linen_opname_company_id' => 'required',
-    ];
 
-    const CREATED_AT = 'linen_opname_created_at';
-    const UPDATED_AT = 'linen_opname_updated_at';
-    const DELETED_AT = 'linen_opname_deleted_at';
+    public function mask_key()
+    {
+        return 'view_key';
+    }
 
-    const CREATED_BY = 'linen_opname_created_by';
-    const UPDATED_BY = 'linen_opname_updated_by';
-    const DELETED_BY = 'linen_opname_deleted_by';
+    public function mask_location_id()
+    {
+        return 'view_location_id';
+    }
 
-    protected $casts = [
-        'linen_opname_created_at' => 'datetime:Y-m-d H:i:s',
-        'linen_opname_updated_at' => 'datetime:Y-m-d H:i:s',
-        'linen_opname_deleted_at' => 'datetime:Y-m-d H:i:s',
-    ];
+    public function getMaskLocationIdAttribute()
+    {
+        return $this->{$this->mask_location_id()};
+    }
 
-    protected $dates = [
-        'linen_opname_created_at',
-        'linen_opname_updated_at',
-        'linen_opname_deleted_at',
-    ];
+    public function getMaskLocationNameAttribute()
+    {
+        return $this->view_location_name;
+    }
 
-    public $searching = 'linen_opname_key';
-    public $datatable = [
-        'linen_opname_summary_id' => [false => 'Code', 'width' => 50],
-        'linen_opname_summary_master_id' => [true => 'No. OpnameSummary'],
-        'linen_opname_summary_item_product_id' => [false => 'Company'],
-        'linen_opname_summary_item_product_name' => [true => 'Company'],
-        'linen_opname_summary_qty_stock' => [false => 'Company'],
-        'linen_opname_summary_qty_opname' => [true => 'Petugas'],
-    ];
+    // end location
 
-    public $status = [
-        '1' => ['Register', 'primary'],
-        '2' => ['OpnameSummary', 'warning'],
-        '3' => ['Done', 'success'],
-    ];
+    public function mask_company_id()
+    {
+        return 'view_company_id';
+    }
 
-    public function status(){
-        return $this->status;
-    }   
+    public function getMaskCompanyIdAttribute()
+    {
+        return $this->{$this->mask_company_id()};
+    }
+
+    public function getMaskCompanyNameAttribute()
+    {
+        return $this->view_company_name;
+    }
+
+    public function mask_product_id()
+    {
+        return 'view_product_id';
+    }
+
+    public function getMaskProductIdAttribute()
+    {
+        return $this->{$this->mask_product_id()};
+    }
+
+    public function getMaskProductNameAttribute()
+    {
+        return $this->view_product_name;
+    }
+
+    
+    public function mask_register()
+    {
+        return 'view_register';
+    }
+
+    public function getMaskRegisterAttribute()
+    {
+        return $this->{$this->mask_register()};
+    }
+
+    public function mask_qty()
+    {
+        return 'view_qty';
+    }
+
+    public function getMaskQtyAttribute()
+    {
+        return $this->{$this->mask_qty()};
+    }
+
+    public function mask_cuci()
+    {
+        return 'view_cuci';
+    }
+
+    public function getMaskCuciAttribute()
+    {
+        return $this->{$this->mask_cuci()};
+    }
+    
+    public function mask_kotor()
+    {
+        return 'view_kotor';
+    }
+
+    public function getMaskKotorAttribute()
+    {
+        return $this->{$this->mask_kotor()};
+    }
+
+    public function mask_retur()
+    {
+        return 'view_retur';
+    }
+
+    public function getMaskReturAttribute()
+    {
+        return $this->{$this->mask_retur()};
+    }
+
+    public function mask_rewash()
+    {
+        return 'view_rewash';
+    }
+
+    public function getMaskRewashAttribute()
+    {
+        return $this->{$this->mask_rewash()};
+    }
+
+    public function mask_opname()
+    {
+        return 'view_opname';
+    }
+
+    public function getMaskOpnameAttribute()
+    {
+        return $this->{$this->mask_opname()};
+    }
+
 }

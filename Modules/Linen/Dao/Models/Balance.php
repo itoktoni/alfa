@@ -12,7 +12,7 @@ use Modules\System\Dao\Facades\TeamFacades;
 use Modules\System\Plugins\Helper;
 use Wildside\Userstamps\Userstamps;
 
-class Stock extends Model
+class Balance extends Model
 {
     protected $table = 'view_balance';
     protected $primaryKey = 'view_company_id';
@@ -29,14 +29,9 @@ class Stock extends Model
         'view_location_name' => [true => 'Location Name'],
         'view_product_id' => [false => 'Company'],
         'view_product_name' => [true => 'Product Name'],
-        'view_register' => [true => 'reg', 'width' => '40'],
-        'view_qty' => [true => 'bersih', 'width' => '40'],
-        'view_cuci' => [true => 'cuci', 'width' => '40'],
-        'view_kotor' => [true => 'kotor', 'width' => '40'],
-        'view_retur' => [true => 'retur', 'width' => '50'],
-        'view_rewash' => [true => 'rewash', 'width' => '50'],
-        'view_pending' => [true => 'pending', 'width' => '50'],
-        'view_hilang' => [true => 'hilang', 'width' => '50'],
+        'view_register' => [true => 'Register', 'width' => '80'],
+        'view_qty' => [true => 'Qty', 'width' => '80'],
+        'view_cuci' => [true => 'cuci', 'width' => '80'],
     ];
 
     public function mask_location_id()

@@ -22,8 +22,8 @@ class CompanyResource extends JsonResource
         return [
             'company_id' => $this->company_id,
             'company_name' => $this->company_name,
-            'locations' => LocationResource::collection($this->locations),
-            'products' => ProductResource::collection($this->products),
+            'locations' => LocationResource::collection($this->has_location),
+            'products' => ProductResource::collection($this->has_product),
         ];
     }
 }

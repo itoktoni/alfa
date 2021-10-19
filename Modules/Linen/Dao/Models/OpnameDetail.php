@@ -35,46 +35,106 @@ class OpnameDetail extends Model
         'linen_opname_detail_rfid' => 'required|unique:linen_outstanding,linen_outstanding_rfid',
     ];
 
-    const CREATED_AT = 'linen_opname_detail_created_at';
-    const UPDATED_AT = 'linen_opname_detail_updated_at';
-    const DELETED_AT = 'linen_opname_detail_deleted_at';
-
-    const CREATED_BY = 'linen_opname_detail_created_by';
-    const UPDATED_BY = 'linen_opname_detail_updated_by';
-    const DELETED_BY = 'linen_opname_detail_deleted_by';
-
-    protected $casts = [
-        'linen_opname_detail_created_at' => 'datetime:Y-m-d H:i:s',
-        'linen_opname_detail_updated_at' => 'datetime:Y-m-d H:i:s',
-        'linen_opname_detail_deleted_at' => 'datetime:Y-m-d H:i:s',
-    ];
-
-    protected $dates = [
-        'linen_opname_detail_created_at',
-        'linen_opname_detail_updated_at',
-        'linen_opname_detail_deleted_at',
-    ];
-
     public $searching = 'linen_opname_detail_key';
     public $datatable = [
-        'linen_opname_detail_id' => [false => 'Code', 'width' => 50],
+        'linen_opname_detail_key' => [false => 'Code', 'width' => 50],
+        'linen_opname_detail_product_name' => [true => 'Product'],
         'linen_opname_detail_company_name' => [true => 'Company'],
         'linen_opname_detail_location_name' => [true => 'Location'],
     ];
 
-    public $status = [
-        '1' => ['Initial', 'success'],
-        '2' => ['Completed', 'primary'],
-    ];
-
-    public function status(){
-        return $this->status;
+    public function mask_key()
+    {
+        return 'linen_opname_detail_key';
     }
 
-    public function user(){
-
-		return $this->hasOne(User::class, TeamFacades::getKeyName(), self::CREATED_BY);
+    public function setMaskKeyAttribute($value)
+    {
+        $this->attributes[$this->mask_key()] = $value;
     }
+
+    public function getMaskKeyAttribute()
+    {
+        return $this->{$this->mask_key()};
+    }
+
+    public function mask_rfid()
+    {
+        return 'linen_opname_detail_rfid';
+    }
+
+    public function setMaskRfidAttribute($value)
+    {
+        $this->attributes[$this->mask_rfid()] = $value;
+    }
+
+    public function getMaskRfidAttribute()
+    {
+        return $this->{$this->mask_rfid()};
+    }
+
+    public function mask_location_id()
+    {
+        return 'linen_opname_detail_location_id';
+    }
+
+    public function setMaskLocationIdAttribute($value)
+    {
+        $this->attributes[$this->mask_location_id()] = $value;
+    }
+
+    public function getMaskLocationIdAttribute()
+    {
+        return $this->{$this->mask_location_id()};
+    }
+
+    public function getMaskLocationNameAttribute()
+    {
+        return $this->linen_opname_detail_location_name;
+    }
+
+    // end location
+
+    public function mask_company_id()
+    {
+        return 'linen_opname_detail_company_id';
+    }
+
+    public function setMaskCompanyIdAttribute($value)
+    {
+        $this->attributes[$this->company_id()] = $value;
+    }
+
+    public function getMaskCompanyIdAttribute()
+    {
+        return $this->{$this->mask_company_id()};
+    }
+
+    public function getMaskCompanyNameAttribute()
+    {
+        return $this->linen_opname_detail_company_name;
+    }
+
+    public function mask_product_id()
+    {
+        return 'linen_opname_detail_product_id';
+    }
+
+    public function setMaskProductIdAttribute($value)
+    {
+        $this->attributes[$this->mask_product_id()] = $value;
+    }
+
+    public function getMaskProductIdAttribute()
+    {
+        return $this->{$this->mask_product_id()};
+    }
+
+    public function getMaskProductNameAttribute()
+    {
+        return $this->linen_opname_detail_product_name;
+    }
+
     
     public static function boot()
     {

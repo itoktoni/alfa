@@ -155,9 +155,11 @@ class LinenController extends Controller
 
     public function show($code)
     {
+        $model = $this->get($code);
         return view(Views::show(config('page'), config('folder')))->with($this->share([
             'fields' => Helper::listData(self::$model->datatable),
-            'model' => $this->get($code, 'has_detail'),
+            'model' => $model,
+            'detail' => $model->has_detail()->limit(10)->latest()->get()
         ]));
     }
 

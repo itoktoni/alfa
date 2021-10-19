@@ -54,14 +54,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($model->has_detail)
-                            @foreach($model->has_detail as $detail)
+                            @if($detail)
+                            @foreach($detail as $item)
                             <tr>
                                 <td data-title="Status">
-                                    {{ $detail->mask_description }}
+                                    {{ $item->mask_description }}
                                 </td>
                                 <td data-title="Created At">
-                                    {{ $detail->mask_created_at }}
+                                    {{ $item->mask_created_at }}
                                 </td>
                             </tr>
                             @endforeach

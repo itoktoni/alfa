@@ -5,6 +5,7 @@ namespace Modules\Linen\Listeners\Grouping;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
+use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
@@ -35,13 +36,13 @@ class UpdateLinenGroupingListener
 
             $sql = LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid)
             ->update([
-                LinenFacades::mask_latest() => TransactionStatus::Grouping,
+                LinenFacades::mask_latest() => LinenStatus::Grouping,
             ]);
 
             $map = $rfid->map(function($item){
                 $data = [
                     'item_linen_detail_rfid' => $item,
-                    'item_linen_detail_status' => TransactionStatus::Grouping,
+                    'item_linen_detail_status' => LinenStatus::Grouping,
                     'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::Grouping),
                     'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
@@ -50,6 +51,8 @@ class UpdateLinenGroupingListener
                 ];
                 return $data;
             });
+
+            LinenDetailFacades::insert($map->unique()->toArray());
         }
     }
 }

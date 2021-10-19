@@ -23,15 +23,17 @@ class Card extends Model
         'linen_card_id',
         'linen_card_status',
         'linen_card_company_id',
+        'linen_card_location_id',
+        'linen_card_location_name',
         'linen_card_company_name',
         'linen_card_product_id',
         'linen_card_product_name',
-        'linen_card_location_id',
-        'linen_card_location_name',
         'linen_card_stock_register',
         'linen_card_stock_kotor',
         'linen_card_stock_bersih',
         'linen_card_stock_pending',
+        'linen_card_stock_return',
+        'linen_card_stock_rewash',
         'linen_card_stock_hilang',
         'linen_card_stock_saldo',
         'linen_card_stock_notes',
@@ -90,7 +92,7 @@ class Card extends Model
         'linen_card_stock_rewash' => [true => 'Rewash', 'width' => 50],
         'linen_card_stock_saldo' => [true => 'Saldo', 'width' => 40],
         'linen_card_stock_notes' => [false => 'Notes', 'width' => 50],
-        'linen_card_status' => [true => 'Notes', 'width' => 50],
+        'linen_card_status' => [false => 'Notes', 'width' => 50],
     ];
     
     public function mask_company_id()

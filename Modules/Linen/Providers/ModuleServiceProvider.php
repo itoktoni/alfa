@@ -5,7 +5,11 @@ namespace Modules\Linen\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Config;
+use Modules\Linen\Dao\Models\Balance;
+use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\Linen\Dao\Models\KotorDetail;
+use Modules\Linen\Dao\Models\OpnameDetail;
+use Modules\Linen\Dao\Models\OpnameSummary;
 use Modules\Linen\Dao\Models\StockDetail;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -40,6 +44,21 @@ class ModuleServiceProvider extends ServiceProvider
         }); 
         $this->app->bind('grouping_facades', function () {
             return new \Modules\Linen\Dao\Repositories\GroupingRepository();
+        });
+        $this->app->bind('grouping_detail_facades', function () {
+            return new GroupingDetail();
+        });
+        $this->app->bind('opname_facades', function () {
+            return new \Modules\Linen\Dao\Repositories\OpnameRepository();
+        });
+        $this->app->bind('opname_detail_facades', function () {
+            return new OpnameDetail();
+        });
+        $this->app->bind('opname_summary_facades', function () {
+            return new OpnameSummary();
+        });
+        $this->app->bind('balance_facades', function () {
+            return new Balance();
         });
         $this->app->bind('master_outstanding_facades', function () {
             return new \Modules\Linen\Dao\Models\MasterOutstanding();

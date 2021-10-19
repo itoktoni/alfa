@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Facades\CardFacades;
+use Modules\Linen\Dao\Facades\DeliveryFacades;
 use Modules\Linen\Dao\Facades\GroupingFacades;
 use Modules\Linen\Dao\Facades\KotorFacades;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
@@ -52,6 +53,8 @@ class CleanGroupingConsole extends Command {
         KotorFacades::query()->truncate();
         KotorDetail::query()->truncate();
         OutstandingFacades::query()->truncate();
+        DeliveryFacades::query()->truncate();
+        CardFacades::query()->truncate();
 
         $this->info('The system has been copied successfully!');
     }

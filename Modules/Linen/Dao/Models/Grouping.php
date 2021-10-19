@@ -57,10 +57,10 @@ class Grouping extends Model
     const DELETED_BY = 'linen_grouping_deleted_by';
 
     protected $casts = [
-        'linen_grouping_created_at' => 'datetime:Y-m-d H:i:s',
+        'linen_grouping_created_at' => 'datetime:Y-m-d',
         'linen_grouping_updated_at' => 'datetime:Y-m-d H:i:s',
         'linen_grouping_deleted_at' => 'datetime:Y-m-d H:i:s',
-        'linen_grouping_status' => 'string',
+        'linen_grouping_status' => 'integer',
         'linen_grouping_total' => 'integer',
     ];
 
@@ -80,16 +80,78 @@ class Grouping extends Model
         'linen_grouping_total' => [true => 'Total'],
         'linen_grouping_created_at' => [true => 'Created At'],
         'name' => [true => 'Created By'],
-        'linen_grouping_status' => [false => 'Status', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
+        'linen_grouping_status' => [true => 'Status', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
     ];
 
-    public $status = [
-        '1' => ['Initial', 'success'],
-        '2' => ['Completed', 'primary'],
-    ];
+    public function mask_status()
+    {
+        return 'linen_grouping_status';
+    }
 
-    public function status(){
-        return $this->status;
+    public function setMaskStatusAttribute($value)
+    {
+        $this->attributes[$this->mask_status()] = $value;
+    }
+
+    public function getMaskStatusAttribute()
+    {
+        return $this->{$this->mask_status()};
+    }
+
+    
+    public function mask_total()
+    {
+        return 'linen_grouping_total';
+    }
+
+    public function setMaskTotalAttribute($value)
+    {
+        $this->attributes[$this->mask_total()] = $value;
+    }
+
+    public function getMaskTotalAttribute()
+    {
+        return $this->{$this->mask_total()};
+    }
+
+    public function mask_company_id()
+    {
+        return 'linen_grouping_company_id';
+    }
+
+    public function setMaskCompanyIdAttribute($value)
+    {
+        $this->attributes[$this->mask_company_id()] = $value;
+    }
+
+    public function getMaskCompanyIdAttribute()
+    {
+        return $this->{$this->mask_company_id()};
+    }
+
+    public function getMaskCompanyNameAttribute()
+    {
+        return $this->linen_grouping_company_name;
+    }
+
+    public function mask_location_id()
+    {
+        return 'linen_grouping_location_id';
+    }
+
+    public function setMaskLocationIdAttribute($value)
+    {
+        $this->attributes[$this->mask_location_id()] = $value;
+    }
+
+    public function getMaskLocationIdAttribute()
+    {
+        return $this->{$this->mask_location_id()};
+    }
+
+    public function getMaskLocationNameAttribute()
+    {
+        return $this->linen_grouping_location_name;
     }
 
     public function has_user(){
@@ -105,16 +167,6 @@ class Grouping extends Model
     public static function boot()
     {
         parent::boot();
-
-        // parent::saving(function($model){
-
-        //     $company = $model->linen_grouping_company_id;
-        //     $model->linen_grouping_company_name = CompanyFacades::find($company)->company_name ?? '';
-
-        //     $location = $model->linen_grouping_location_id;
-        //     $model->linen_grouping_location_name = LocationFacades::find($location)->location_name ?? '';
-
-        // });
 
         parent::saved(function($model){
 

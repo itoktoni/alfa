@@ -43,9 +43,7 @@ class Delivery extends Model
     public $timestamps = true;
     public $incrementing = false;
     public $rules = [
-        'linen_delivery_key' => 'required|unique:linen_delivery',
-        'linen_delivery_company_id' => 'required|unique:system_company',
-        'barcode' => 'required',
+        'linen_delivery_driver_id' => 'required',
     ];
 
     const CREATED_AT = 'linen_delivery_created_at';
@@ -57,10 +55,10 @@ class Delivery extends Model
     const DELETED_BY = 'linen_delivery_deleted_by';
 
     protected $casts = [
-        'linen_delivery_created_at' => 'datetime:Y-m-d H:i:s',
+        'linen_delivery_created_at' => 'datetime:Y-m-d',
         'linen_delivery_updated_at' => 'datetime:Y-m-d H:i:s',
         'linen_delivery_deleted_at' => 'datetime:Y-m-d H:i:s',
-        'linen_delivery_status' => 'string',
+        'linen_delivery_status' => 'integer',
         'linen_delivery_total' => 'integer',
     ];
 
@@ -82,16 +80,63 @@ class Delivery extends Model
         'linen_delivery_created_by' => [false => 'Created At'],
         'linen_delivery_created_at' => [true => 'Created At'],
         'name' => [true => 'Created By'],
-        'linen_delivery_status' => [false => 'Status', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
+        'linen_delivery_status' => [true => 'Status', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
     ];
 
-    public $status = [
-        '1' => ['Initial', 'success'],
-        '2' => ['Completed', 'primary'],
-    ];
+    public function mask_status()
+    {
+        return 'linen_delivery_status';
+    }
 
-    public function status(){
-        return $this->status;
+    public function setMaskStatusAttribute($value)
+    {
+        $this->attributes[$this->mask_status()] = $value;
+    }
+
+    public function getMaskStatusAttribute()
+    {
+        return $this->{$this->mask_status()};
+    }
+
+    public function mask_company_id()
+    {
+        return 'linen_delivery_company_id';
+    }
+
+    public function setMaskCompanyIdAttribute($value)
+    {
+        $this->attributes[$this->mask_company_id()] = $value;
+    }
+
+    public function getMaskCompanyIdAttribute()
+    {
+        return $this->{$this->mask_company_id()};
+    }
+
+    public function getMaskCompanyNameAttribute()
+    {
+        return $this->linen_delivery_company_name;
+    }
+
+    
+    public function mask_driver_id()
+    {
+        return 'linen_delivery_company_id';
+    }
+
+    public function setMaskDriverIdAttribute($value)
+    {
+        $this->attributes[$this->mask_driver_id()] = $value;
+    }
+
+    public function getMaskDriverIdAttribute()
+    {
+        return $this->{$this->mask_driver_id()};
+    }
+
+    public function getMaskDriverNameAttribute()
+    {
+        return $this->linen_delivery_driver_name;
     }
 
     public function has_user(){
@@ -115,14 +160,13 @@ class Delivery extends Model
 
         parent::saving(function($model){
 
-            $company = $model->linen_delivery_company_id;
-            $model->linen_delivery_company_name = CompanyFacades::find($company)->company_name ?? '';
+            $model->linen_delivery_company_name = CompanyFacades::find($model->mask_company_id)->company_name ?? '';
+            $model->linen_delivery_driver_name = TeamFacades::find($model->mask_driver_id)->name ?? '';
             
         });
 
         parent::created(function($model){
 
-            $delivery = $model->detail;
             CreateDeliveryEvent::dispatch($model->{$model->getKeyName()});
 
         });

@@ -85,7 +85,7 @@ class UpdateGroupModuleService extends UpdateService
                         if (count($split) > 1) {
                             $name = ucwords(str_replace('_', ' ', Str::snake($function)));
                         }
-                        $name = str_replace('Index', 'List', $name);
+                        $name = str_replace('index', 'List', $name);
 
                         $pathAction = '\Modules\\' . ucfirst($getData->system_group_module_folder) . '\Http\Controllers\\' . $module . 'Controller';
 

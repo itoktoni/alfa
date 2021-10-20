@@ -75,7 +75,7 @@ class UpdateModuleService extends UpdateService
                 if (count($split) > 1) {
                     $name = ucwords(str_replace('_', ' ', Str::snake($function)));
                 }
-                $name = str_replace('Index', 'List', $name);
+                $name = str_replace('index', 'List', $name);
 
                 $pathSave = '\App\Http\Controllers\\' . $getData->system_module_controller . 'Controller';
                 if ($getData->system_module_folder) {

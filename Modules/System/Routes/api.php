@@ -8,6 +8,7 @@ use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Item\Dao\Models\Linen;
 use Modules\Item\Http\Controllers\LinenController;
 use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\System\Http\Controllers\TeamController;
 
@@ -48,7 +49,7 @@ if (Cache::has('routing')) {
             ]);
 
             $check = Linen::whereIn('item_linen_rfid', $rfid)->update([
-                LinenFacades::mask_latest() => LinenStatus::LinenDownload,
+                LinenFacades::mask_latest() => LinenStatus::Download,
             ]);
         });
 
@@ -87,8 +88,8 @@ if (Cache::has('routing')) {
             $map = $outstanding->map(function($item){
                 $data = [
                     'item_linen_detail_rfid' => $item->linen_kotor_detail_rfid,
-                    'item_linen_detail_status' => LinenStatus::LinenDownload,
-                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenDownload),
+                    'item_linen_detail_status' => LinenStatus::Download,
+                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::Download),
                     'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_by' => auth()->user()->id,
@@ -107,14 +108,14 @@ if (Cache::has('routing')) {
 
             $rfid = request()->get('rfid');
             $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->update([
-                'linen_outstanding_status' => LinenStatus::Gate,
+                'linen_outstanding_status' => TransactionStatus::Gate,
             ]);
             
             $map = collect($rfid)->map(function($item){
                 $data = [
                     'item_linen_detail_rfid' => $item,
-                    'item_linen_detail_status' => LinenStatus::LinenUpdate,
-                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenUpdate),
+                    'item_linen_detail_status' => LinenStatus::LinenKotor,
+                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenKotor),
                     'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_by' => auth()->user()->id,
@@ -126,7 +127,7 @@ if (Cache::has('routing')) {
             LinenDetailFacades::insert($map->unique()->toArray());
             
             $check = Linen::whereIn('item_linen_rfid', $rfid)->update([
-                LinenFacades::mask_latest() => LinenStatus::LinenUpdate,
+                LinenFacades::mask_latest() => LinenStatus::LinenKotor,
             ]);
 
             return $rfid;
@@ -141,8 +142,8 @@ if (Cache::has('routing')) {
             $map = collect($collect)->map(function($item){
                 $data = [
                     'item_linen_detail_rfid' => $item,
-                    'item_linen_detail_status' => LinenStatus::LinenUpdate,
-                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenUpdate),
+                    'item_linen_detail_status' => LinenStatus::BelumDiScan,
+                    'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::BelumDiScan),
                     'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_by' => auth()->user()->id,
@@ -161,7 +162,7 @@ if (Cache::has('routing')) {
             OutstandingFacades::insert($insert);
 
             $check = Linen::whereIn('item_linen_rfid', $collect)->update([
-                LinenFacades::mask_latest() => LinenStatus::LinenUpload,
+                LinenFacades::mask_latest() => LinenStatus::BelumDiScan,
             ]);
 
             return $insert;

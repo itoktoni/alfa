@@ -37,6 +37,10 @@ class LinenStatus extends Enum
     const Hilang            = 19;
     const Retur             = 20;
     const Rewash            = 21;
+    // saat diupload
+    const Download          = 22;
+    const Update            = 23;
+    const Upload            = 24;
 
     public static function colors()
     {

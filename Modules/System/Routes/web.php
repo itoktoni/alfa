@@ -128,6 +128,8 @@ Route::get('reboot', [TeamController::class, 'reset_routing'])->name('reboot');
 
 Route::get('/', function () {
 
+    return redirect()->route('login');
+
     $middlewareClosure = function ($middleware) {
         return $middleware instanceof Closure ? 'Closure' : $middleware;
     };

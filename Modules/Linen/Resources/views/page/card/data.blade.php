@@ -21,7 +21,7 @@
             fixedHeader: true,
             dom: '<<t>p><"pull-left"i>',
             serverSide: true,
-            order: [],
+            order: [0],
             pageLength: {{ config('website.pagination') }},
             pagingType: 'first_last_numbers',
             ajax: {

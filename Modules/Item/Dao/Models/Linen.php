@@ -232,7 +232,7 @@ class Linen extends Model
 
     public function getMaskCounterAttribute()
     {
-        return $this->{$this->mask_qty()};
+        return $this->{$this->mask_counter()};
     }
 
 

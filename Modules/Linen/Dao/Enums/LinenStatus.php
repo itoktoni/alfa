@@ -41,6 +41,9 @@ class LinenStatus extends Enum
     const Download          = 22;
     const Update            = 23;
     const Upload            = 24;
+    const KirimRetur        = 25;
+    const KirimRewash       = 26;
+
 
     public static function colors()
     {

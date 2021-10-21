@@ -36,14 +36,14 @@ class UpdateLinenDeliveryListener
         if($rfid = $event->rfid){
 
             $status = null;
-            if($event->model->mask_status == TransactionStatus::Bersih){
+            if($event->model->mask_status == TransactionStatus::Kotor){
                 $status = LinenStatus::Bersih;
             }
             else if($event->model->mask_status == TransactionStatus::Retur){
-                $status = LinenStatus::Retur;
+                $status = LinenStatus::KirimRetur;
             }
             else if($event->model->mask_status == TransactionStatus::Rewash){
-                $status = LinenStatus::Rewash;
+                $status = LinenStatus::KirimRewash;
             }
 
             $sql = LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid)

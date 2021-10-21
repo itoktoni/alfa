@@ -9,6 +9,7 @@ use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
+use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Events\CreateGroupingEvent;
 use Modules\Linen\Events\CreateKotorEvent;
 
@@ -37,6 +38,11 @@ class UpdateLinenGroupingListener
             $sql = LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid)
             ->update([
                 LinenFacades::mask_latest() => LinenStatus::Grouping,
+            ]);
+
+            OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid)
+            ->update([
+                LinenFacades::mask_process() => TransactionStatus::Grouping,
             ]);
 
             $map = $rfid->map(function($item){

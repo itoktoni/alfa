@@ -13,7 +13,6 @@
                 <div class="show">
                     <table class="table table-table table-bordered table-striped table-hover mb-none">
                         <tbody>
-
                             <tr>
                                 <th class="col-lg-2">Nama Product</th>
                                 <td>{{ $model->has_product->mask_product_name ?? '' }}</td>

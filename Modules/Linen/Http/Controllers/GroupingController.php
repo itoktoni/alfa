@@ -13,6 +13,7 @@ use Modules\Linen\Http\Requests\GroupingRequest;
 use Modules\Linen\Http\Requests\OutstandingBatchRequest;
 use Modules\Linen\Http\Requests\OutstandingMasterRequest;
 use Modules\Linen\Http\Services\GroupingCreateService;
+use Modules\Linen\Http\Services\GroupingDataService;
 use Modules\Linen\Http\Services\GroupingSingleService;
 use Modules\Linen\Http\Services\OutstandingBatchService;
 use Modules\Linen\Http\Services\OutstandingMasterService;
@@ -82,7 +83,7 @@ class GroupingController extends Controller
         return Response::redirectBack($data);
     }
 
-    public function data(DataService $service)
+    public function data(GroupingDataService $service)
     {
         return $service
             ->EditAction([

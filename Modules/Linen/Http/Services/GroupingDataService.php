@@ -32,7 +32,10 @@ class GroupingDataService extends DataService
 
             $response = $filter->get()->toArray();
 
-            return Notes::data($response);
+            return Notes::data([
+                "total" => count($response),
+                "data" => $response
+            ]);
         }
 
         $this->datatable = Datatables::of($filter);

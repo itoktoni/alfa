@@ -8,6 +8,7 @@ use Modules\Linen\Http\Resources\LinenCollection;
 use Modules\Linen\Http\Resources\OutstandingCollection;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\System\Http\Services\DataService;
+use Modules\System\Plugins\Notes;
 
 class GroupingDataService extends DataService
 {
@@ -29,7 +30,9 @@ class GroupingDataService extends DataService
                 $filter = $filter->where(GroupingFacades::mask_company_id(), $company);
             }
 
-            return $filter->get()->toArray();
+            $response = $filter->get()->toArray();
+
+            return Notes::data($response);
         }
 
         $this->datatable = Datatables::of($filter);

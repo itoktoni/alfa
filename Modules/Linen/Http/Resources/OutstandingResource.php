@@ -31,7 +31,7 @@ class OutstandingResource extends JsonResource
             'linen_outstanding_ori_company_name' => $this->linen_outstanding_ori_company_name,
             'linen_outstanding_product_name' => $this->linen_outstanding_product_name,
             // 'linen_outstanding_scan_location_name' => $this->linen_outstanding_scan_location_name,
-            // 'linen_outstanding_ori_location_name' => $this->linen_outstanding_ori_location_name,
+            'linen_outstanding_ori_location_name' => $this->linen_outstanding_ori_location_name,
             'linen_outstanding_description' => LinenStatus::getDescription($this->linen_outstanding_description) ?? '',
             'linen_outstanding_session' => $this->linen_outstanding_session,
         ];

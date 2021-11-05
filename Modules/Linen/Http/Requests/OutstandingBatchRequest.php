@@ -35,7 +35,6 @@ class OutstandingBatchRequest extends GeneralRequest
             }
 
             $validate = collect($this->rfid)->mapWithKeys(function ($item) use ($linen, $company, $session, $status) {
-                dd($item);
                 $user = auth()->user();
                 $data = [
                     'linen_outstanding_rfid' => $item,
@@ -71,8 +70,8 @@ class OutstandingBatchRequest extends GeneralRequest
                     $data = array_merge($data, [
                         'linen_outstanding_product_id' => $slinen->item_linen_product_id ?? null,
                         'linen_outstanding_product_name' => $slinen->product->item_product_name ?? null,
-                        // 'linen_outstanding_ori_location_id' => $slinen->location_id,
-                        // 'linen_outstanding_ori_location_name' => $slinen->location_name ?? null,
+                        'linen_outstanding_ori_location_id' => $slinen->location_id,
+                        'linen_outstanding_ori_location_name' => $slinen->location_name ?? null,
                         'linen_outstanding_ori_company_id' => $slinen->company_id ?? null,
                         'linen_outstanding_ori_company_name' => $slinen->company_name ?? null,
                     ]);
@@ -114,7 +113,7 @@ class OutstandingBatchRequest extends GeneralRequest
         if (request()->get('type') == 'update') {
 
             return [
-                'linen_outstanding_status' => 'required|in:1,2,3',
+                'linen_outstanding_status' => 'required',
                 'rfid.*' => 'required|exists:item_linen,item_linen_rfid',
             ];
 

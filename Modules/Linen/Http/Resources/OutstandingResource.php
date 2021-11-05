@@ -15,8 +15,8 @@ class OutstandingResource extends JsonResource
      */
     public function toArray($request)
     {
-        $description = OutstandingFacades::description();
-        $status = OutstandingFacades::status();
+        $description = OutstandingFacades::mask_description();
+        $status = OutstandingFacades::mask_status();
         
         return [
             'linen_outstanding_id' => $this->linen_outstanding_id,

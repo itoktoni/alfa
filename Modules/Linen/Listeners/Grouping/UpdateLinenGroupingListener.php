@@ -42,7 +42,7 @@ class UpdateLinenGroupingListener
 
             OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid)
             ->update([
-                LinenFacades::mask_process() => TransactionStatus::Grouping,
+                LinenFacades::mask_latest() => TransactionStatus::Grouping,
             ]);
 
             $map = $rfid->map(function($item){

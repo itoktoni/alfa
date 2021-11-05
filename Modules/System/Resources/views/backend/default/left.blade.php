@@ -39,7 +39,7 @@
                                     @php
                                     $function_name = Helper::functionToLabel($data_action->system_action_function)->__toString();
                                     @endphp
-                                    {{ __($function_name) }}
+                                    {{ __(str_replace('Index', 'Data', $function_name)) }}
                                     {{ $menu->system_module_name == 'Module' ? __($menu->system_module_name.'s') : __($menu->system_module_name) }}
                                 </a>
                             </li>

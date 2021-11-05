@@ -154,7 +154,7 @@ class ReportLinenSummaryRepository extends LinenRepository implements FromView, 
         }
         
         $query->whereNull('item_linen_deleted_at')
-        ->addSelect(DB::raw('count(item_linen_id) as qty'))
+        ->addSelect(DB::raw('count(item_linen_rfid) as qty'))
         ->groupBy('item_linen_company_id', 'item_linen_product_id');
 
         

@@ -1,9 +1,5 @@
 @extends(Views::backend())
 
-@push('css')
-<link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-@endpush
-
 @push('js')
 <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 @endpush

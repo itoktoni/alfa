@@ -112,7 +112,7 @@ class RegisterLinenController extends Controller
                 $query->whereDate('item_linen_created_at','<=', $to);
             }
 
-            $preview =  $query->addSelect(DB::raw('count(item_linen_id) as qty'))
+            $preview =  $query->addSelect(DB::raw('count(item_linen_rfid) as qty'))
             ->groupBy('item_linen_company_id', 'item_linen_product_id')->get();
             
         }

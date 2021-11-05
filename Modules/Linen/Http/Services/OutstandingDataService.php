@@ -23,10 +23,10 @@ class OutstandingDataService extends DataService
                     'name' => 'list',
                     'message' => 'Data berhasil di ambil',
                     'data' => [
-                        'description' => collect(OutstandingFacades::description())->map(function($item, $key){
+                        'description' => collect(OutstandingFacades::mask_description())->map(function($item, $key){
                             return ['id' => strval($key), 'name' => $item[0]];
                         })->toArray(),
-                        'status' => collect(OutstandingFacades::status())->map(function($item, $key){
+                        'status' => collect(OutstandingFacades::mask_status())->map(function($item, $key){
                             return ['id' => strval($key), 'name' => $item[0]];
                         })->toArray(),
                     ]

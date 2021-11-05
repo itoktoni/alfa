@@ -23,6 +23,7 @@ class OutstandingResource extends JsonResource
             'linen_outstanding_id' => $this->linen_outstanding_id,
             'linen_outstanding_rfid' => $this->linen_outstanding_rfid,
             'linen_outstanding_status' => TransactionStatus::getDescription($this->linen_outstanding_status) ?? '',
+            'linen_outstanding_process' => TransactionStatus::getDescription($this->linen_outstanding_process) ?? '',
             'linen_outstanding_created_at' => $this->linen_outstanding_created_at->format('Y-m-d H:i:s') ?? null,
             'linen_outstanding_created_by' => $this->linen_outstanding_created_by ?? null,
             'linen_outstanding_created_name' => $this->linen_outstanding_created_name ?? null,

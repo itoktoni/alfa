@@ -41,9 +41,9 @@ class OutstandingBatchService
 
     public function update($repository, $data)
     {
-        $where = $data->data;
+        $where = $data->rfid;
         $update = $data->all();
-        unset($update['data']);
+        unset($update['rfid']);
         unset($update['type']);
         $pull = $repository->WhereIn('linen_outstanding_rfid', $where);
         $check = $pull->update($update);

@@ -22,7 +22,7 @@ class OutstandingBatchRequest extends GeneralRequest
         if (request()->get('type') != 'update') {
 
             $company = CompanyFacades::find($this->linen_outstanding_scan_company_id);
-            // $location = LocationFacades::find($this->linen_outstanding_scan_location_id);
+            $location = LocationFacades::find($this->linen_outstanding_scan_location_id);
             $session = $this->linen_outstanding_session;
             $status = $this->linen_outstanding_status ?? 1;
 
@@ -34,7 +34,7 @@ class OutstandingBatchRequest extends GeneralRequest
                 });
             }
 
-            $validate = collect($this->rfid)->mapWithKeys(function ($item) use ($linen, $company, $session, $status) {
+            $validate = collect($this->rfid)->mapWithKeys(function ($item) use ($linen, $company, $session, $status, $location) {
                 $user = auth()->user();
                 $data = [
                     'linen_outstanding_rfid' => $item,
@@ -45,8 +45,8 @@ class OutstandingBatchRequest extends GeneralRequest
                     'linen_outstanding_created_by' => $user->id,
                     'linen_outstanding_created_name' => $user->name,
                     'linen_outstanding_session' => $session,
-                    // 'linen_outstanding_scan_location_id' => $location->location_id ?? null,
-                    // 'linen_outstanding_scan_location_name' => $location->location_name ?? 'Beda Location',
+                    'linen_outstanding_scan_location_id' => $location->location_id ?? null,
+                    'linen_outstanding_scan_location_name' => $location->location_name ?? 'Beda Location',
                     'linen_outstanding_scan_company_id' => $company->company_id ?? null,
                     'linen_outstanding_scan_company_name' => $company->company_name ?? 'Beda Rumah Sakit',
                 ];
@@ -81,8 +81,8 @@ class OutstandingBatchRequest extends GeneralRequest
                     $data = array_merge($data, [
                         'linen_outstanding_product_id' => null,
                         'linen_outstanding_product_name' => null,
-                        // 'linen_outstanding_ori_location_id' => null,
-                        // 'linen_outstanding_ori_location_name' => null,
+                        'linen_outstanding_ori_location_id' => null,
+                        'linen_outstanding_ori_location_name' => null,
                         'linen_outstanding_ori_company_id' => null,
                         'linen_outstanding_ori_company_name' => null,
                         'linen_outstanding_description' => 2,
@@ -113,7 +113,7 @@ class OutstandingBatchRequest extends GeneralRequest
         if (request()->get('type') == 'update') {
 
             return [
-                'linen_outstanding_status' => 'required',
+                'linen_outstanding_process' => 'required',
                 'rfid.*' => 'required|exists:item_linen,item_linen_rfid',
             ];
 

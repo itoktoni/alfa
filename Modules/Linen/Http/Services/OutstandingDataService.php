@@ -32,7 +32,7 @@ class OutstandingDataService extends DataService
                     ]
                 ];
             }
-            
+            $request = request()->all();
             $filter = $this->filter;
             if(isset($request[OutstandingFacades::mask_status()])){
                 $status = $request[OutstandingFacades::mask_status()];
@@ -42,7 +42,6 @@ class OutstandingDataService extends DataService
                 $company = $request[OutstandingFacades::mask_company_ori()];
                 $filter = $filter->where(OutstandingFacades::mask_company_ori(), $company);
             }
-
             $response = $filter->get();
 
             // $pagination = request()->get('page') ? $this->filter->paginate(request()->get('limit') ?? config('website.pagination')) : $this->filter->get();

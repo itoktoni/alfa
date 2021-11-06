@@ -52,7 +52,7 @@ class LinenBersihController extends Controller
         
         if (request()->all()) {
             $preview = $service->data($linen, $request);
-            $query = self::$model->dataRepository()->with('detail');
+            $query = self::$model->dataRepository()->with('has_detail');
 
             if ($company_id = request()->get('company_id')) {
                 $query->where('linen_delivery_company_id', $company_id);
@@ -73,7 +73,7 @@ class LinenBersihController extends Controller
 
             // kotor
 
-            $query2 = KotorFacades::dataRepository()->with('detail');
+            $query2 = KotorFacades::dataRepository()->with('has_detail');
 
             if ($company_id = request()->get('company_id')) {
                 $query2->where('linen_kotor_company_id', $company_id);
@@ -100,14 +100,14 @@ class LinenBersihController extends Controller
             $kotor = $query2->first();
 
             $company = CompanyFacades::find(request()->get('company_id'));
-            $location = $company->locations ?? [];
-            $product = $company->products ?? [];
+            $location = $company->has_location ?? [];
+            $product = $company->has_product ?? [];
 
             $master = $query->first();
             $detail = [];
             if ($master) {
 
-                $detail = $master->detail()->get();
+                $detail = $master->has_detail()->get();
             }
 
             $date_from = Carbon::createFromFormat('Y-m-d', request()->get('from'));

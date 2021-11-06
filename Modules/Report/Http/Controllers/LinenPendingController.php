@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Item\Dao\Repositories\ProductRepository;
+use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Repositories\DeliveryRepository;
 use Modules\Report\Dao\Repositories\ReportLinenKotorHarianRepository;
@@ -41,8 +43,8 @@ class LinenPendingController extends Controller
         $product = Views::option(new ProductRepository());
         $location = Views::option(new LocationRepository());
         $user = Views::option(new TeamRepository());
-        $status = Views::status(self::$model->status, true);
-        $description = Views::status(self::$model->description, true);
+        $status = TransactionStatus::getOptions();
+        $description = LinenStatus::getOptions();
 
         $view = [
             'product' => $product,

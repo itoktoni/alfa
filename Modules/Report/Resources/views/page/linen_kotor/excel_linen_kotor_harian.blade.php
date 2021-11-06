@@ -1,7 +1,7 @@
 @if(!empty($detail))
 @php
-$linen_kotor = $detail->where('linen_kotor_detail_description', 1);
-$linen_beda_rs = $detail->where('linen_kotor_detail_description', 2);
+$linen_kotor = $detail->where('linen_kotor_detail_description', LinenStatus::LinenKotor);
+$linen_beda_rs = $detail->where('linen_kotor_detail_description', LinenStatus::BedaRs);
 $total_location = count($location)+6;
 $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
 @endphp
@@ -32,7 +32,6 @@ $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
         <td>Tanggal Linen Kotor : {{ $date_from->addDays(-1)->format('d/m/Y') ?? '' }} - {{ $date_to->addDays(-1)->format('d/m/Y') ?? '' }}</td>
     </tr>
 </table>
-
 @if(!empty($master))
 <table id="datatable" class="responsive table-striped table-condensed table-bordered table-hover">
     <thead>
@@ -42,7 +41,7 @@ $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
             @foreach($location as $loc)
             <td width="130">{{ $loc->location_name }}</td>
             @endforeach
-            <td width="100">Beda Rumah Sakit</td>
+            <td width="120">Beda Rumah Sakit</td>
             <td width="100">Total Kotor (Pcs)</td>
             <td width="100">(Kg) Kotor</td>
         </tr>

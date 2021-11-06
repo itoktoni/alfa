@@ -72,8 +72,8 @@ class LinenKotorController extends Controller
             $query->whereNull('linen_kotor_detail_deleted_at');
             
             $company = CompanyFacades::find(request()->get('company_id'));
-            $location = $company->locations ?? [];
-            $product = $company->products ?? [];
+            $location = $company->has_location ?? [];
+            $product = $company->has_product ?? [];
             
             $detail = [];
             if ($query->count() > 0) {

@@ -55,8 +55,8 @@ class ReportLinenBersihHarianRepository extends DeliveryRepository implements Fr
     public function __construct()
     {
         $this->company = CompanyFacades::find(request()->get('company_id'));
-        $location = $this->company->locations ?? [];
-        $product = $this->company->products ?? [];
+        $location = $this->company->has_location ?? [];
+        $product = $this->company->has_product ?? [];
 
         $this->location = $location;
         $this->product = $product;
@@ -98,7 +98,7 @@ class ReportLinenBersihHarianRepository extends DeliveryRepository implements Fr
 
     public function view(): View
     {
-        $query = $this->dataRepository()->with('detail');
+        $query = $this->dataRepository()->with('has_detail');
         
         if ($company_id = request()->get('company_id')) {
             $query->where('linen_delivery_company_id', $company_id);
@@ -120,7 +120,7 @@ class ReportLinenBersihHarianRepository extends DeliveryRepository implements Fr
 
         // kotor
 
-        $query2 = KotorFacades::dataRepository()->with('detail');
+        $query2 = KotorFacades::dataRepository()->with('has_detail');
         
         if ($company_id = request()->get('company_id')) {
             $query2->where('linen_kotor_company_id', $company_id);
@@ -151,7 +151,7 @@ class ReportLinenBersihHarianRepository extends DeliveryRepository implements Fr
 
         if($master){
 
-            $detail = $master->detail()->get();
+            $detail = $master->has_detail()->get();
         }
 
         $date_from = Carbon::createFromFormat('Y-m-d', request()->get('from'));

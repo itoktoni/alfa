@@ -62,8 +62,8 @@ class ReportLinenKotorHarianRepository extends KotorRepository implements FromVi
         // $this->delivery = new Delivery();
 
         $this->company = CompanyFacades::find(request()->get('company_id'));
-        $location = $this->company->locations ?? [];
-        $product = $this->company->products ?? [];
+        $location = $this->company->has_location ?? [];
+        $product = $this->company->has_product ?? [];
 
         $this->location = $location;
         $this->product = $product;

@@ -1,6 +1,6 @@
 @php
     $linen_delivery = $detail;
-    $linen_kotor = $kotor->detail ?? [];
+    $linen_kotor = $kotor->has_detail ?? [];
     $total_location = count($location)+6;
 @endphp
 @if(!empty($detail))

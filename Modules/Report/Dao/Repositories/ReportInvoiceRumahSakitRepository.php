@@ -76,7 +76,7 @@ class ReportInvoiceRumahSakitRepository extends DeliveryRepository implements Fr
 
     public function view(): View
     {
-        $query = $this->dataRepository()->with('detail');
+        $query = $this->dataRepository()->with('has_detail');
         
         // if ($company_id = request()->get('company_id')) {
         //     $query->where('linen_delivery_company_id', $company_id);

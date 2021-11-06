@@ -52,7 +52,7 @@ class InvoiceController extends Controller
 
     public function rumahSakit(Request $request, PreviewService $service)
     {
-        $linen = DeliveryFacades::dataRepository()->with('detail');
+        $linen = DeliveryFacades::dataRepository()->with('has_detail');
 
         $master = $detail = $previw = [];
         if ($key = request()->get('key')) {
@@ -63,7 +63,7 @@ class InvoiceController extends Controller
 
         if ($master) {
 
-            $detail = $master->detail()->get()->groupBy('linen_grouping_detail_product_id');
+            $detail = $master->has_detail()->get()->groupBy('linen_grouping_detail_product_id');
         }
 
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))->with($this->share([

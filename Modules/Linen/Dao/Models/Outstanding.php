@@ -18,7 +18,7 @@ class Outstanding extends Model
     use Userstamps, FilterQueryString;
 
     protected $table = 'linen_outstanding';
-    protected $primaryKey = 'linen_outstanding_id';
+    protected $primaryKey = 'linen_outstanding_rfid';
 
     protected $filters = [
         'linen_outstanding_scan_company_id',
@@ -31,7 +31,6 @@ class Outstanding extends Model
     ];
 
     protected $fillable = [
-        'linen_outstanding_id',
         'linen_outstanding_rfid',
         'linen_outstanding_status',
         'linen_outstanding_created_at',

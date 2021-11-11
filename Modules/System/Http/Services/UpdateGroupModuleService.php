@@ -30,6 +30,7 @@ class UpdateGroupModuleService extends UpdateService
         'patch' => 'POST',
         'master' => 'POST',
         'batch' => 'POST',
+        'sync' => 'POST',
         'download' => 'GET',
     ];
 
@@ -42,6 +43,7 @@ class UpdateGroupModuleService extends UpdateService
         'patch' => 1,
         'master' => 1,
         'batch' => 1,
+        'sync' => 1,
         'download' => 1,
     ];
 

@@ -15,10 +15,9 @@ class KotorDetail extends Model
     use SoftDeletes, Userstamps;
 
     protected $table = 'linen_kotor_detail';
-    protected $primaryKey = 'linen_kotor_detail_id';
+    protected $primaryKey = 'linen_kotor_detail_rfid';
 
     protected $fillable = [
-        'linen_kotor_detail_id',
         'linen_kotor_detail_rfid',
         'linen_kotor_detail_created_at',
         'linen_kotor_detail_downloaded_at',
@@ -41,6 +40,7 @@ class KotorDetail extends Model
         'linen_kotor_detail_ori_company_id',
         'linen_kotor_detail_ori_company_name',
         'linen_kotor_detail_description',
+        'linen_kotor_detail_form',
         'linen_kotor_detail_key',
     ];
 
@@ -75,7 +75,7 @@ class KotorDetail extends Model
 
     public $searching = 'linen_kotor_detail_retur';
     public $datatable = [
-        'linen_kotor_detail_id' => [false => 'Code', 'width' => 50],
+        'linen_kotor_detail_rfid' => [false => 'Code', 'width' => 50],
         'linen_kotor_detail_company_name' => [true => 'Company'],
         'linen_kotor_detail_location_name' => [true => 'Location'],
         'linen_kotor_detail_total' => [true => 'Total'],

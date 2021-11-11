@@ -11,11 +11,13 @@ use Modules\Linen\Dao\Models\kotor;
 use Modules\Linen\Dao\Models\kotorDetail;
 use Modules\Linen\Dao\Repositories\KotorRepository;
 use Modules\Linen\Http\Requests\KotorRequest;
+use Modules\Linen\Http\Requests\KotorSyncRequest;
 use Modules\Linen\Http\Requests\OutstandingBatchRequest;
 use Modules\Linen\Http\Requests\OutstandingMasterRequest;
 use Modules\Linen\Http\Services\KotorCreateService;
 use Modules\Linen\Http\Services\KotorDataService;
 use Modules\Linen\Http\Services\KotorSingleService;
+use Modules\Linen\Http\Services\KotorSyncService;
 use Modules\Linen\Http\Services\OutstandingBatchService;
 use Modules\Linen\Http\Services\OutstandingMasterService;
 use Modules\System\Dao\Repositories\CompanyRepository;
@@ -78,6 +80,12 @@ class KotorController extends Controller
     // }
 
     public function save(KotorRequest $request, KotorCreateService $service)
+    {
+        $data = $service->save(self::$model, $request);
+        return Response::redirectBack($data);
+    }
+
+    public function sync(KotorSyncRequest $request, KotorSyncService $service)
     {
         $data = $service->save(self::$model, $request);
         return Response::redirectBack($data);

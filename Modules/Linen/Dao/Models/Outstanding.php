@@ -94,7 +94,6 @@ class Outstanding extends Model
     public $datatable = [
         'linen_outstanding_session' => [false => 'No. Transaksi'],
         'linen_outstanding_key' => [true => 'No. Transaksi'],
-        'linen_outstanding_id' => [false => 'Code', 'width' => 50],
         'linen_outstanding_rfid' => [true => 'No. Seri RFID', 'width' => 180],
         'linen_outstanding_product_id' => [false => 'Product'],
         'linen_outstanding_product_name' => [true => 'Product'],

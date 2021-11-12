@@ -43,7 +43,6 @@ class SyncUpdateOutstanding extends Command
     public function handle()
     {
         $outstanding = DB::connection('server')->table('linen_outstanding')
-            ->where('linen_outstanding_status', TransactionStatus::Kotor)
             ->where('linen_outstanding_description', '!=', LinenStatus::BelumDiScan)
             ->whereNull('linen_outstanding_uploaded_at')
             ->limit(env('SYNC_LIMIT', 100))

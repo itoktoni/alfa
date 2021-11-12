@@ -109,13 +109,14 @@ if (Cache::has('routing')) {
 
             $rfid = request()->get('rfid');
             $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->update([
-                'linen_outstanding_status' => TransactionStatus::Gate,
+                'linen_outstanding_process' => TransactionStatus::Gate,
             ]);
             
             $map = collect($rfid)->map(function($item){
                 $data = [
                     'item_linen_detail_rfid' => $item,
                     'item_linen_detail_status' => LinenStatus::LinenKotor,
+                    'item_linen_detail_process' => LinenStatus::LinenKotor,
                     'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenKotor),
                     'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),

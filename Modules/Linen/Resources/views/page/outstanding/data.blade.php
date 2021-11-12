@@ -5,6 +5,16 @@
 @push('js')
 <script src="{{ Helper::backend('vendor/jquery-datatables/media/js/jquery.dataTables.min.js') }}"></script>
 @endpush
+
+@push('css')
+<style>
+#datatable tr td{
+    font-size: 11px;
+}
+
+</style>
+@endpush
+
 @push('javascript')
 {{-- for datatable and parse fields --}}
 <script>

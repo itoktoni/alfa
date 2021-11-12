@@ -102,7 +102,7 @@ class KotorSyncRequest extends GeneralRequest
 
             // GROUPING INTO KEY
             $group = collect($detail_kotor)->mapToGroups(function ($item) {
-                return [$item['linen_kotor_detail_key'] => $item];
+                return [$item['linen_kotor_detail_key'].$item['linen_kotor_detail_scan_company_id'].$item['linen_kotor_detail_scan_location_id'].$item['linen_kotor_detail_form'].$item['linen_kotor_detail_description'] => $item];
             });
 
             foreach ($group as $key => $fix_linen) {

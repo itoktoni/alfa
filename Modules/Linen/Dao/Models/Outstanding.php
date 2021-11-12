@@ -109,7 +109,7 @@ class Outstanding extends Model
         'linen_outstanding_created_at' => [false => 'Created At'],
         'name' => [true => 'Operator'],
         'linen_outstanding_status' => [true => 'Status', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
-        'linen_outstanding_process' => [true => 'Process', 'width' => 30, 'class' => 'text-center', 'status' => 'status'],
+        'linen_outstanding_process' => [true => 'Process', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
         'linen_outstanding_description' => [true => 'Description', 'width' => 100, 'class' => 'text-center', 'status' => 'description'],
     ];
 

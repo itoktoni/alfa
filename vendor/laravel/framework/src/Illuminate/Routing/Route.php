@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Route as SymfonyRoute;
 
 class Route
 {
-    use Macroable, RouteDependencyResolverTrait;
+    use CreatesRegularExpressionRouteConstraints, Macroable, RouteDependencyResolverTrait;
 
     /**
      * The URI pattern the route responds to.
@@ -92,6 +92,13 @@ class Route
      * @var array
      */
     protected $originalParameters;
+
+    /**
+     * Indicates "trashed" models can be retrieved when resolving implicit model bindings for this route.
+     *
+     * @var bool
+     */
+    protected $withTrashedBindings = false;
 
     /**
      * Indicates the maximum number of seconds the route should acquire a session lock for.
@@ -238,8 +245,7 @@ class Route
      */
     protected function isSerializedClosure()
     {
-        return is_string($this->action['uses']) &&
-               Str::startsWith($this->action['uses'], 'C:32:"Opis\\Closure\\SerializableClosure') !== false;
+        return RouteAction::containsSerializedClosure($this->action);
     }
 
     /**
@@ -303,7 +309,7 @@ class Route
     {
         $this->compileRoute();
 
-        foreach ($this->getValidators() as $validator) {
+        foreach (self::getValidators() as $validator) {
             if (! $includingMethod && $validator instanceof MethodValidator) {
                 continue;
             }
@@ -561,6 +567,29 @@ class Route
     }
 
     /**
+     * Allow "trashed" models to be retrieved when resolving implicit model bindings for this route.
+     *
+     * @param  bool  $withTrashed
+     * @return $this
+     */
+    public function withTrashed($withTrashed = true)
+    {
+        $this->withTrashedBindings = $withTrashed;
+
+        return $this;
+    }
+
+    /**
+     * Determines if the route allows "trashed" models to be retrieved when resolving implicit model bindings.
+     *
+     * @return bool
+     */
+    public function allowsTrashedBindings()
+    {
+        return $this->withTrashedBindings;
+    }
+
+    /**
      * Set a default value for the route.
      *
      * @param  string  $key
@@ -747,6 +776,8 @@ class Route
      */
     public function prefix($prefix)
     {
+        $prefix = $prefix ?? '';
+
         $this->updatePrefixOnAction($prefix);
 
         $uri = rtrim($prefix, '/').'/'.ltrim($this->uri, '/');
@@ -935,6 +966,34 @@ class Route
     }
 
     /**
+     * Get the value of the action that should be taken on a missing model exception.
+     *
+     * @return \Closure|null
+     */
+    public function getMissing()
+    {
+        $missing = $this->action['missing'] ?? null;
+
+        return is_string($missing) &&
+            Str::startsWith($missing, 'C:32:"Opis\\Closure\\SerializableClosure')
+                ? unserialize($missing)
+                : $missing;
+    }
+
+    /**
+     * Define the callable that should be invoked on a missing model exception.
+     *
+     * @param  \Closure  $missing
+     * @return $this
+     */
+    public function missing($missing)
+    {
+        $this->action['missing'] = $missing;
+
+        return $this;
+    }
+
+    /**
      * Get all middleware, including the ones from the controller.
      *
      * @return array
@@ -947,9 +1006,9 @@ class Route
 
         $this->computedMiddleware = [];
 
-        return $this->computedMiddleware = array_unique(array_merge(
+        return $this->computedMiddleware = Router::uniqueMiddleware(array_merge(
             $this->middleware(), $this->controllerMiddleware()
-        ), SORT_REGULAR);
+        ));
     }
 
     /**
@@ -1168,8 +1227,10 @@ class Route
     {
         if ($this->action['uses'] instanceof Closure) {
             $this->action['uses'] = serialize(new SerializableClosure($this->action['uses']));
+        }
 
-            // throw new LogicException("Unable to prepare route [{$this->uri}] for serialization. Uses Closure.");
+        if (isset($this->action['missing']) && $this->action['missing'] instanceof Closure) {
+            $this->action['missing'] = serialize(new SerializableClosure($this->action['missing']));
         }
 
         $this->compileRoute();

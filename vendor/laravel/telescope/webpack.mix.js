@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
 const webpack = require('webpack');
+const path = require('path');
 
 /*
  |--------------------------------------------------------------------------
@@ -23,10 +24,10 @@ mix.options({
 })
     .setPublicPath('public')
     .js('resources/js/app.js', 'public')
+    .vue()
     .sass('resources/sass/app.scss', 'public')
     .sass('resources/sass/app-dark.scss', 'public')
     .version()
-    .copy('public', '../../telescopetest/public/vendor/telescope')
     .webpackConfig({
         resolve: {
             symlinks: false,
@@ -34,5 +35,10 @@ mix.options({
                 '@': path.resolve(__dirname, 'resources/js/'),
             },
         },
-        plugins: [new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],
+        plugins: [
+            new webpack.IgnorePlugin({
+                resourceRegExp: /^\.\/locale$/,
+                contextRegExp: /moment$/,
+            }),
+        ],
     });

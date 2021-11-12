@@ -19,6 +19,7 @@ class Outstanding extends Model
 
     protected $table = 'linen_outstanding';
     protected $primaryKey = 'linen_outstanding_rfid';
+    protected $keyType = 'string';
 
     protected $filters = [
         'linen_outstanding_scan_company_id',

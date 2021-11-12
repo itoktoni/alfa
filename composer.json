@@ -25,7 +25,7 @@
         "kirschbaum-development/eloquent-power-joins": "^2.3",
         "larapack/config-writer": "1.*",
         "laravel-lang/lang": "~8.0",
-        "laravel/framework": "8.6.0",
+        "laravel/framework": "8.60.0",
         "laravel/legacy-factories": "^1.1",
         "laravel/sanctum": "^2.9",
         "laravel/telescope": "^4.4",

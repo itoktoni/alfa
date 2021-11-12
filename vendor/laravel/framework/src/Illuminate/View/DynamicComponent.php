@@ -30,15 +30,9 @@ class DynamicComponent extends Component
     protected static $componentClasses = [];
 
     /**
-     * The cached binding keys for component classes.
-     *
-     * @var array
-     */
-    protected static $bindings = [];
-
-    /**
      * Create a new component instance.
      *
+     * @param  string  $component
      * @return void
      */
     public function __construct(string $component)
@@ -49,7 +43,7 @@ class DynamicComponent extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\View\View|string
+     * @return \Illuminate\Contracts\View\View|string
      */
     public function render()
     {
@@ -126,7 +120,7 @@ EOF;
     protected function compileSlots(array $slots)
     {
         return collect($slots)->map(function ($slot, $name) {
-            return $name === '__default' ? null : '<x-slot name="'.$name.'">{{ $'.$name.' }}</x-slot>';
+            return $name === '__default' ? null : '<x-slot name="'.$name.'" '.((string) $slot->attributes).'>{{ $'.$name.' }}</x-slot>';
         })->filter()->implode(PHP_EOL);
     }
 
@@ -153,13 +147,9 @@ EOF;
      */
     protected function bindings(string $class)
     {
-        if (! isset(static::$bindings[$class])) {
-            [$data, $attributes] = $this->compiler()->partitionDataAndAttributes($class, $this->attributes->getAttributes());
+        [$data, $attributes] = $this->compiler()->partitionDataAndAttributes($class, $this->attributes->getAttributes());
 
-            static::$bindings[$class] = array_keys($data->all());
-        }
-
-        return static::$bindings[$class];
+        return array_keys($data->all());
     }
 
     /**

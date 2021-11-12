@@ -4,6 +4,7 @@ import axios from 'axios';
 import Routes from './routes';
 import VueRouter from 'vue-router';
 import VueJsonPretty from 'vue-json-pretty';
+import 'vue-json-pretty/lib/styles.css';
 import moment from 'moment-timezone';
 
 require('bootstrap');
@@ -80,6 +81,12 @@ new Vue({
 
             window.Telescope.recording = !Telescope.recording;
             this.recording = !this.recording;
+        },
+
+        clearEntries() {
+            if (confirm('Are you sure you want to delete all Telescope data?')) {
+                axios.delete(Telescope.basePath + '/telescope-api/entries').then((response) => location.reload());
+            }
         },
     },
 });

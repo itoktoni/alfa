@@ -115,13 +115,17 @@ class KotorSyncRequest extends GeneralRequest
             }
         }
 
-        $outstanding_search = OutstandingFacades::select(OutstandingFacades::mask_rfid())->whereIn(OutstandingFacades::mask_rfid(), $rfid)->get();
-        $pluck = $outstanding_search->pluck(OutstandingFacades::mask_rfid())->toArray();
-        if($pluck){
+        // $outstanding_search = OutstandingFacades::select(OutstandingFacades::mask_rfid())->whereIn(OutstandingFacades::mask_rfid(), $rfid)->get();
+        // $pluck = $outstanding_search->pluck(OutstandingFacades::mask_rfid())->toArray();
+        // if($pluck){
 
-            $data_outstanding = collect($data_outstanding)->whereNotIn(OutstandingFacades::mask_rfid(), $pluck)->toArray();
-        }
-
+        //     $data_outstanding = collect($data_outstanding)->whereNotIn(OutstandingFacades::mask_rfid(), $pluck)->toArray();
+        // }
+        // else{
+        //     $data_outstanding = 
+        // }
+        // dd($data_outstanding);
+        
         $this->merge([
             'kotor' => $request,
             'outstanding' => $data_outstanding,

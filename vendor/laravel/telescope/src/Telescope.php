@@ -8,12 +8,10 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Testing\Fakes\EventFake;
 use Laravel\Telescope\Contracts\EntriesRepository;
 use Laravel\Telescope\Contracts\TerminableRepository;
-use RuntimeException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
@@ -144,11 +142,23 @@ class Telescope
 
         static::registerMailableTagExtractor();
 
-        if (static::runningApprovedArtisanCommand($app) ||
-            static::handlingApprovedRequest($app)
+        if (! static::runningWithinOctane($app) &&
+            (static::runningApprovedArtisanCommand($app) ||
+            static::handlingApprovedRequest($app))
         ) {
             static::startRecording();
         }
+    }
+
+    /**
+     * Determine if Telescope is running within Octane.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return bool
+     */
+    protected static function runningWithinOctane($app)
+    {
+        return isset($_SERVER['LARAVEL_OCTANE']);
     }
 
     /**
@@ -190,18 +200,46 @@ class Telescope
             return false;
         }
 
+        return static::requestIsToApprovedDomain($app['request']) &&
+            static::requestIsToApprovedUri($app['request']);
+    }
+
+    /**
+     * Determine if the request is to an approved domain.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected static function requestIsToApprovedDomain($request): bool
+    {
+        return is_null(config('telescope.domain')) ||
+            config('telescope.domain') !== $request->getHost();
+    }
+
+    /**
+     * Determine if the request is to an approved URI.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected static function requestIsToApprovedUri($request)
+    {
         if (! empty($only = config('telescope.only_paths', []))) {
-            return $app['request']->is($only);
+            return $request->is($only);
         }
 
-        return ! $app['request']->is(
-            array_merge([
-                config('telescope.path').'*',
+        return ! $request->is(
+            collect([
                 'telescope-api*',
                 'vendor/telescope*',
                 'horizon*',
                 'vendor/horizon*',
-            ], config('telescope.ignore_paths', []))
+            ])
+            ->merge(config('telescope.ignore_paths', []))
+            ->unless(is_null(config('telescope.path')), function ($paths) {
+                return $paths->prepend(config('telescope.path').'*');
+            })
+            ->all()
         );
     }
 
@@ -239,9 +277,11 @@ class Telescope
 
         static::$shouldRecord = false;
 
-        call_user_func($callback);
-
-        static::$shouldRecord = $shouldRecord;
+        try {
+            call_user_func($callback);
+        } finally {
+            static::$shouldRecord = $shouldRecord;
+        }
     }
 
     /**
@@ -488,6 +528,17 @@ class Telescope
     public static function recordView(IncomingEntry $entry)
     {
         static::record(EntryType::VIEW, $entry);
+    }
+
+    /**
+     * Record the given entry.
+     *
+     * @param  \Laravel\Telescope\IncomingEntry  $entry
+     * @return void
+     */
+    public static function recordClientRequest(IncomingEntry $entry)
+    {
+        static::record(EntryType::CLIENT_REQUEST, $entry);
     }
 
     /**
@@ -764,23 +815,5 @@ class Telescope
         static::$runsMigrations = false;
 
         return new static;
-    }
-
-    /**
-     * Check if assets are up-to-date.
-     *
-     * @return bool
-     *
-     * @throws \RuntimeException
-     */
-    public static function assetsAreCurrent()
-    {
-        $publishedPath = public_path('vendor/telescope/mix-manifest.json');
-
-        if (! File::exists($publishedPath)) {
-            throw new RuntimeException('The Telescope assets are not published. Please run: php artisan telescope:publish');
-        }
-
-        return File::get($publishedPath) === File::get(__DIR__.'/../public/mix-manifest.json');
     }
 }

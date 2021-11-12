@@ -74,6 +74,8 @@ class Builder
      *
      * @param  string  $type
      * @return void
+     *
+     * @throws \InvalidArgumentException
      */
     public static function defaultMorphKeyType(string $type)
     {
@@ -92,6 +94,32 @@ class Builder
     public static function morphUsingUuids()
     {
         return static::defaultMorphKeyType('uuid');
+    }
+
+    /**
+     * Create a database in the schema.
+     *
+     * @param  string  $name
+     * @return bool
+     *
+     * @throws \LogicException
+     */
+    public function createDatabase($name)
+    {
+        throw new LogicException('This database driver does not support creating databases.');
+    }
+
+    /**
+     * Drop a database from the schema if the database exists.
+     *
+     * @param  string  $name
+     * @return bool
+     *
+     * @throws \LogicException
+     */
+    public function dropDatabaseIfExists($name)
+    {
+        throw new LogicException('This database driver does not support dropping databases.');
     }
 
     /**
@@ -224,6 +252,20 @@ class Builder
         $this->build(tap($this->createBlueprint($table), function ($blueprint) {
             $blueprint->dropIfExists();
         }));
+    }
+
+    /**
+     * Drop columns from a table schema.
+     *
+     * @param  string  $table
+     * @param  string|array  $columns
+     * @return void
+     */
+    public function dropColumns($table, $columns)
+    {
+        $this->table($table, function (Blueprint $blueprint) use ($columns) {
+            $blueprint->dropColumn($columns);
+        });
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Linen\Dao\Facades\CardFacades;
 use Modules\Linen\Dao\Facades\KotorDetailFacades;
 use Modules\Linen\Dao\Facades\KotorFacades;
+use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Facades\StockFacades;
 use Modules\Linen\Dao\Models\KotorDetail;
 use Modules\Linen\Dao\Models\Outstanding;
@@ -20,27 +21,25 @@ class KotorSyncService
         $check = false;
         // DB::beginTransaction();
         try {
-            
-            if(!empty($data->get('kotor'))){
-                foreach($data->get('kotor') as $key => $kotor){
-
+            if(!empty($data['kotor'])){
+                foreach($data['kotor'] as $key => $kotor){
                     $master_kotor = KotorFacades::find($key);
                     if(empty($master_kotor)){
-                        $repository->saveRepository($master_kotor);
+                        $repository->saveRepository($kotor);
                     }
-
+                    
                     KotorDetail::upsert($kotor['detail'], [
-                        'linen_opname_detail_rfid',
-                        'linen_opname_detail_key'
+                        'linen_kotor_detail_rfid',
+                        'linen_kotor_detail_key'
                     ]);
                 }
             }
             if(!empty($data['outstanding'])){
 
-                Outstanding::upsert($data['outstanding']);
+                Outstanding::upsert($data['outstanding'], ['linen_kotor_detail_rfid']);
             }
 
-            $list_rfid = collect($data->get('data'));
+            $list_rfid = collect($data['data']);
             $return = KotorDetailFacades::select('linen_kotor_detail_rfid')->whereIn(KotorDetailFacades::mask_rfid(), $list_rfid->pluck('linen_rfid')->toArray())->get();
             
             $map = $list_rfid->map(function($item) use($return){

@@ -60,7 +60,6 @@ if (Cache::has('routing')) {
             $outstanding = OutstandingFacades::dataRepository()->select([
                 'linen_outstanding_key',
                 'linen_outstanding_rfid',
-                'linen_outstanding_status',
                 'linen_outstanding_created_at',
                 'linen_outstanding_updated_at',
                 'linen_outstanding_deleted_at',
@@ -79,6 +78,8 @@ if (Cache::has('routing')) {
                 'linen_outstanding_ori_location_name',
                 'linen_outstanding_ori_company_id',
                 'linen_outstanding_ori_company_name',
+                'linen_outstanding_status',
+                'linen_outstanding_process',
                 'linen_outstanding_description',
 
             ])->whereNull('linen_outstanding_downloaded_at')->limit($limit)->get();

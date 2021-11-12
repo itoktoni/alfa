@@ -21,7 +21,7 @@ trait HasDatabaseNotifications
      */
     public function readNotifications()
     {
-        return $this->notifications()->read();
+        return $this->notifications()->whereNotNull('read_at');
     }
 
     /**
@@ -31,6 +31,6 @@ trait HasDatabaseNotifications
      */
     public function unreadNotifications()
     {
-        return $this->notifications()->unread();
+        return $this->notifications()->whereNull('read_at');
     }
 }

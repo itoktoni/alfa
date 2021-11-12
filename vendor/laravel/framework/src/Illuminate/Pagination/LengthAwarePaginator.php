@@ -34,7 +34,7 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
      * @param  int  $total
      * @param  int  $perPage
      * @param  int|null  $currentPage
-     * @param  array  $options  (path, query, fragment, pageName)
+     * @param  array  $options (path, query, fragment, pageName)
      * @return void
      */
     public function __construct($items, $total, $perPage, $currentPage = null, array $options = [])
@@ -99,7 +99,7 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
      *
      * @return \Illuminate\Support\Collection
      */
-    public function linkCollection()
+    protected function linkCollection()
     {
         return collect($this->elements())->flatMap(function ($item) {
             if (! is_array($item)) {
@@ -109,17 +109,17 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
             return collect($item)->map(function ($url, $page) {
                 return [
                     'url' => $url,
-                    'label' => (string) $page,
+                    'label' => $page,
                     'active' => $this->currentPage() === $page,
                 ];
             });
         })->prepend([
             'url' => $this->previousPageUrl(),
-            'label' => function_exists('__') ? __('pagination.previous') : 'Previous',
+            'label' => 'Previous',
             'active' => false,
         ])->push([
             'url' => $this->nextPageUrl(),
-            'label' => function_exists('__') ? __('pagination.next') : 'Next',
+            'label' => 'Next',
             'active' => false,
         ]);
     }
@@ -213,7 +213,6 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
      *
      * @return array
      */
-    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();

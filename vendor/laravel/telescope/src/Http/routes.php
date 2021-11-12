@@ -72,10 +72,6 @@ Route::get('/telescope-api/schedule/{telescopeEntryId}', 'ScheduleController@sho
 Route::post('/telescope-api/redis', 'RedisController@index');
 Route::get('/telescope-api/redis/{telescopeEntryId}', 'RedisController@show');
 
-// Client Requests entries...
-Route::post('/telescope-api/client-requests', 'ClientRequestController@index');
-Route::get('/telescope-api/client-requests/{telescopeEntryId}', 'ClientRequestController@show');
-
 // Monitored Tags...
 Route::get('/telescope-api/monitored-tags', 'MonitoredTagController@index');
 Route::post('/telescope-api/monitored-tags/', 'MonitoredTagController@store');
@@ -83,8 +79,5 @@ Route::post('/telescope-api/monitored-tags/delete', 'MonitoredTagController@dest
 
 // Toggle Recording...
 Route::post('/telescope-api/toggle-recording', 'RecordingController@toggle');
-
-// Clear Entries...
-Route::delete('/telescope-api/entries', 'EntriesController@destroy');
 
 Route::get('/{view?}', 'HomeController@index')->where('view', '(.*)')->name('telescope');

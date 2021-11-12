@@ -18,9 +18,6 @@ class TelescopeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerCommands();
-        $this->registerPublishing();
-
         if (! config('telescope.enabled')) {
             return;
         }
@@ -29,6 +26,7 @@ class TelescopeServiceProvider extends ServiceProvider
 
         $this->registerRoutes();
         $this->registerMigrations();
+        $this->registerPublishing();
 
         Telescope::start($this->app);
         Telescope::listenForStorageOpportunities($this->app);
@@ -91,7 +89,7 @@ class TelescopeServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/../public' => public_path('vendor/telescope'),
-            ], ['telescope-assets', 'laravel-assets']);
+            ], 'telescope-assets');
 
             $this->publishes([
                 __DIR__.'/../config/telescope.php' => config_path('telescope.php'),
@@ -100,23 +98,6 @@ class TelescopeServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../stubs/TelescopeServiceProvider.stub' => app_path('Providers/TelescopeServiceProvider.php'),
             ], 'telescope-provider');
-        }
-    }
-
-    /**
-     * Register the package's commands.
-     *
-     * @return void
-     */
-    protected function registerCommands()
-    {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                Console\ClearCommand::class,
-                Console\InstallCommand::class,
-                Console\PruneCommand::class,
-                Console\PublishCommand::class,
-            ]);
         }
     }
 
@@ -132,6 +113,13 @@ class TelescopeServiceProvider extends ServiceProvider
         );
 
         $this->registerStorageDriver();
+
+        $this->commands([
+            Console\ClearCommand::class,
+            Console\InstallCommand::class,
+            Console\PruneCommand::class,
+            Console\PublishCommand::class,
+        ]);
     }
 
     /**

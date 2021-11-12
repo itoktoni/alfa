@@ -19,18 +19,6 @@ trait Authorizable
     }
 
     /**
-     * Determine if the entity has any of the given abilities.
-     *
-     * @param  iterable|string  $abilities
-     * @param  array|mixed  $arguments
-     * @return bool
-     */
-    public function canAny($abilities, $arguments = [])
-    {
-        return app(Gate::class)->forUser($this)->any($abilities, $arguments);
-    }
-
-    /**
      * Determine if the entity does not have the given abilities.
      *
      * @param  iterable|string  $abilities

@@ -2,7 +2,6 @@
 
 namespace Illuminate\Http\Resources;
 
-use Illuminate\Pagination\AbstractCursorPaginator;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -31,7 +30,7 @@ trait CollectsResources
             ? $resource->mapInto($collects)
             : $resource->toBase();
 
-        return ($resource instanceof AbstractPaginator || $resource instanceof AbstractCursorPaginator)
+        return $resource instanceof AbstractPaginator
                     ? $resource->setCollection($this->collection)
                     : $this->collection;
     }
@@ -48,8 +47,7 @@ trait CollectsResources
         }
 
         if (Str::endsWith(class_basename($this), 'Collection') &&
-            (class_exists($class = Str::replaceLast('Collection', '', get_class($this))) ||
-             class_exists($class = Str::replaceLast('Collection', 'Resource', get_class($this))))) {
+            class_exists($class = Str::replaceLast('Collection', '', get_class($this)))) {
             return $class;
         }
     }
@@ -59,7 +57,6 @@ trait CollectsResources
      *
      * @return \ArrayIterator
      */
-    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->collection->getIterator();

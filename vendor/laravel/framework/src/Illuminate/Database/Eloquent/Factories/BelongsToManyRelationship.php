@@ -3,14 +3,13 @@
 namespace Illuminate\Database\Eloquent\Factories;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 class BelongsToManyRelationship
 {
     /**
      * The related factory instance.
      *
-     * @var \Illuminate\Database\Eloquent\Factories\Factory|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model
+     * @var \Illuminate\Database\Eloquent\Factories\Factory
      */
     protected $factory;
 
@@ -31,12 +30,12 @@ class BelongsToManyRelationship
     /**
      * Create a new attached relationship definition.
      *
-     * @param  \Illuminate\Database\Eloquent\Factories\Factory|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model  $factory
+     * @param  \Illuminate\Database\Eloquent\Factories\Factory  $factory
      * @param  callable|array  $pivot
      * @param  string  $relationship
      * @return void
      */
-    public function __construct($factory, $pivot, $relationship)
+    public function __construct(Factory $factory, $pivot, $relationship)
     {
         $this->factory = $factory;
         $this->pivot = $pivot;
@@ -51,7 +50,7 @@ class BelongsToManyRelationship
      */
     public function createFor(Model $model)
     {
-        Collection::wrap($this->factory instanceof Factory ? $this->factory->create([], $model) : $this->factory)->each(function ($attachable) use ($model) {
+        $this->factory->create([], $model)->each(function ($attachable) use ($model) {
             $model->{$this->relationship}()->attach(
                 $attachable,
                 is_callable($this->pivot) ? call_user_func($this->pivot, $model) : $this->pivot

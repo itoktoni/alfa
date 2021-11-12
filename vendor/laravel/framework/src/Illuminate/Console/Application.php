@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -76,8 +77,6 @@ class Application extends SymfonyApplication implements ApplicationContract
 
     /**
      * {@inheritdoc}
-     *
-     * @return int
      */
     public function run(InputInterface $input = null, OutputInterface $output = null)
     {
@@ -87,7 +86,7 @@ class Application extends SymfonyApplication implements ApplicationContract
 
         $this->events->dispatch(
             new CommandStarting(
-                $commandName, $input, $output = $output ?: new BufferedConsoleOutput
+                $commandName, $input, $output = $output ?: new ConsoleOutput
             )
         );
 

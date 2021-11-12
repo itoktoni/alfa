@@ -18,11 +18,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 use Illuminate\Support\Traits\Macroable;
 use JsonSerializable;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
-use ReflectionClass;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -117,7 +115,7 @@ class Router implements BindingRegistrar, RegistrarContract
     /**
      * All of the verbs supported by the router.
      *
-     * @var string[]
+     * @var array
      */
     public static $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
 
@@ -646,8 +644,6 @@ class Router implements BindingRegistrar, RegistrarContract
     {
         $this->current = $route = $this->routes->match($request);
 
-        $route->setContainer($this->container);
-
         $this->container->instance(Route::class, $route);
 
         return $route;
@@ -705,36 +701,14 @@ class Router implements BindingRegistrar, RegistrarContract
      */
     public function gatherRouteMiddleware(Route $route)
     {
-        $computedMiddleware = $route->gatherMiddleware();
-
         $excluded = collect($route->excludedMiddleware())->map(function ($name) {
             return (array) MiddlewareNameResolver::resolve($name, $this->middleware, $this->middlewareGroups);
         })->flatten()->values()->all();
 
-        $middleware = collect($computedMiddleware)->map(function ($name) {
+        $middleware = collect($route->gatherMiddleware())->map(function ($name) {
             return (array) MiddlewareNameResolver::resolve($name, $this->middleware, $this->middlewareGroups);
         })->flatten()->reject(function ($name) use ($excluded) {
-            if (empty($excluded)) {
-                return false;
-            }
-
-            if ($name instanceof Closure) {
-                return false;
-            }
-
-            if (in_array($name, $excluded, true)) {
-                return true;
-            }
-
-            if (! class_exists($name)) {
-                return false;
-            }
-
-            $reflection = new ReflectionClass($name);
-
-            return collect($excluded)->contains(function ($exclude) use ($reflection) {
-                return class_exists($exclude) && $reflection->isSubclassOf($exclude);
-            });
+            return in_array($name, $excluded, true);
         })->values();
 
         return $this->sortMiddleware($middleware);
@@ -780,14 +754,11 @@ class Router implements BindingRegistrar, RegistrarContract
             $response = (new HttpFoundationFactory)->createResponse($response);
         } elseif ($response instanceof Model && $response->wasRecentlyCreated) {
             $response = new JsonResponse($response, 201);
-        } elseif ($response instanceof Stringable) {
-            $response = new Response($response->__toString(), 200, ['Content-Type' => 'text/html']);
         } elseif (! $response instanceof SymfonyResponse &&
                    ($response instanceof Arrayable ||
                     $response instanceof Jsonable ||
                     $response instanceof ArrayObject ||
                     $response instanceof JsonSerializable ||
-                    $response instanceof \stdClass ||
                     is_array($response))) {
             $response = new JsonResponse($response);
         } elseif (! $response instanceof SymfonyResponse) {
@@ -959,18 +930,6 @@ class Router implements BindingRegistrar, RegistrarContract
     }
 
     /**
-     * Flush the router's middleware groups.
-     *
-     * @return $this
-     */
-    public function flushMiddlewareGroups()
-    {
-        $this->middlewareGroups = [];
-
-        return $this;
-    }
-
-    /**
      * Add a new route parameter binder.
      *
      * @param  string  $key
@@ -1090,7 +1049,7 @@ class Router implements BindingRegistrar, RegistrarContract
     /**
      * Get the currently dispatched route instance.
      *
-     * @return \Illuminate\Routing\Route|null
+     * @return \Illuminate\Routing\Route
      */
     public function getCurrentRoute()
     {
@@ -1274,42 +1233,6 @@ class Router implements BindingRegistrar, RegistrarContract
     }
 
     /**
-     * Remove any duplicate middleware from the given array.
-     *
-     * @param  array  $middleware
-     * @return array
-     */
-    public static function uniqueMiddleware(array $middleware)
-    {
-        $seen = [];
-        $result = [];
-
-        foreach ($middleware as $value) {
-            $key = \is_object($value) ? \spl_object_id($value) : $value;
-
-            if (! isset($seen[$key])) {
-                $seen[$key] = true;
-                $result[] = $value;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Set the container instance used by the router.
-     *
-     * @param  \Illuminate\Container\Container  $container
-     * @return $this
-     */
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-
-        return $this;
-    }
-
-    /**
      * Dynamically handle calls into the router instance.
      *
      * @param  string  $method
@@ -1326,6 +1249,6 @@ class Router implements BindingRegistrar, RegistrarContract
             return (new RouteRegistrar($this))->attribute($method, is_array($parameters[0]) ? $parameters[0] : $parameters);
         }
 
-        return (new RouteRegistrar($this))->attribute($method, array_key_exists(0, $parameters) ? $parameters[0] : true);
+        return (new RouteRegistrar($this))->attribute($method, $parameters[0]);
     }
 }

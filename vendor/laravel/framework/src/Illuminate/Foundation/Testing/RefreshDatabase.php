@@ -79,15 +79,11 @@ trait RefreshDatabase
      */
     protected function migrateFreshUsing()
     {
-        $seeder = $this->seeder();
-
-        return array_merge(
-            [
-                '--drop-views' => $this->shouldDropViews(),
-                '--drop-types' => $this->shouldDropTypes(),
-            ],
-            $seeder ? ['--seeder' => $seeder] : ['--seed' => $this->shouldSeed()]
-        );
+        return [
+            '--drop-views' => $this->shouldDropViews(),
+            '--drop-types' => $this->shouldDropTypes(),
+            '--seed' => $this->shouldSeed(),
+        ];
     }
 
     /**
@@ -160,15 +156,5 @@ trait RefreshDatabase
     protected function shouldSeed()
     {
         return property_exists($this, 'seed') ? $this->seed : false;
-    }
-
-    /**
-     * Determine the specific seeder class that should be used when refreshing the database.
-     *
-     * @return mixed
-     */
-    protected function seeder()
-    {
-        return property_exists($this, 'seeder') ? $this->seeder : false;
     }
 }

@@ -33,16 +33,6 @@ trait ResponseTrait
     }
 
     /**
-     * Get the status text for the response.
-     *
-     * @return string
-     */
-    public function statusText()
-    {
-        return $this->statusText;
-    }
-
-    /**
      * Get the content of the response.
      *
      * @return string
@@ -106,7 +96,7 @@ trait ResponseTrait
      */
     public function cookie($cookie)
     {
-        return $this->withCookie(...func_get_args());
+        return call_user_func_array([$this, 'withCookie'], func_get_args());
     }
 
     /**
@@ -118,26 +108,7 @@ trait ResponseTrait
     public function withCookie($cookie)
     {
         if (is_string($cookie) && function_exists('cookie')) {
-            $cookie = cookie(...func_get_args());
-        }
-
-        $this->headers->setCookie($cookie);
-
-        return $this;
-    }
-
-    /**
-     * Expire a cookie when sending the response.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Cookie|mixed  $cookie
-     * @param  string|null  $path
-     * @param  string|null  $domain
-     * @return $this
-     */
-    public function withoutCookie($cookie, $path = null, $domain = null)
-    {
-        if (is_string($cookie) && function_exists('cookie')) {
-            $cookie = cookie($cookie, null, -2628000, $path, $domain);
+            $cookie = call_user_func_array('cookie', func_get_args());
         }
 
         $this->headers->setCookie($cookie);

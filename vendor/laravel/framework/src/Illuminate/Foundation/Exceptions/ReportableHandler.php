@@ -42,11 +42,7 @@ class ReportableHandler
      */
     public function __invoke(Throwable $e)
     {
-        $result = call_user_func($this->callback, $e);
-
-        if ($result === false) {
-            return false;
-        }
+        call_user_func($this->callback, $e);
 
         return ! $this->shouldStop;
     }
@@ -59,13 +55,7 @@ class ReportableHandler
      */
     public function handles(Throwable $e)
     {
-        foreach ($this->firstClosureParameterTypes($this->callback) as $type) {
-            if (is_a($e, $type)) {
-                return true;
-            }
-        }
-
-        return false;
+        return is_a($e, $this->firstClosureParameterType($this->callback));
     }
 
     /**

@@ -5,7 +5,6 @@ namespace Illuminate\Session\Middleware;
 use Closure;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
@@ -57,11 +56,11 @@ class StartSession
         $session = $this->getSession($request);
 
         if ($this->manager->shouldBlock() ||
-            ($request->route() instanceof Route && $request->route()->locksFor())) {
+            ($request->route() && $request->route()->locksFor())) {
             return $this->handleRequestWhileBlocking($request, $session, $next);
+        } else {
+            return $this->handleStatefulRequest($request, $session, $next);
         }
-
-        return $this->handleStatefulRequest($request, $session, $next);
     }
 
     /**
@@ -74,10 +73,6 @@ class StartSession
      */
     protected function handleRequestWhileBlocking(Request $request, $session, Closure $next)
     {
-        if (! $request->route() instanceof Route) {
-            return;
-        }
-
         $lockFor = $request->route() && $request->route()->locksFor()
                         ? $request->route()->locksFor()
                         : 10;
@@ -200,7 +195,7 @@ class StartSession
     protected function storeCurrentUrl(Request $request, $session)
     {
         if ($request->method() === 'GET' &&
-            $request->route() instanceof Route &&
+            $request->route() &&
             ! $request->ajax() &&
             ! $request->prefetch()) {
             $session->setPreviousUrl($request->fullUrl());

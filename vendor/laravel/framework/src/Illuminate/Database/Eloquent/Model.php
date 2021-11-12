@@ -3,15 +3,13 @@
 namespace Illuminate\Database\Eloquent;
 
 use ArrayAccess;
-use Illuminate\Contracts\Broadcasting\HasBroadcastChannel;
+use Exception;
 use Illuminate\Contracts\Queue\QueueableCollection;
 use Illuminate\Contracts\Queue\QueueableEntity;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Support\CanBeEscapedWhenCastToString;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -21,9 +19,8 @@ use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
 use JsonSerializable;
-use LogicException;
 
-abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToString, HasBroadcastChannel, Jsonable, JsonSerializable, QueueableEntity, UrlRoutable
+abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializable, QueueableEntity, UrlRoutable
 {
     use Concerns\HasAttributes,
         Concerns\HasEvents,
@@ -84,13 +81,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     protected $withCount = [];
 
     /**
-     * Indicates whether lazy loading will be prevented on this model.
-     *
-     * @var bool
-     */
-    public $preventsLazyLoading = false;
-
-    /**
      * The number of models to return for pagination.
      *
      * @var int
@@ -110,13 +100,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @var bool
      */
     public $wasRecentlyCreated = false;
-
-    /**
-     * Indicates that the object's string representation should be escaped when __toString is invoked.
-     *
-     * @var bool
-     */
-    protected $escapeWhenCastingToString = false;
 
     /**
      * The connection resolver instance.
@@ -161,37 +144,16 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     protected static $ignoreOnTouch = [];
 
     /**
-     * Indicates whether lazy loading should be restricted on all models.
-     *
-     * @var bool
-     */
-    protected static $modelsShouldPreventLazyLoading = false;
-
-    /**
-     * The callback that is responsible for handling lazy loading violations.
-     *
-     * @var callable|null
-     */
-    protected static $lazyLoadingViolationCallback;
-
-    /**
-     * Indicates if broadcasting is currently enabled.
-     *
-     * @var bool
-     */
-    protected static $isBroadcasting = true;
-
-    /**
      * The name of the "created at" column.
      *
-     * @var string|null
+     * @var string
      */
     const CREATED_AT = 'created_at';
 
     /**
      * The name of the "updated at" column.
      *
-     * @var string|null
+     * @var string
      */
     const UPDATED_AT = 'updated_at';
 
@@ -371,47 +333,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     }
 
     /**
-     * Prevent model relationships from being lazy loaded.
-     *
-     * @param  bool  $value
-     * @return void
-     */
-    public static function preventLazyLoading($value = true)
-    {
-        static::$modelsShouldPreventLazyLoading = $value;
-    }
-
-    /**
-     * Register a callback that is responsible for handling lazy loading violations.
-     *
-     * @param  callable  $callback
-     * @return void
-     */
-    public static function handleLazyLoadingViolationUsing(callable $callback)
-    {
-        static::$lazyLoadingViolationCallback = $callback;
-    }
-
-    /**
-     * Execute a callback without broadcasting any model events for all model types.
-     *
-     * @param  callable  $callback
-     * @return mixed
-     */
-    public static function withoutBroadcasting(callable $callback)
-    {
-        $isBroadcasting = static::$isBroadcasting;
-
-        static::$isBroadcasting = false;
-
-        try {
-            return $callback();
-        } finally {
-            static::$isBroadcasting = $isBroadcasting;
-        }
-    }
-
-    /**
      * Fill the model with an array of attributes.
      *
      * @param  array  $attributes
@@ -466,19 +387,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         }
 
         return $this->getTable().'.'.$column;
-    }
-
-    /**
-     * Qualify the given columns with the model's table.
-     *
-     * @param  array  $columns
-     * @return array
-     */
-    public function qualifyColumns($columns)
-    {
-        return collect($columns)->map(function ($column) {
-            return $this->qualifyColumn($column);
-        })->all();
     }
 
     /**
@@ -608,10 +516,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function loadMorph($relation, $relations)
     {
-        if (! $this->{$relation}) {
-            return $this;
-        }
-
         $className = get_class($this->{$relation});
 
         $this->{$relation}->load($relations[$className] ?? []);
@@ -635,21 +539,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     }
 
     /**
-     * Eager load relation's column aggregations on the model.
-     *
-     * @param  array|string  $relations
-     * @param  string  $column
-     * @param  string  $function
-     * @return $this
-     */
-    public function loadAggregate($relations, $column, $function = null)
-    {
-        $this->newCollection([$this])->loadAggregate($relations, $column, $function);
-
-        return $this;
-    }
-
-    /**
      * Eager load relation counts on the model.
      *
      * @param  array|string  $relations
@@ -659,86 +548,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     {
         $relations = is_string($relations) ? func_get_args() : $relations;
 
-        return $this->loadAggregate($relations, '*', 'count');
-    }
-
-    /**
-     * Eager load relation max column values on the model.
-     *
-     * @param  array|string  $relations
-     * @param  string  $column
-     * @return $this
-     */
-    public function loadMax($relations, $column)
-    {
-        return $this->loadAggregate($relations, $column, 'max');
-    }
-
-    /**
-     * Eager load relation min column values on the model.
-     *
-     * @param  array|string  $relations
-     * @param  string  $column
-     * @return $this
-     */
-    public function loadMin($relations, $column)
-    {
-        return $this->loadAggregate($relations, $column, 'min');
-    }
-
-    /**
-     * Eager load relation's column summations on the model.
-     *
-     * @param  array|string  $relations
-     * @param  string  $column
-     * @return $this
-     */
-    public function loadSum($relations, $column)
-    {
-        return $this->loadAggregate($relations, $column, 'sum');
-    }
-
-    /**
-     * Eager load relation average column values on the model.
-     *
-     * @param  array|string  $relations
-     * @param  string  $column
-     * @return $this
-     */
-    public function loadAvg($relations, $column)
-    {
-        return $this->loadAggregate($relations, $column, 'avg');
-    }
-
-    /**
-     * Eager load related model existence values on the model.
-     *
-     * @param  array|string  $relations
-     * @return $this
-     */
-    public function loadExists($relations)
-    {
-        return $this->loadAggregate($relations, '*', 'exists');
-    }
-
-    /**
-     * Eager load relationship column aggregation on the polymorphic relation of a model.
-     *
-     * @param  string  $relation
-     * @param  array  $relations
-     * @param  string  $column
-     * @param  string  $function
-     * @return $this
-     */
-    public function loadMorphAggregate($relation, $relations, $column, $function = null)
-    {
-        if (! $this->{$relation}) {
-            return $this;
-        }
-
-        $className = get_class($this->{$relation});
-
-        $this->{$relation}->loadAggregate($relations[$className] ?? [], $column, $function);
+        $this->newCollection([$this])->loadCount($relations);
 
         return $this;
     }
@@ -752,59 +562,11 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function loadMorphCount($relation, $relations)
     {
-        return $this->loadMorphAggregate($relation, $relations, '*', 'count');
-    }
+        $className = get_class($this->{$relation});
 
-    /**
-     * Eager load relationship max column values on the polymorphic relation of a model.
-     *
-     * @param  string  $relation
-     * @param  array  $relations
-     * @param  string  $column
-     * @return $this
-     */
-    public function loadMorphMax($relation, $relations, $column)
-    {
-        return $this->loadMorphAggregate($relation, $relations, $column, 'max');
-    }
+        $this->{$relation}->loadCount($relations[$className] ?? []);
 
-    /**
-     * Eager load relationship min column values on the polymorphic relation of a model.
-     *
-     * @param  string  $relation
-     * @param  array  $relations
-     * @param  string  $column
-     * @return $this
-     */
-    public function loadMorphMin($relation, $relations, $column)
-    {
-        return $this->loadMorphAggregate($relation, $relations, $column, 'min');
-    }
-
-    /**
-     * Eager load relationship column summations on the polymorphic relation of a model.
-     *
-     * @param  string  $relation
-     * @param  array  $relations
-     * @param  string  $column
-     * @return $this
-     */
-    public function loadMorphSum($relation, $relations, $column)
-    {
-        return $this->loadMorphAggregate($relation, $relations, $column, 'sum');
-    }
-
-    /**
-     * Eager load relationship average column values on the polymorphic relation of a model.
-     *
-     * @param  string  $relation
-     * @param  array  $relations
-     * @param  string  $column
-     * @return $this
-     */
-    public function loadMorphAvg($relation, $relations, $column)
-    {
-        return $this->loadMorphAggregate($relation, $relations, $column, 'avg');
+        return $this;
     }
 
     /**
@@ -850,9 +612,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
             return $query->{$method}($column, $amount, $extra);
         }
 
-        $this->{$column} = $this->isClassDeviable($column)
-            ? $this->deviateClassCastableAttribute($method, $column, $amount)
-            : $this->{$column} + ($method === 'increment' ? $amount : $amount * -1);
+        $this->{$column} = $this->{$column} + ($method === 'increment' ? $amount : $amount * -1);
 
         $this->forceFill($extra);
 
@@ -860,7 +620,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
             return false;
         }
 
-        return tap($this->setKeysForSaveQuery($query)->{$method}($column, $amount, $extra), function () use ($column) {
+        return tap($query->where(
+            $this->getKeyName(), $this->getKey()
+        )->{$method}($column, $amount, $extra), function () use ($column) {
             $this->syncChanges();
 
             $this->fireModelEvent('updated', false);
@@ -883,40 +645,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         }
 
         return $this->fill($attributes)->save($options);
-    }
-
-    /**
-     * Update the model in the database within a transaction.
-     *
-     * @param  array  $attributes
-     * @param  array  $options
-     * @return bool
-     *
-     * @throws \Throwable
-     */
-    public function updateOrFail(array $attributes = [], array $options = [])
-    {
-        if (! $this->exists) {
-            return false;
-        }
-
-        return $this->fill($attributes)->saveOrFail($options);
-    }
-
-    /**
-     * Update the model in the database without raising any events.
-     *
-     * @param  array  $attributes
-     * @param  array  $options
-     * @return bool
-     */
-    public function updateQuietly(array $attributes = [], array $options = [])
-    {
-        if (! $this->exists) {
-            return false;
-        }
-
-        return $this->fill($attributes)->saveQuietly($options);
     }
 
     /**
@@ -1010,7 +738,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     }
 
     /**
-     * Save the model to the database within a transaction.
+     * Save the model to the database using transaction.
      *
      * @param  array  $options
      * @return bool
@@ -1080,35 +808,12 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     }
 
     /**
-     * Set the keys for a select query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function setKeysForSelectQuery($query)
-    {
-        $query->where($this->getKeyName(), '=', $this->getKeyForSelectQuery());
-
-        return $query;
-    }
-
-    /**
-     * Get the primary key value for a select query.
-     *
-     * @return mixed
-     */
-    protected function getKeyForSelectQuery()
-    {
-        return $this->original[$this->getKeyName()] ?? $this->getKey();
-    }
-
-    /**
      * Set the keys for a save update query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function setKeysForSaveQuery($query)
+    protected function setKeysForSaveQuery(Builder $query)
     {
         $query->where($this->getKeyName(), '=', $this->getKeyForSaveQuery());
 
@@ -1122,7 +827,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     protected function getKeyForSaveQuery()
     {
-        return $this->original[$this->getKeyName()] ?? $this->getKey();
+        return $this->original[$this->getKeyName()]
+                        ?? $this->getKey();
     }
 
     /**
@@ -1147,7 +853,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         // If the model has an incrementing key, we can use the "insertGetId" method on
         // the query builder, which will give us back the final inserted ID for this
         // table from the database. Not all tables have to be incrementing though.
-        $attributes = $this->getAttributesForInsert();
+        $attributes = $this->getAttributes();
 
         if ($this->getIncrementing()) {
             $this->insertAndSetId($query, $attributes);
@@ -1198,9 +904,10 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public static function destroy($ids)
     {
-        if ($ids instanceof EloquentCollection) {
-            $ids = $ids->modelKeys();
-        }
+        // We'll initialize a count here so we will return the total number of deletes
+        // for the operation. The developers can then check this number as a boolean
+        // type value or get this total count of records deleted for logging, etc.
+        $count = 0;
 
         if ($ids instanceof BaseCollection) {
             $ids = $ids->all();
@@ -1208,16 +915,10 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
 
         $ids = is_array($ids) ? $ids : func_get_args();
 
-        if (count($ids) === 0) {
-            return 0;
-        }
-
         // We will actually pull the models from the database table and call delete on
         // each of them individually so that their events get fired properly with a
         // correct set of attributes in case the developers wants to check these.
         $key = ($instance = new static)->getKeyName();
-
-        $count = 0;
 
         foreach ($instance->whereIn($key, $ids)->get() as $model) {
             if ($model->delete()) {
@@ -1233,14 +934,14 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      *
      * @return bool|null
      *
-     * @throws \LogicException
+     * @throws \Exception
      */
     public function delete()
     {
         $this->mergeAttributesFromClassCasts();
 
         if (is_null($this->getKeyName())) {
-            throw new LogicException('No primary key defined on model.');
+            throw new Exception('No primary key defined on model.');
         }
 
         // If the model doesn't exist, there is nothing to delete so we'll just return
@@ -1270,27 +971,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     }
 
     /**
-     * Delete the model from the database within a transaction.
-     *
-     * @return bool|null
-     *
-     * @throws \Throwable
-     */
-    public function deleteOrFail()
-    {
-        if (! $this->exists) {
-            return false;
-        }
-
-        return $this->getConnection()->transaction(function () {
-            return $this->delete();
-        });
-    }
-
-    /**
      * Force a hard delete on a soft deleted model.
      *
-     * This method protects developers from running forceDelete when the trait is missing.
+     * This method protects developers from running forceDelete when trait is missing.
      *
      * @return bool|null
      */
@@ -1509,7 +1192,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      *
      * @return array
      */
-    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();
@@ -1527,8 +1209,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
             return;
         }
 
-        return $this->setKeysForSelectQuery($this->newQueryWithoutScopes())
+        return static::newQueryWithoutScopes()
                         ->with(is_string($with) ? func_get_args() : $with)
+                        ->where($this->getKeyName(), $this->getKey())
                         ->first();
     }
 
@@ -1544,7 +1227,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         }
 
         $this->setRawAttributes(
-            $this->setKeysForSelectQuery($this->newQueryWithoutScopes())->firstOrFail()->attributes
+            static::newQueryWithoutScopes()->findOrFail($this->getKey())->attributes
         );
 
         $this->load(collect($this->relations)->reject(function ($relation) {
@@ -1881,18 +1564,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     }
 
     /**
-     * Retrieve the model for a bound value.
-     *
-     * @param  mixed  $value
-     * @param  string|null  $field
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function resolveSoftDeletableRouteBinding($value, $field = null)
-    {
-        return $this->where($field ?? $this->getRouteKeyName(), $value)->withTrashed()->first();
-    }
-
-    /**
      * Retrieve the child model for a bound value.
      *
      * @param  string  $childType
@@ -1902,41 +1573,15 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function resolveChildRouteBinding($childType, $value, $field)
     {
-        return $this->resolveChildRouteBindingQuery($childType, $value, $field)->first();
-    }
-
-    /**
-     * Retrieve the child model for a bound value.
-     *
-     * @param  string  $childType
-     * @param  mixed  $value
-     * @param  string|null  $field
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function resolveSoftDeletableChildRouteBinding($childType, $value, $field)
-    {
-        return $this->resolveChildRouteBindingQuery($childType, $value, $field)->withTrashed()->first();
-    }
-
-    /**
-     * Retrieve the child model query for a bound value.
-     *
-     * @param  string  $childType
-     * @param  mixed  $value
-     * @param  string|null  $field
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    protected function resolveChildRouteBindingQuery($childType, $value, $field)
-    {
         $relationship = $this->{Str::plural(Str::camel($childType))}();
 
         $field = $field ?: $relationship->getRelated()->getRouteKeyName();
 
         if ($relationship instanceof HasManyThrough ||
             $relationship instanceof BelongsToMany) {
-            return $relationship->where($relationship->getRelated()->getTable().'.'.$field, $value);
+            return $relationship->where($relationship->getRelated()->getTable().'.'.$field, $value)->first();
         } else {
-            return $relationship->where($field, $value);
+            return $relationship->where($field, $value)->first();
         }
     }
 
@@ -1974,36 +1619,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     }
 
     /**
-     * Determine if lazy loading is disabled.
-     *
-     * @return bool
-     */
-    public static function preventsLazyLoading()
-    {
-        return static::$modelsShouldPreventLazyLoading;
-    }
-
-    /**
-     * Get the broadcast channel route definition that is associated with the given entity.
-     *
-     * @return string
-     */
-    public function broadcastChannelRoute()
-    {
-        return str_replace('\\', '.', get_class($this)).'.{'.Str::camel(class_basename($this)).'}';
-    }
-
-    /**
-     * Get the broadcast channel name that is associated with the given entity.
-     *
-     * @return string
-     */
-    public function broadcastChannel()
-    {
-        return str_replace('\\', '.', get_class($this)).'.'.$this->getKey();
-    }
-
-    /**
      * Dynamically retrieve attributes on the model.
      *
      * @param  string  $key
@@ -2032,7 +1647,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  mixed  $offset
      * @return bool
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return ! is_null($this->getAttribute($offset));
@@ -2044,7 +1658,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  mixed  $offset
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getAttribute($offset);
@@ -2057,7 +1670,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  mixed  $value
      * @return void
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->setAttribute($offset, $value);
@@ -2069,7 +1681,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  mixed  $offset
      * @return void
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->attributes[$offset], $this->relations[$offset]);
@@ -2136,22 +1747,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function __toString()
     {
-        return $this->escapeWhenCastingToString
-                    ? e($this->toJson())
-                    : $this->toJson();
-    }
-
-    /**
-     * Indicate that the object's string representation should be escaped when __toString is invoked.
-     *
-     * @param  bool  $escape
-     * @return $this
-     */
-    public function escapeWhenCastingToString($escape = true)
-    {
-        $this->escapeWhenCastingToString = $escape;
-
-        return $this;
+        return $this->toJson();
     }
 
     /**
@@ -2176,7 +1772,5 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     public function __wakeup()
     {
         $this->bootIfNotBooted();
-
-        $this->initializeTraits();
     }
 }

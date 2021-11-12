@@ -6,8 +6,6 @@ use Illuminate\Queue\Events\JobExceptionOccurred;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
-use Laravel\Octane\Events\RequestReceived;
-use Laravel\Octane\Events\RequestTerminated;
 use Laravel\Telescope\Contracts\EntriesRepository;
 
 trait ListensForStorageOpportunities
@@ -27,28 +25,9 @@ trait ListensForStorageOpportunities
      */
     public static function listenForStorageOpportunities($app)
     {
-        static::manageRecordingStateForOctane($app);
         static::storeEntriesBeforeTermination($app);
+
         static::storeEntriesAfterWorkerLoop($app);
-    }
-
-    /**
-     * Manage starting and stopping the recording state for Octane.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected static function manageRecordingStateForOctane($app)
-    {
-        $app['events']->listen(RequestReceived::class, function ($event) {
-            if (static::requestIsToApprovedUri($event->request)) {
-                static::startRecording();
-            }
-        });
-
-        $app['events']->listen(RequestTerminated::class, function ($event) {
-            static::stopRecording();
-        });
     }
 
     /**
@@ -98,7 +77,7 @@ trait ListensForStorageOpportunities
     /**
      * Store the recorded entries if totally done processing the current job.
      *
-     * @param  \Illuminate\Queue\Events\JobProcessed  $event
+     * @param  \Illuminate\Queue\Events\JobProcessed $event
      * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */

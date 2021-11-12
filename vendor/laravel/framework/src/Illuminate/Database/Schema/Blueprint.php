@@ -5,6 +5,7 @@ namespace Illuminate\Database\Schema;
 use BadMethodCallException;
 use Closure;
 use Illuminate\Database\Connection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Grammars\Grammar;
 use Illuminate\Database\SQLiteConnection;
@@ -70,13 +71,6 @@ class Blueprint
      * @var bool
      */
     public $temporary = false;
-
-    /**
-     * The column to add new columns after.
-     *
-     * @var string
-     */
-    public $after;
 
     /**
      * Create a new schema blueprint.
@@ -390,19 +384,6 @@ class Blueprint
     }
 
     /**
-     * Indicate that the given column and foreign key should be dropped.
-     *
-     * @param  string  $column
-     * @return \Illuminate\Support\Fluent
-     */
-    public function dropConstrainedForeignId($column)
-    {
-        $this->dropForeign([$column]);
-
-        return $this->dropColumn($column);
-    }
-
-    /**
      * Indicate that the given indexes should be renamed.
      *
      * @param  string  $from
@@ -678,17 +659,6 @@ class Blueprint
     }
 
     /**
-     * Create a new tiny text column on the table.
-     *
-     * @param  string  $column
-     * @return \Illuminate\Database\Schema\ColumnDefinition
-     */
-    public function tinyText($column)
-    {
-        return $this->addColumn('tinyText', $column);
-    }
-
-    /**
      * Create a new text column on the table.
      *
      * @param  string  $column
@@ -854,12 +824,14 @@ class Blueprint
      */
     public function foreignId($column)
     {
-        return $this->addColumnDefinition(new ForeignIdColumnDefinition($this, [
+        $this->columns[] = $column = new ForeignIdColumnDefinition($this, [
             'type' => 'bigInteger',
             'name' => $column,
             'autoIncrement' => false,
             'unsigned' => true,
-        ]));
+        ]);
+
+        return $column;
     }
 
     /**
@@ -875,7 +847,7 @@ class Blueprint
             $model = new $model;
         }
 
-        return $model->getKeyType() === 'int' && $model->getIncrementing()
+        return $model->getKeyType() === 'int' && $model->incrementing
                     ? $this->foreignId($column ?: $model->getForeignKey())
                     : $this->foreignUuid($column ?: $model->getForeignKey());
     }
@@ -1205,10 +1177,10 @@ class Blueprint
      */
     public function foreignUuid($column)
     {
-        return $this->addColumnDefinition(new ForeignIdColumnDefinition($this, [
+        return $this->columns[] = new ForeignIdColumnDefinition($this, [
             'type' => 'uuid',
             'name' => $column,
-        ]));
+        ]);
     }
 
     /**
@@ -1520,44 +1492,11 @@ class Blueprint
      */
     public function addColumn($type, $name, array $parameters = [])
     {
-        return $this->addColumnDefinition(new ColumnDefinition(
+        $this->columns[] = $column = new ColumnDefinition(
             array_merge(compact('type', 'name'), $parameters)
-        ));
-    }
+        );
 
-    /**
-     * Add a new column definition to the blueprint.
-     *
-     * @param  \Illuminate\Database\Schema\ColumnDefinition  $definition
-     * @return \Illuminate\Database\Schema\ColumnDefinition
-     */
-    protected function addColumnDefinition($definition)
-    {
-        $this->columns[] = $definition;
-
-        if ($this->after) {
-            $definition->after($this->after);
-
-            $this->after = $definition->name;
-        }
-
-        return $definition;
-    }
-
-    /**
-     * Add the columns from the callback after the given column.
-     *
-     * @param  string  $column
-     * @param  \Closure  $callback
-     * @return void
-     */
-    public function after($column, Closure $callback)
-    {
-        $this->after = $column;
-
-        $callback($this);
-
-        $this->after = null;
+        return $column;
     }
 
     /**
@@ -1656,7 +1595,7 @@ class Blueprint
     }
 
     /**
-     * Determine if the blueprint has auto-increment columns.
+     * Determine if the blueprint has auto increment columns.
      *
      * @return bool
      */
@@ -1668,7 +1607,7 @@ class Blueprint
     }
 
     /**
-     * Get the auto-increment column starting values.
+     * Get the auto increment column starting values.
      *
      * @return array
      */

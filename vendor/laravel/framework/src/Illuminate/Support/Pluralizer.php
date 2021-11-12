@@ -12,7 +12,7 @@ class Pluralizer
     /**
      * Uncountable word forms.
      *
-     * @var string[]
+     * @var array
      */
     public static $uncountable = [
         'audio',
@@ -69,7 +69,7 @@ class Pluralizer
      */
     public static function plural($value, $count = 2)
     {
-        if ((int) abs($count) === 1 || static::uncountable($value) || preg_match('/^(.*)[A-Za-z0-9\x{0080}-\x{FFFF}]$/u', $value) == 0) {
+        if ((int) abs($count) === 1 || static::uncountable($value)) {
             return $value;
         }
 

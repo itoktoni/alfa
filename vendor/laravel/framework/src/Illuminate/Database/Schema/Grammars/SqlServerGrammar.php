@@ -17,45 +17,16 @@ class SqlServerGrammar extends Grammar
     /**
      * The possible column modifiers.
      *
-     * @var string[]
+     * @var array
      */
     protected $modifiers = ['Increment', 'Collate', 'Nullable', 'Default', 'Persisted'];
 
     /**
      * The columns available as serials.
      *
-     * @var string[]
+     * @var array
      */
     protected $serials = ['tinyInteger', 'smallInteger', 'mediumInteger', 'integer', 'bigInteger'];
-
-    /**
-     * Compile a create database command.
-     *
-     * @param  string  $name
-     * @param  \Illuminate\Database\Connection  $connection
-     * @return string
-     */
-    public function compileCreateDatabase($name, $connection)
-    {
-        return sprintf(
-            'create database %s',
-            $this->wrapValue($name),
-        );
-    }
-
-    /**
-     * Compile a drop database if exists command.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    public function compileDropDatabaseIfExists($name)
-    {
-        return sprintf(
-            'drop database if exists %s',
-            $this->wrapValue($name)
-        );
-    }
 
     /**
      * Compile the query to determine if a table exists.
@@ -64,7 +35,7 @@ class SqlServerGrammar extends Grammar
      */
     public function compileTableExists()
     {
-        return "select * from sys.sysobjects where id = object_id(?) and xtype in ('U', 'V')";
+        return "select * from sysobjects where type = 'U' and name = ?";
     }
 
     /**
@@ -75,7 +46,9 @@ class SqlServerGrammar extends Grammar
      */
     public function compileColumnListing($table)
     {
-        return "select name from sys.columns where object_id = object_id('$table')";
+        return "select col.name from sys.columns as col
+                join sys.objects as obj on col.object_id = obj.object_id
+                where obj.type = 'U' and obj.object_id = object_id('$table')";
     }
 
     /**
@@ -192,7 +165,7 @@ class SqlServerGrammar extends Grammar
      */
     public function compileDropIfExists(Blueprint $blueprint, Fluent $command)
     {
-        return sprintf('if exists (select * from sys.sysobjects where id = object_id(%s, \'U\')) drop table %s',
+        return sprintf('if exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = %s) drop table %s',
             "'".str_replace("'", "''", $this->getTablePrefix().$blueprint->getTable())."'",
             $this->wrapTable($blueprint)
         );
@@ -413,17 +386,6 @@ class SqlServerGrammar extends Grammar
     protected function typeString(Fluent $column)
     {
         return "nvarchar({$column->length})";
-    }
-
-    /**
-     * Create the column definition for a tiny text type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeTinyText(Fluent $column)
-    {
-        return 'nvarchar(255)';
     }
 
     /**

@@ -36,9 +36,9 @@ class BatchFactory
      * @param  int  $failedJobs
      * @param  array  $failedJobIds
      * @param  array  $options
-     * @param  \Carbon\CarbonImmutable  $createdAt
-     * @param  \Carbon\CarbonImmutable|null  $cancelledAt
-     * @param  \Carbon\CarbonImmutable|null  $finishedAt
+     * @param  \Illuminate\Support\CarbonImmutable  $createdAt
+     * @param  \Illuminate\Support\CarbonImmutable|null  $cancelledAt
+     * @param  \Illuminate\Support\CarbonImmutable|null  $finishedAt
      * @return \Illuminate\Bus\Batch
      */
     public function make(BatchRepository $repository,

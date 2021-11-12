@@ -54,7 +54,7 @@ trait FormatsMessages
         // messages out of the translator service for this validation rule.
         $key = "validation.{$lowerRule}";
 
-        if ($key !== ($value = $this->translator->get($key))) {
+        if ($key != ($value = $this->translator->get($key))) {
             return $value;
         }
 
@@ -116,7 +116,7 @@ trait FormatsMessages
     }
 
     /**
-     * Get the custom error message from the translator.
+     * Get the custom error message from translator.
      *
      * @param  string  $key
      * @return string
@@ -336,11 +336,7 @@ trait FormatsMessages
             return $value ? 'true' : 'false';
         }
 
-        if (is_null($value)) {
-            return 'empty';
-        }
-
-        return (string) $value;
+        return $value;
     }
 
     /**
@@ -378,7 +374,7 @@ trait FormatsMessages
         $callback = $this->replacers[$rule];
 
         if ($callback instanceof Closure) {
-            return $callback(...func_get_args());
+            return call_user_func_array($callback, func_get_args());
         } elseif (is_string($callback)) {
             return $this->callClassBasedReplacer($callback, $message, $attribute, $rule, $parameters, $validator);
         }
@@ -399,6 +395,6 @@ trait FormatsMessages
     {
         [$class, $method] = Str::parseCallback($callback, 'replace');
 
-        return $this->container->make($class)->{$method}(...array_slice(func_get_args(), 1));
+        return call_user_func_array([$this->container->make($class), $method], array_slice(func_get_args(), 1));
     }
 }

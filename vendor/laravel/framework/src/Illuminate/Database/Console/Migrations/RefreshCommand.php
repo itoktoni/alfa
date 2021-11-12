@@ -4,8 +4,6 @@ namespace Illuminate\Database\Console\Migrations;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Database\Events\DatabaseRefreshed;
 use Symfony\Component\Console\Input\InputOption;
 
 class RefreshCommand extends Command
@@ -64,12 +62,6 @@ class RefreshCommand extends Command
             '--realpath' => $this->input->getOption('realpath'),
             '--force' => true,
         ]));
-
-        if ($this->laravel->bound(Dispatcher::class)) {
-            $this->laravel[Dispatcher::class]->dispatch(
-                new DatabaseRefreshed
-            );
-        }
 
         if ($this->needsSeeding()) {
             $this->runSeeder($database);

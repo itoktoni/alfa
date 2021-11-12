@@ -5,7 +5,6 @@ namespace Illuminate\Routing;
 use BadMethodCallException;
 use Closure;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Reflector;
 use InvalidArgumentException;
 
 /**
@@ -20,11 +19,9 @@ use InvalidArgumentException;
  * @method \Illuminate\Routing\RouteRegistrar domain(string $value)
  * @method \Illuminate\Routing\RouteRegistrar middleware(array|string|null $middleware)
  * @method \Illuminate\Routing\RouteRegistrar name(string $value)
- * @method \Illuminate\Routing\RouteRegistrar namespace(string|null $value)
+ * @method \Illuminate\Routing\RouteRegistrar namespace(string $value)
  * @method \Illuminate\Routing\RouteRegistrar prefix(string  $prefix)
- * @method \Illuminate\Routing\RouteRegistrar scopeBindings()
  * @method \Illuminate\Routing\RouteRegistrar where(array  $where)
- * @method \Illuminate\Routing\RouteRegistrar withoutMiddleware(array|string  $middleware)
  */
 class RouteRegistrar
 {
@@ -45,7 +42,7 @@ class RouteRegistrar
     /**
      * The methods to dynamically pass through to the router.
      *
-     * @var string[]
+     * @var array
      */
     protected $passthru = [
         'get', 'post', 'put', 'patch', 'delete', 'options', 'any',
@@ -54,18 +51,10 @@ class RouteRegistrar
     /**
      * The attributes that can be set through this class.
      *
-     * @var string[]
+     * @var array
      */
     protected $allowedAttributes = [
-        'as',
-        'domain',
-        'middleware',
-        'name',
-        'namespace',
-        'prefix',
-        'scopeBindings',
-        'where',
-        'withoutMiddleware',
+        'as', 'domain', 'middleware', 'name', 'namespace', 'prefix', 'where',
     ];
 
     /**
@@ -75,8 +64,6 @@ class RouteRegistrar
      */
     protected $aliases = [
         'name' => 'as',
-        'scopeBindings' => 'scope_bindings',
-        'withoutMiddleware' => 'excluded_middleware',
     ];
 
     /**
@@ -105,21 +92,7 @@ class RouteRegistrar
             throw new InvalidArgumentException("Attribute [{$key}] does not exist.");
         }
 
-        if ($key === 'middleware') {
-            foreach ($value as $index => $middleware) {
-                $value[$index] = (string) $middleware;
-            }
-        }
-
-        $attributeKey = Arr::get($this->aliases, $key, $key);
-
-        if ($key === 'withoutMiddleware') {
-            $value = array_merge(
-                (array) ($this->attributes[$attributeKey] ?? []), Arr::wrap($value)
-            );
-        }
-
-        $this->attributes[$attributeKey] = $value;
+        $this->attributes[Arr::get($this->aliases, $key, $key)] = $value;
 
         return $this;
     }
@@ -208,11 +181,8 @@ class RouteRegistrar
         }
 
         if (is_array($action) &&
-            ! Arr::isAssoc($action) &&
-            Reflector::isCallable($action)) {
-            if (strncmp($action[0], '\\', 1)) {
-                $action[0] = '\\'.$action[0];
-            }
+            is_callable($action) &&
+            ! Arr::isAssoc($action)) {
             $action = [
                 'uses' => $action[0].'@'.$action[1],
                 'controller' => $action[0].'@'.$action[1],
@@ -242,7 +212,7 @@ class RouteRegistrar
                 return $this->attribute($method, is_array($parameters[0]) ? $parameters[0] : $parameters);
             }
 
-            return $this->attribute($method, array_key_exists(0, $parameters) ? $parameters[0] : true);
+            return $this->attribute($method, $parameters[0]);
         }
 
         throw new BadMethodCallException(sprintf(

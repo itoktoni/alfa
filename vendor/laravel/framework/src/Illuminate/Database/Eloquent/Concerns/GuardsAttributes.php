@@ -9,14 +9,14 @@ trait GuardsAttributes
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array
      */
     protected $fillable = [];
 
     /**
      * The attributes that aren't mass assignable.
      *
-     * @var string[]|bool
+     * @var array|bool
      */
     protected $guarded = ['*'];
 
@@ -130,7 +130,7 @@ trait GuardsAttributes
     }
 
     /**
-     * Determine if the current state is "unguarded".
+     * Determine if current state is "unguarded".
      *
      * @return bool
      */

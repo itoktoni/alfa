@@ -1,19 +1,21 @@
 <script type="text/ecmascript-6">
-    import hljs from 'highlight.js/lib/core';
+    import hljs from 'highlight.js/lib/highlight';
     import sql from 'highlight.js/lib/languages/sql';
-    import { format } from 'sql-formatter';
-
-    hljs.registerLanguage('sql', sql);
+    import StandardSqlFormatter from 'sql-formatter/src/languages/StandardSqlFormatter';
 
     export default {
-        methods: {
+        data(){
+            return {
+                sqlFormatter: new StandardSqlFormatter({}),
+            };
+        },
+
+        methods:{
             highlightSQL() {
                 this.$nextTick(() => {
-                    hljs.highlightElement(this.$refs.sqlcode);
+                    hljs.registerLanguage('sql', sql);
+                    hljs.highlightBlock(this.$refs.sqlcode);
                 });
-            },
-            formatSql(sql) {
-                return format(sql);
             }
         }
     }
@@ -54,7 +56,7 @@
             <div class="card mt-5">
                 <div class="card-header"><h5>Query</h5></div>
 
-                <pre class="code-bg p-4 mb-0 text-white" ref="sqlcode">{{ formatSql(slotProps.entry.content.sql) }}</pre>
+                <pre class="code-bg p-4 mb-0 text-white" ref="sqlcode">{{sqlFormatter.format(slotProps.entry.content.sql)}}</pre>
             </div>
         </div>
     </preview-screen>

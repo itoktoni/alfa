@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Contracts\Queue\Factory as QueueFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Queue\CallQueuedClosure;
+use Illuminate\Queue\SerializableClosure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use JsonSerializable;
@@ -80,21 +81,21 @@ class Batch implements Arrayable, JsonSerializable
     /**
      * The date indicating when the batch was created.
      *
-     * @var \Carbon\CarbonImmutable
+     * @var \Illuminate\Support\CarbonImmutable
      */
     public $createdAt;
 
     /**
      * The date indicating when the batch was cancelled.
      *
-     * @var \Carbon\CarbonImmutable|null
+     * @var \Illuminate\Support\CarbonImmutable|null
      */
     public $cancelledAt;
 
     /**
      * The date indicating when the batch was finished.
      *
-     * @var \Carbon\CarbonImmutable|null
+     * @var \Illuminate\Support\CarbonImmutable|null
      */
     public $finishedAt;
 
@@ -110,9 +111,9 @@ class Batch implements Arrayable, JsonSerializable
      * @param  int  $failedJobs
      * @param  array  $failedJobIds
      * @param  array  $options
-     * @param  \Carbon\CarbonImmutable  $createdAt
-     * @param  \Carbon\CarbonImmutable|null  $cancelledAt
-     * @param  \Carbon\CarbonImmutable|null  $finishedAt
+     * @param  \Illuminate\Support\CarbonImmutable  $createdAt
+     * @param  \Illuminate\Support\CarbonImmutable|null  $cancelledAt
+     * @param  \Illuminate\Support\CarbonImmutable|null  $finishedAt
      * @return void
      */
     public function __construct(QueueFactory $queue,
@@ -155,36 +156,23 @@ class Batch implements Arrayable, JsonSerializable
     /**
      * Add additional jobs to the batch.
      *
-     * @param  \Illuminate\Support\Enumerable|array  $jobs
+     * @param  \Illuminate\Support\Collection|array  $jobs
      * @return self
      */
     public function add($jobs)
     {
-        $count = 0;
-
-        $jobs = Collection::wrap($jobs)->map(function ($job) use (&$count) {
-            $job = $job instanceof Closure ? CallQueuedClosure::create($job) : $job;
-
-            if (is_array($job)) {
-                $count += count($job);
-
-                return with($this->prepareBatchedChain($job), function ($chain) {
-                    return $chain->first()
-                            ->allOnQueue($this->options['queue'] ?? null)
-                            ->allOnConnection($this->options['connection'] ?? null)
-                            ->chain($chain->slice(1)->values()->all());
-                });
-            } else {
-                $job->withBatchId($this->id);
-
-                $count++;
+        $jobs = Collection::wrap($jobs)->map(function ($job) {
+            if ($job instanceof Closure) {
+                $job = CallQueuedClosure::create($job);
             }
+
+            $job->withBatchId($this->id);
 
             return $job;
         });
 
-        $this->repository->transaction(function () use ($jobs, $count) {
-            $this->repository->incrementTotalJobs($this->id, $count);
+        $this->repository->transaction(function () use ($jobs) {
+            $this->repository->incrementTotalJobs($this->id, count($jobs));
 
             $this->queue->connection($this->options['connection'] ?? null)->bulk(
                 $jobs->all(),
@@ -194,21 +182,6 @@ class Batch implements Arrayable, JsonSerializable
         });
 
         return $this->fresh();
-    }
-
-    /**
-     * Prepare a chain that exists within the jobs being added.
-     *
-     * @param  array  $chain
-     * @return \Illuminate\Support\Collection
-     */
-    protected function prepareBatchedChain(array $chain)
-    {
-        return collect($chain)->map(function ($job) {
-            $job = $job instanceof Closure ? CallQueuedClosure::create($job) : $job;
-
-            return $job->withBatchId($this->id);
-        });
     }
 
     /**
@@ -266,7 +239,7 @@ class Batch implements Arrayable, JsonSerializable
      * Decrement the pending jobs for the batch.
      *
      * @param  string  $jobId
-     * @return \Illuminate\Bus\UpdatedBatchJobCounts
+     * @return int
      */
     public function decrementPendingJobs(string $jobId)
     {
@@ -349,7 +322,7 @@ class Batch implements Arrayable, JsonSerializable
      * Increment the failed jobs for the batch.
      *
      * @param  string  $jobId
-     * @return \Illuminate\Bus\UpdatedBatchJobCounts
+     * @return int
      */
     public function incrementFailedJobs(string $jobId)
     {
@@ -367,7 +340,7 @@ class Batch implements Arrayable, JsonSerializable
     }
 
     /**
-     * Determine if the batch has "finally" callbacks.
+     * Determine if the batch has "then" callbacks.
      *
      * @return bool
      */
@@ -419,20 +392,16 @@ class Batch implements Arrayable, JsonSerializable
     /**
      * Invoke a batch callback handler.
      *
-     * @param  callable  $handler
-     * @param  \Illuminate\Bus\Batch  $batch
+     * @param  \Illuminate\Queue\SerializableClosure|callable  $handler
+     * @param  \Illuminate\Bus  $batch
      * @param  \Throwable|null  $e
      * @return void
      */
     protected function invokeHandlerCallback($handler, Batch $batch, Throwable $e = null)
     {
-        try {
-            return $handler($batch, $e);
-        } catch (Throwable $e) {
-            if (function_exists('report')) {
-                report($e);
-            }
-        }
+        return $handler instanceof SerializableClosure
+                    ? $handler->__invoke($batch, $e)
+                    : call_user_func($handler, $batch, $e);
     }
 
     /**
@@ -462,7 +431,6 @@ class Batch implements Arrayable, JsonSerializable
      *
      * @return array
      */
-    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();

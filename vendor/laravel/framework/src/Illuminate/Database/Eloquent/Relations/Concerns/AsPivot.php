@@ -83,15 +83,15 @@ trait AsPivot
     }
 
     /**
-     * Set the keys for a select query.
+     * Set the keys for a save update query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function setKeysForSelectQuery($query)
+    protected function setKeysForSaveQuery(Builder $query)
     {
         if (isset($this->attributes[$this->getKeyName()])) {
-            return parent::setKeysForSelectQuery($query);
+            return parent::setKeysForSaveQuery($query);
         }
 
         $query->where($this->foreignKey, $this->getOriginal(
@@ -101,17 +101,6 @@ trait AsPivot
         return $query->where($this->relatedKey, $this->getOriginal(
             $this->relatedKey, $this->getAttribute($this->relatedKey)
         ));
-    }
-
-    /**
-     * Set the keys for a save update query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function setKeysForSaveQuery($query)
-    {
-        return $this->setKeysForSelectQuery($query);
     }
 
     /**
@@ -297,8 +286,6 @@ trait AsPivot
      */
     protected function newQueryForCollectionRestoration(array $ids)
     {
-        $ids = array_values($ids);
-
         if (! Str::contains($ids[0], ':')) {
             return parent::newQueryForRestoration($ids);
         }

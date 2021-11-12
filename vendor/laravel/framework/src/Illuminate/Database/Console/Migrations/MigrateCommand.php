@@ -164,14 +164,6 @@ class MigrateCommand extends BaseCommand
      */
     protected function schemaPath($connection)
     {
-        if ($this->option('schema-path')) {
-            return $this->option('schema-path');
-        }
-
-        if (file_exists($path = database_path('schema/'.$connection->getName().'-schema.dump'))) {
-            return $path;
-        }
-
-        return database_path('schema/'.$connection->getName().'-schema.sql');
+        return $this->option('schema-path') ?: database_path('schema/'.$connection->getName().'-schema.sql');
     }
 }

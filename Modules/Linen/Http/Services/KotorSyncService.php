@@ -37,7 +37,7 @@ class KotorSyncService
             }
             if(!empty($data['outstanding'])){
 
-                Outstanding::insert($data['outstanding']);
+                Outstanding::upsert($data['outstanding']);
             }
 
             $list_rfid = collect($data->get('data'));

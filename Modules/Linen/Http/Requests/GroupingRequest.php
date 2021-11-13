@@ -43,7 +43,7 @@ class GroupingRequest extends GeneralRequest
                 'linen_grouping_detail_ori_company_id' => $item->mask_company_ori ?? '',
                 'linen_grouping_detail_ori_company_name' => $item->mask_company_ori_name ?? '',
                 'linen_grouping_detail_ori_location_id' => $item->mask_location_ori ?? '',
-                'linen_grouping_detail_ori_location_name' => $item->mask_location_ori ?? '', 
+                'linen_grouping_detail_ori_location_name' => $item->mask_location_ori_name ?? '', 
                 'linen_grouping_detail_scan_company_id' => $company->company_id ?? '',
                 'linen_grouping_detail_scan_company_name' => $company->company_name ?? '',
                 'linen_grouping_detail_scan_location_id' => $location->location_id ?? '',

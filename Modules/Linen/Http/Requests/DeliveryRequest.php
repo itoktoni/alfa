@@ -25,7 +25,7 @@ class DeliveryRequest extends GeneralRequest
     public function prepareForValidation()
     {
         $company = CompanyFacades::find($this->linen_delivery_company_id);
-
+        
         $grouping = GroupingDetail::whereIn(GroupingDetailFacades::mask_barcode(), $this->barcode)->get();
         $data = $grouping->pluck(GroupingDetailFacades::mask_rfid())->unique() ?? [];
         $stock = $grouping->mapToGroups(function($item){

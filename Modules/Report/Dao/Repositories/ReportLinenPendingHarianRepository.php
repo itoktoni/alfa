@@ -164,7 +164,7 @@ class ReportLinenPendingHarianRepository extends OutstandingRepository implement
         $date_to = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
         
         return view('Report::page.linen_pending.excel_linen_pending_harian', [
-            'master' => $master,
+            'preview' => $master,
             'status' => LinenStatus::getOptions(),
             'date_from' => $date_from,
             'date_to' => $date_to,

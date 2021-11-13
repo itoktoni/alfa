@@ -39,6 +39,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Repositories\KotorRepository;
 use Modules\Linen\Dao\Repositories\OutstandingRepository;
@@ -164,7 +165,7 @@ class ReportLinenPendingHarianRepository extends OutstandingRepository implement
         
         return view('Report::page.linen_pending.excel_linen_pending_harian', [
             'master' => $master,
-            'status' => Views::status(OutstandingFacades::status())->toArray(),
+            'status' => LinenStatus::getOptions(),
             'date_from' => $date_from,
             'date_to' => $date_to,
         ]);

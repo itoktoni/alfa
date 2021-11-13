@@ -101,7 +101,7 @@ class ReportInvoiceRumahSakitRepository extends DeliveryRepository implements Fr
         // $query = $query->orderBy($this->model->getKeyName(), 'ASC');
         return view('Report::page.invoice.excel_report_invoice', [
             'master' => $master,
-            'detail' => $master->detail()->get()->groupBy('linen_grouping_detail_product_id')
+            'detail' => $master->has_detail()->get()->groupBy('linen_grouping_detail_product_id')
         ]);
     }
 }

@@ -1,6 +1,7 @@
 @php
     $linen_delivery = $detail;
     $linen_kotor = $kotor->has_detail ?? [];
+    dd($linen_kotor);
     $total_location = count($location)+6;
 @endphp
 @if(!empty($detail))
@@ -51,7 +52,6 @@
             </tr>
         </thead>
         <tbody>
-            @if($linen_kotor)
             @php 
             $total_kotor_pcs_right = $total_kotor_pcs_bottom = $total_delivery_pcs_right = $total_delivery_pcs_bottom = $kg_delivery_right = $kg_delivery_bottom = $total_bersih_pcs_right = $total_bersih_pcs_bottom = 0;
             @endphp
@@ -60,9 +60,9 @@
 
             @php
             
-            $total_delivery_pcs = $linen_delivery->where('linen_grouping_detail_product_id', $item->item_product_id)->count();
-            $total_kotor_pcs_right = $linen_kotor->where('linen_kotor_detail_product_id', $item->item_product_id)->count();
-            $total_delivery_pcs_right = $total_delivery_pcs;
+            $total_delivery_pcs = $linen_delivery->where('linen_grouping_detail_product_id', $item->item_product_id)->count() ?? 0;
+            $total_kotor_pcs_right = $linen_kotor->where('linen_kotor_detail_product_id', $item->item_product_id)->count() ?? 0;
+            $total_delivery_pcs_right = $total_delivery_pcs ?? 0;
 
             $pivot_berat = $item->pivot->company_item_weight ?? 0;
             $kg_delivery_right = $total_delivery_pcs_right * $pivot_berat;
@@ -97,7 +97,6 @@
                 </td>
             </tr>
             @endforeach
-            @endif
         </tbody>
         <tfoot>
             <tr>

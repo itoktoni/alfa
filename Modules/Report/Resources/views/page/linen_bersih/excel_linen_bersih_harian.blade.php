@@ -113,8 +113,8 @@
                 </td>
                 @endforeach
                 <td>{{ $total_delivery_pcs_bottom ?? '' }}</td>
-                <td>{{ $kg_delivery_bottom }}</td>
-                <td>{{ $total_kotor_pcs_bottom }}</td>
+                <td>{{ $kg_delivery_bottom ?? 0 }}</td>
+                <td>{{ $total_kotor_pcs_bottom ?? 0 }}</td>
             </tr>
         </tfoot>
     </table>

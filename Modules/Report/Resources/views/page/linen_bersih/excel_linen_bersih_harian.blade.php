@@ -51,6 +51,7 @@
             </tr>
         </thead>
         <tbody>
+            @if($linen_kotor)
             @php 
             $total_kotor_pcs_right = $total_kotor_pcs_bottom = $total_delivery_pcs_right = $total_delivery_pcs_bottom = $kg_delivery_right = $kg_delivery_bottom = $total_bersih_pcs_right = $total_bersih_pcs_bottom = 0;
             @endphp
@@ -96,6 +97,7 @@
                 </td>
             </tr>
             @endforeach
+            @endif
         </tbody>
         <tfoot>
             <tr>

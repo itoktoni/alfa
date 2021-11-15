@@ -70,7 +70,7 @@ class Kotor extends Model
     public $searching = 'linen_kotor_key';
     public $datatable = [
         'linen_kotor_id' => [false => 'Code', 'width' => 50],
-        'linen_kotor_key' => [true => 'No. Linen Kotor'],
+        'linen_kotor_key' => [true => 'No. Linen Kotor', 'width' => 150],
         'linen_kotor_company_id' => [false => 'Company'],
         'linen_kotor_company_name' => [true => 'Company'],
         'linen_kotor_location_id' => [false => 'Location'],

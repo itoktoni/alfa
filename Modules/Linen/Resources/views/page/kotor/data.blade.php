@@ -216,7 +216,7 @@
                                 <th width="9" class="center"><input id="checkAll" class="selectall"
                                         onclick="toggle(this)" type="checkbox"></th>
 
-                                <th class="text-center" width=70>
+                                <th class="text-center" width=50>
                                     <strong>{{ __('Actions') }}</strong>
                                 </th>
                             </tr>

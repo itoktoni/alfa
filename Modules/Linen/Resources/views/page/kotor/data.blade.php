@@ -3,6 +3,14 @@
 @component('components.responsive', ['array' => $fields])
 @endcomponent
 
+@push('css')
+<style>
+#datatable tr td{
+    font-size: 11px;
+}
+</style>
+@endpush
+
 <x-date :array="['date']" />
 
 @push('js')

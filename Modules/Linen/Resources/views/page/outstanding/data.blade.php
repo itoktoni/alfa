@@ -11,7 +11,6 @@
 #datatable tr td{
     font-size: 11px;
 }
-
 </style>
 @endpush
 

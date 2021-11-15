@@ -59,8 +59,8 @@
 
             @php
             
-            $total_delivery_pcs = $linen_delivery->where('linen_grouping_detail_product_id', $item->item_product_id)->count() ?? 0;
-            $total_kotor_pcs_right = $linen_kotor->where('linen_kotor_detail_product_id', $item->item_product_id)->count() ?? 0;
+            $total_delivery_pcs = $linen_delivery ? $linen_delivery->where('linen_grouping_detail_product_id', $item->item_product_id)->count() : 0;
+            $total_kotor_pcs_right = $linen_kotor ? $linen_kotor->where('linen_kotor_detail_product_id', $item->item_product_id)->count() : 0;
             $total_delivery_pcs_right = $total_delivery_pcs ?? 0;
 
             $pivot_berat = $item->pivot->company_item_weight ?? 0;

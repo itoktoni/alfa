@@ -52,8 +52,10 @@ class Linen extends Model
         'item_linen_created_at',
         'item_linen_updated_at',
         'item_linen_deleted_at',
+        'item_linen_ganti_at',
         'item_linen_counter',
         'item_linen_update_by',
+        'item_linen_ganti_by',
         'item_linen_created_by',
         'item_linen_created_name',
         'item_linen_deleted_by',
@@ -95,6 +97,7 @@ class Linen extends Model
         'item_linen_created_name' => [false => 'Key'],
         'item_linen_counter' => [true => 'Cuci', 'width' => 30],
         'item_linen_created_at' => [false => 'Created At'],
+        'item_linen_ganti_at' => [false => 'Created At'],
         'item_linen_rent' => [true => 'Rental', 'width' => 50, 'class' => 'text-center', 'status' => 'rent'],
         'item_linen_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center', 'status' => 'status'],
         'item_linen_latest' => [true => 'Status Linen Terakhir', 'width' => 150, 'class' => 'text-center', 'latest' => 'latest'],
@@ -104,6 +107,7 @@ class Linen extends Model
         'item_linen_created_at' => 'datetime:Y-m-d H:i:s',
         'item_linen_updated_at' => 'datetime:Y-m-d H:i:s',
         'item_linen_deleted_at' => 'datetime:Y-m-d H:i:s',
+        'item_linen_ganti_at' => 'datetime:Y-m-d H:i:s',
         'item_linen_rent' => 'integer',
         'item_linen_status' => 'integer',
         'item_linen_latest' => 'integer',
@@ -114,6 +118,7 @@ class Linen extends Model
         'item_linen_created_at',
         'item_linen_updated_at',
         'item_linen_deleted_at',
+        'item_linen_ganti_at',
     ];
 
     public function mask_rfid()

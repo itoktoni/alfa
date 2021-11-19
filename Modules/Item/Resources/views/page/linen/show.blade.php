@@ -48,19 +48,19 @@
                     <table class="table table-no-more table-bordered table-striped mb-none">
                         <thead>
                             <tr>
-                                <th class="text-left col-md-2">Status</th>
-                                <th class="text-left">Createt At</th>
+                                <th class="text-left col-md-2">Createt At</th>
+                                <th class="text-left ">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if($detail)
                             @foreach($detail as $item)
                             <tr>
-                                <td data-title="Status">
-                                    {{ $item->mask_description }}
-                                </td>
                                 <td data-title="Created At">
                                     {{ $item->mask_created_at }}
+                                </td>
+                                <td data-title="Status">
+                                    {{ $item->mask_description }}
                                 </td>
                             </tr>
                             @endforeach

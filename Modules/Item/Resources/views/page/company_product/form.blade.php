@@ -13,10 +13,11 @@
     </div>
     @endif
 
-    {!! Form::label('name', __('Description'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
-    <div class="col-md-4 col-sm-4">
-        {!! Form::textarea('company_item_description', null, ['class' => 'form-control', 'rows' => '3']) !!}
-    </div> 
+    {!! Form::label('name', __('Location'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
+    <div class="col-md-4 col-sm-4 {{ $errors->has('location_id') ? 'has-error' : ''}}">
+        {{ Form::select('location_id', $location, null, ['class'=> 'form-control', ]) }}
+        {!! $errors->first('location_id', '<p class="help-block">:message</p>') !!}
+    </div>
 
 </div>
 
@@ -37,16 +38,12 @@
     @endif
 
     {!! Form::label('name', __('Size'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
-    <div class="col-md-2 col-sm-2 {{ $errors->has('company_item_size_id') ? 'has-error' : ''}}">
+    <div class="col-md-4 col-sm-4 {{ $errors->has('company_item_size_id') ? 'has-error' : ''}}">
         {{ Form::select('company_item_size_id', $size, null, ['class'=> 'form-control', ]) }}
         {!! $errors->first('company_item_size_id', '<p class="help-block">:message</p>') !!}
     </div>
 
-    {!! Form::label('name', __('Weight'), ['class' => 'col-md-1 col-sm-2 control-label']) !!}
-    <div class="col-md-1 col-sm-4 {{ $errors->has('company_item_weight') ? 'has-error' : ''}}">
-        {!! Form::text('company_item_weight', null, ['class' => 'form-control']) !!}
-        {!! $errors->first('company_item_weight', '<p class="help-block">:message</p>') !!}
-    </div>
+   
 
 </div>
 
@@ -69,7 +66,16 @@
 
 <div class="form-group">
 
-    
+{!! Form::label('name', __('Weight'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
+    <div class="col-md-4 col-sm-4 {{ $errors->has('company_item_weight') ? 'has-error' : ''}}">
+        {!! Form::text('company_item_weight', null, ['class' => 'form-control']) !!}
+        {!! $errors->first('company_item_weight', '<p class="help-block">:message</p>') !!}
+    </div>
+
+{!! Form::label('name', __('Description'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
+    <div class="col-md-4 col-sm-4">
+        {!! Form::textarea('company_item_description', null, ['class' => 'form-control', 'rows' => '3']) !!}
+    </div>   
 <!-- 
     {!! Form::label('name', __('Unit'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('company_item_unit_id') ? 'has-error' : ''}}">

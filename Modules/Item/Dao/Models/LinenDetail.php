@@ -136,8 +136,10 @@ class LinenDetail extends Model
     {
         parent::boot();
         parent::saving(function ($model) {
-            $model->item_linen_detail_description = LinenStatus::getDescription($model->mask_status);
-
+            if(empty($model->item_linen_detail_description)){
+                
+                $model->item_linen_detail_description = LinenStatus::getDescription($model->mask_status);
+            }
         });
     }
 }

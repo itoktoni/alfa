@@ -21,7 +21,7 @@ class CompanyConnectionItemProduct extends Model
 
 	protected $fillable = [
 		'company_id',
-		'product_id',
+		'item_product_id',
 		'location_id',
 		'company_item_id',
 		'company_item_target',

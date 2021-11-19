@@ -43,7 +43,9 @@ class LinenStatus extends Enum
     const Upload            = 24;
     const KirimRetur        = 25;
     const KirimRewash       = 26;
-
+    // hapus chip
+    const HapusChip         = 27;
+    const Activated         = 28;
 
     public static function colors()
     {
@@ -68,6 +70,8 @@ class LinenStatus extends Enum
             self::Hilang => ColorType::Primary,
             self::Retur => ColorType::Primary,
             self::Rewash => ColorType::Primary,
+            self::HapusChip => ColorType::Primary,
+            self::Activated => ColorType::Primary,
         ];
     }
 

@@ -12,13 +12,16 @@ use Wildside\Userstamps\Userstamps;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Mehradsadeghi\FilterQueryString\FilterQueryString;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Item\Dao\Facades\LinenDetailFacades;
+use Modules\Item\Events\GantiChipLinenEvent;
 use Modules\Item\Events\RegisterLinenEvent;
+use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\System\Dao\Models\Company;
 
 class Linen extends Model
 {
-    use Userstamps, FilterQueryString, HasFactory;
+    use Userstamps, FilterQueryString, HasFactory, SoftDeletes;
     protected $table = 'item_linen';
     protected $primaryKey = 'item_linen_rfid';
     protected $keyType = 'string';
@@ -35,6 +38,7 @@ class Linen extends Model
 
     protected $fillable = [
         'item_linen_rfid',
+        'item_linen_rfid_old',
         'item_linen_description',
         'item_linen_status',
         'item_linen_rent',
@@ -47,6 +51,7 @@ class Linen extends Model
         'item_linen_product_name',
         'item_linen_created_at',
         'item_linen_updated_at',
+        'item_linen_deleted_at',
         'item_linen_counter',
         'item_linen_update_by',
         'item_linen_created_by',
@@ -79,6 +84,7 @@ class Linen extends Model
     public $searching = 'item_linen_rfid';
     public $datatable = [
         'item_linen_rfid' => [true => 'No. Seri RFID', 'width' => 200],
+        'item_linen_deleted_at' => [false => 'No. Seri RFID', 'width' => 200],
         'item_linen_product_id' => [false => 'Product Id'],
         'item_linen_product_name' => [true => 'Product Name'],
         'item_linen_company_id' => [false => 'Company Id'],
@@ -91,7 +97,7 @@ class Linen extends Model
         'item_linen_created_at' => [false => 'Created At'],
         'item_linen_rent' => [true => 'Rental', 'width' => 50, 'class' => 'text-center', 'status' => 'rent'],
         'item_linen_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center', 'status' => 'status'],
-        'item_linen_latest' => [true => 'Latest', 'width' => 150, 'class' => 'text-center', 'latest' => 'latest'],
+        'item_linen_latest' => [true => 'Status Linen Terakhir', 'width' => 150, 'class' => 'text-center', 'latest' => 'latest'],
     ];
 
     protected $casts = [
@@ -123,6 +129,21 @@ class Linen extends Model
     public function getMaskRfidAttribute()
     {
         return $this->{$this->mask_rfid()};
+    }
+
+    public function mask_old_rfid()
+    {
+        return 'item_linen_rfid_old';
+    }
+
+    public function setMaskOldRfidAttribute($value)
+    {
+        $this->attributes[$this->mask_old_rfid()] = $value;
+    }
+
+    public function getMaskOldRfidAttribute()
+    {
+        return $this->{$this->mask_old_rfid()};
     }
 
     public function mask_company_id()
@@ -295,6 +316,21 @@ class Linen extends Model
         return $this->{$this->mask_status()};
     }
 
+    public function mask_description()
+    {
+        return 'item_linen_description';
+    }
+
+    public function setMaskDescriptionAttribute($value)
+    {
+        $this->attributes[$this->mask_description()] = $value;
+    }
+
+    public function getMaskDescriptionAttribute()
+    {
+        return $this->{$this->mask_description()};
+    }
+
     /**
      * 
      * End latest
@@ -361,18 +397,24 @@ class Linen extends Model
             $model->item_linen_location_name = LocationFacades::find($model->item_linen_location_id)->location_name ?? '';
             $model->item_linen_created_name = auth()->user()->name ?? '';
             $model->mask_counter = 0;
+
         });
 
         parent::created(function ($model) {
-            if($model->mask_status == 1){
+            if($model->mask_status == LinenStatus::Register){
 
                 RegisterLinenEvent::dispatch($model->mask_rfid, $model->mask_company_id, $model->mask_location_id, $model->mask_product_id);
             }
-
-            // else if($model->mask_status == 2)
-            // {
-            //     RegisterLinenChangeEvent::dispatch($model->rfid, $model->company_id, $model->location_id, $model->product_id);
-            // }
         });
+
+        parent::deleted(function($model){
+
+            LinenDetailFacades::create([
+                LinenDetailFacades::mask_rfid() => $model->mask_rfid,
+                LinenDetailFacades::mask_status() => LinenStatus::HapusChip,
+            ]);
+
+        });
+
     }
 }

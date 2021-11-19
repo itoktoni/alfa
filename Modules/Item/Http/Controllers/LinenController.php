@@ -10,10 +10,13 @@ use Kirschbaum\PowerJoins\PowerJoins;
 use Modules\Item\Dao\Enums\RegisterStatus;
 use Modules\Item\Dao\Enums\RentStatus;
 use Modules\Item\Dao\Facades\CompanyProductFacades;
+use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Item\Dao\Repositories\LinenRepository;
 use Modules\Item\Dao\Repositories\ProductRepository;
+use Modules\Item\Http\Services\DeleteLinenService;
 use Modules\Item\Http\Services\LinenDataService;
+use Modules\Item\Http\Services\UpdateLinenService;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\System\Dao\Facades\CompanyConnectionLocationFacades;
 use Modules\System\Dao\Facades\CompanyFacades;
@@ -27,7 +30,6 @@ use Modules\System\Http\Requests\GeneralRequest;
 use Modules\System\Http\Services\CreateService;
 use Modules\System\Http\Services\DeleteService;
 use Modules\System\Http\Services\SingleService;
-use Modules\System\Http\Services\UpdateService;
 use Modules\System\Plugins\Helper;
 use Modules\System\Plugins\Notes;
 use Modules\System\Plugins\Response;
@@ -52,18 +54,18 @@ class LinenController extends Controller
         $location = Views::option(new LocationRepository());
         $company = Views::option(new CompanyRepository());
         $user = Views::option(new TeamRepository());
-        $rent = LinenStatus::getOptions([LinenStatus::Cuci, LinenStatus::Rental]);
-        $status = LinenStatus::getOptions([LinenStatus::Register, LinenStatus::GantiChip]);
+        $rent = LinenStatus::getOptions([LinenStatus::StatusLinen, LinenStatus::Cuci, LinenStatus::Rental]);
+        $status = LinenStatus::getOptions([LinenStatus::StatusLinen, LinenStatus::Register, LinenStatus::GantiChip]);
 
-        if(request()->get('company_id') || isset($data['model'])){
+        if (request()->get('company_id') || isset($data['model'])) {
 
             $id = request()->get('company_id') ?? $data['model']->item_linen_company_id;
 
             $data_company = CompanyFacades::where(CompanyFacades::getKeyName(), $id)->first();
-            if(isset($data_company->has_location)){
+            if (isset($data_company->has_location)) {
                 $location = $data_company->has_location->pluck('location_name', 'location_id');
             }
-            if(isset($data_company->has_product)){
+            if (isset($data_company->has_product)) {
                 $product = $data_company->has_product->pluck('item_product_name', 'item_product_id');
             }
         }
@@ -142,12 +144,22 @@ class LinenController extends Controller
 
     public function edit($code)
     {
+        if(request()->get('activate')){
+            LinenFacades::withTrashed()->find($code)->restore();
+
+            LinenDetailFacades::create([
+                LinenDetailFacades::mask_rfid() => $code,
+                LinenDetailFacades::mask_status() => LinenStatus::Activated,
+            ]);
+            
+            return redirect()->back();
+        }
         return view(Views::update())->with($this->share([
             'model' => $this->get($code),
         ]));
     }
 
-    public function update($code, GeneralRequest $request, UpdateService $service)
+    public function update($code, GeneralRequest $request, UpdateLinenService $service)
     {
         $data = $service->update(self::$model, $request, $code);
         return Response::redirectBack($data);
@@ -172,7 +184,7 @@ class LinenController extends Controller
         return self::$service->get(self::$model, $code);
     }
 
-    public function delete(DeleteRequest $request, DeleteService $service)
+    public function delete(DeleteRequest $request, DeleteLinenService $service)
     {
         $code = $request->get('code');
         $data = $service->delete(self::$model, $code);
@@ -190,7 +202,7 @@ class LinenController extends Controller
 
         // return FacadesResponse::download(public_path('/files/linen/'.$jsongFile));
         $company = request()->get('item_linen_company_id');
-        return response()->streamDownload(function(){
+        return response()->streamDownload(function () {
             $sql = LinenFacades::dataRepository();
             $data = $sql->select([
                 'item_linen_rfid as rfid',
@@ -201,7 +213,6 @@ class LinenController extends Controller
                 'item_linen_location_name as lname',
             ])->filter()->get();
             echo json_encode($data);
-            
-        },$company.'_item_linen.json');
+        }, $company . '_item_linen.json');
     }
 }

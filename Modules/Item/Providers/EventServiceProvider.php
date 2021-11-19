@@ -3,10 +3,13 @@
 namespace Modules\Item\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Item\Events\GantiChipLinenEvent;
 use Modules\Item\Events\RegisterLinenEvent;
 use Modules\Item\Listeners\Register\CreateLinenDetailListener;
 use Modules\Item\Listeners\Register\CreateLinenStockCardListener;
 use Modules\Item\Listeners\Register\CreateLinenStockDetailListener;
+use Modules\Item\Listeners\Register\DeleteLinenListener;
+use Modules\Item\Listeners\Register\GantiChipLinenDetailListener;
 use Modules\Item\Listeners\Register\RealisasiCompanyProductListener;
 use Modules\Item\Listeners\Register\UpdateLinenListener;
 
@@ -24,6 +27,10 @@ class EventServiceProvider extends ServiceProvider
             RealisasiCompanyProductListener::class,
             CreateLinenStockCardListener::class
         ],
+        GantiChipLinenEvent::class => [
+            DeleteLinenListener::class,
+            GantiChipLinenDetailListener::class,
+        ]
     ];
 
     /**

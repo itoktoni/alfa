@@ -10,6 +10,7 @@ use Modules\Item\Dao\Repositories\UnitRepository;
 use Modules\Item\Http\Requests\CompanyProductRequest;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Repositories\CompanyRepository;
+use Modules\System\Dao\Repositories\LocationRepository;
 use Modules\System\Http\Requests\DeleteRequest;
 use Modules\System\Http\Requests\GeneralRequest;
 use Modules\System\Http\Services\CreateService;
@@ -36,6 +37,7 @@ class CompanyProductController extends Controller
     private function share($data = [])
     {
         $company = Views::option(new CompanyRepository());
+        $location = Views::option(new LocationRepository());
         $product = Views::option(new ProductRepository());
         $unit = Views::option(new UnitRepository());
         $size = Views::option(new SizeRepository());
@@ -53,6 +55,7 @@ class CompanyProductController extends Controller
 
         $view = [
             'company' => $company,
+            'location' => $location,
             'product' => $product,
             'size' => $size,
             'unit' => $unit,

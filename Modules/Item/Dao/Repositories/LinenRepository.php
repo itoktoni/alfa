@@ -18,7 +18,7 @@ class LinenRepository extends Linen implements CrudInterface
     public function dataRepository()
     {
         $list = Helper::dataColumn($this->datatable);
-        return $this->select($list);
+        return $this->select($list)->withTrashed();
     }
 
     public function saveRepository($request)
@@ -34,7 +34,7 @@ class LinenRepository extends Linen implements CrudInterface
     public function updateRepository($request, $code)
     {
         try {
-            $update = $this->findOrFail($code);
+            $update = $this->withTrashed()->findOrFail($code);
             $update->update($request);
             return Notes::update($update->toArray());
         } catch (QueryException $ex) {
@@ -55,9 +55,9 @@ class LinenRepository extends Linen implements CrudInterface
     public function singleRepository($code, $relation = false)
     {
         if ($relation) {
-            return $this->with($relation)->findOrFail($code);
+            return $this->withTrashed()->with($relation)->findOrFail($code);
         }
-        return $this->findOrFail($code);
+        return $this->withTrashed()->findOrFail($code);
     }
     
     public function rfidRepository($code){

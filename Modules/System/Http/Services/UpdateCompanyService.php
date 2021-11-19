@@ -18,13 +18,7 @@ class UpdateCompanyService extends UpdateService
                 $location = $data->locations;
             }
 
-            $getData->locations()->sync($location);
-            
-            // if(isset($data->products)){
-            //     $product = $data->products;
-            // }
-            
-            // $getData->products()->sync($product);
+            $getData->has_location()->sync($location);
         }
 
         if ($check['status']) {

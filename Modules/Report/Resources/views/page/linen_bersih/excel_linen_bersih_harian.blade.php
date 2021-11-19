@@ -48,11 +48,12 @@
                 <td width="100">Total Bersih (Pcs)</td>
                 <td width="100">(Kg) Bersih</td>
                 <td width="100">Total Kotor (Pcs)</td>
+                <td width="80">Selisih</td>
             </tr>
         </thead>
         <tbody>
             @php 
-            $total_kotor_pcs_right = $total_kotor_pcs_bottom = $total_delivery_pcs_right = $total_delivery_pcs_bottom = $kg_delivery_right = $kg_delivery_bottom = $total_bersih_pcs_right = $total_bersih_pcs_bottom = 0;
+            $total_kotor_pcs_right = $total_kotor_pcs_bottom = $total_delivery_pcs_right = $total_delivery_pcs_bottom = $kg_delivery_right = $kg_delivery_bottom = $total_bersih_pcs_right = $total_bersih_pcs_bottom = $total_selisih = 0;
             @endphp
 
             @foreach($product as $item)
@@ -70,6 +71,10 @@
             $total_kotor_pcs_bottom = $total_kotor_pcs_bottom + $total_kotor_pcs_right;
 
             $kg_delivery_bottom = $kg_delivery_bottom + $kg_delivery_right;
+
+            $selisih = $total_kotor_pcs_right - $total_delivery_pcs_right;
+
+            $total_selisih = $total_selisih + $selisih;
 
             @endphp
             <tr>
@@ -94,6 +99,9 @@
                 <td>
                     {{ $total_kotor_pcs_right }}
                 </td>
+                <td>
+                    {{ $selisih }}
+                </td>
             </tr>
             @endforeach
         </tbody>
@@ -113,6 +121,7 @@
                 <td>{{ $total_delivery_pcs_bottom ?? '' }}</td>
                 <td>{{ $kg_delivery_bottom ?? 0 }}</td>
                 <td>{{ $total_kotor_pcs_bottom ?? 0 }}</td>
+                <td>{{ $total_selisih ?? 0 }}</td>
             </tr>
         </tfoot>
     </table>

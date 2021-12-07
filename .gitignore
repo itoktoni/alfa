@@ -12,4 +12,5 @@ yarn-error.log
 /node_modules
 /public/files
 .env
+/storage/*
 /resources/lang/*

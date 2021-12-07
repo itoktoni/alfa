@@ -94,7 +94,7 @@ class Outstanding extends Model
     public $searching = 'linen_outstanding_rfid';
     public $datatable = [
         'linen_outstanding_session' => [false => 'No. Transaksi', 'width' => 100],
-        'linen_outstanding_key' => [true => 'No. Transaksi'],
+        'linen_outstanding_key' => [true => 'No. Transaksi', 'width' => 100],
         'linen_outstanding_rfid' => [true => 'No. Seri RFID', 'width' => 150],
         'linen_outstanding_product_id' => [false => 'Product'],
         'linen_outstanding_product_name' => [true => 'Product'],
@@ -106,7 +106,7 @@ class Outstanding extends Model
         'linen_outstanding_ori_company_name' => [true => 'Rumah Sakit'],
         'linen_outstanding_ori_location_id' => [false => 'Location'],
         'linen_outstanding_ori_location_name' => [true => 'Ruangan'],
-        'linen_outstanding_created_at' => [true => 'Tanggal Masuk'],
+        'linen_outstanding_created_at' => [true => 'Tanggal Masuk', 'width' => 50],
         'name' => [true => 'Operator'],
         'linen_outstanding_status' => [true => 'Status', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
         'linen_outstanding_process' => [true => 'Process', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],

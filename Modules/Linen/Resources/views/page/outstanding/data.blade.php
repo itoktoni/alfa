@@ -34,11 +34,7 @@
             dom: '<<t>p><"pull-left"i>',
             serverSide: true,
             order: [],
-            pageLength: {
-                {
-                    {{ env('WEBSITE_PAGINATION') }}
-                }
-            },
+            pageLength: {{ config('website.pagination') }},
             pagingType: 'first_last_numbers',
             ajax: {
                 url: '{{ route($route_data) }}',
@@ -60,11 +56,7 @@
                 error: function(xhr, textStatus, errorThrown) {
                     new PNotify({
                         title: 'Datatable Error !',
-                        text: {
-                            {
-                                config('website.env') == 'local' ? 'xhr.responseJSON.message' : 'errorThrown'
-                            }
-                        },
+                        text: {{ config('website.env') == 'local' ? 'xhr.responseJSON.message' : 'errorThrown' }},
                         type: 'error',
                         hide: false
                     });

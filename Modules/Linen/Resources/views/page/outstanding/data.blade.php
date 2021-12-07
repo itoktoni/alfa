@@ -36,7 +36,7 @@
             order: [],
             pageLength: {
                 {
-                    env('WEBSITE_PAGINATION')
+                    {{ env('WEBSITE_PAGINATION') }}
                 }
             },
             pagingType: 'first_last_numbers',

@@ -1,6 +1,7 @@
 @if(!empty($detail))
 @php
 $linen_kotor = $detail->where('linen_kotor_detail_description', LinenStatus::LinenKotor);
+$linen_bersih = $bersih->has_detail ?? [];
 $linen_beda_rs = $detail->where('linen_kotor_detail_description', LinenStatus::BedaRs);
 $total_location = count($location)+6;
 $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
@@ -44,11 +45,13 @@ $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
             <td width="120">Beda Rumah Sakit</td>
             <td width="100">Total Kotor (Pcs)</td>
             <td width="100">(Kg) Kotor</td>
+            <td width="120">Total Bersih (Pcs)</td>
+            <td width="100">Selisih</td>
         </tr>
     </thead>
     <tbody>
         @php 
-        $total_beda_rs_right = $total_beda_rs_bottom = $total_kotor_pcs_right = $total_kotor_pcs_bottom = $kg_kotor_right = $kg_kotor_bottom = $total_bersih_pcs_right = $total_bersih_pcs_bottom = 0;
+        $total_beda_rs_right = $total_beda_rs_bottom = $total_bersih_bottom = $total_selisih_bottom = $total_kotor_pcs_right = $total_kotor_pcs_bottom = $kg_kotor_right = $kg_kotor_bottom = $total_bersih_pcs_right = $total_selisih_pcs_right = $total_bersih_pcs_bottom = 0;
         @endphp
 
         @foreach($product as $item)
@@ -59,6 +62,13 @@ $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
         
         $total_kotor_pcs = $linen_kotor->where('linen_kotor_detail_product_id', $item->item_product_id)->count();
         $total_kotor_pcs_right = $total_beda_rs_right + $total_kotor_pcs;
+
+        $total_bersih_pcs = $linen_bersih->where('linen_grouping_detail_product_id', $item->item_product_id)->count();
+        $total_bersih_pcs_right = $total_bersih_pcs_right + $total_bersih_pcs;
+
+        $total_bersih_bottom = $total_bersih_bottom + $total_bersih_pcs_right;
+
+        $total_selisih_bottom = $total_selisih_bottom + ($total_kotor_pcs_right - $total_bersih_pcs_right);
 
         $pivot_berat = $item->pivot->company_item_weight ?? 0;
         $kg_kotor_right = $total_kotor_pcs_right * $pivot_berat;
@@ -84,12 +94,17 @@ $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
             <td>
                 {{ $total_beda_rs_right ?? '' }}
             </td>
-            
             <td>
                 {{  $total_kotor_pcs_right }}
             </td>
             <td>
                 {{ $kg_kotor_right }}
+            </td>
+            <td>
+                {{  $total_bersih_pcs_right }}
+            </td>
+            <td>
+                {{  $total_kotor_pcs_right - $total_bersih_pcs_right }}
             </td>
         </tr>
         @endforeach
@@ -110,6 +125,8 @@ $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
             <td>{{ $total_beda_rs_bottom ?? '' }}</td>
             <td>{{ $total_kotor_pcs_bottom ?? '' }}</td>
             <td>{{ $kg_kotor_bottom }}</td>
+            <td>{{ $total_bersih_bottom }}</td>
+            <td>{{ $total_selisih_bottom }}</td>
         </tr>
     </tfoot>
 </table>

@@ -69,8 +69,8 @@ class OutstandingDataService extends DataService
         if($product = $request['linen_outstanding_product_id']){
             $filter = $filter->where('linen_outstanding_product_id', $product);
         }
-        if($create = $request['linen_outstanding_created_by']){
-            $filter = $filter->where('linen_outstanding_created_by', $create);
+        if($create = $request['linen_outstanding_created_at']){
+            $filter = $filter->whereDate('linen_outstanding_created_at', $create);
         }
         // if($register = $request['item_linen_created_by']){
         //     $filter = $filter->where('item_linen_created_by', $register);

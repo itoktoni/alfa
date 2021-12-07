@@ -106,7 +106,7 @@ class Outstanding extends Model
         'linen_outstanding_ori_company_name' => [true => 'Rumah Sakit'],
         'linen_outstanding_ori_location_id' => [false => 'Location'],
         'linen_outstanding_ori_location_name' => [true => 'Ruangan'],
-        'linen_outstanding_created_at' => [false => 'Created At'],
+        'linen_outstanding_created_at' => [true => 'Tanggal Masuk'],
         'name' => [true => 'Operator'],
         'linen_outstanding_status' => [true => 'Status', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],
         'linen_outstanding_process' => [true => 'Process', 'width' => 50, 'class' => 'text-center', 'status' => 'status'],

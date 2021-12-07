@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Item\Dao\Facades\LinenFacades;
+use Modules\Linen\Dao\Facades\DeliveryFacades;
 use Modules\Linen\Dao\Models\KotorDetail;
 use Modules\Linen\Dao\Repositories\KotorRepository;
 use Modules\Report\Dao\Repositories\ReportLinenKotorHarianRepository;
@@ -48,7 +49,7 @@ class LinenKotorController extends Controller
     public function harian(Request $request, PreviewService $service)
     {
         $linen = LinenFacades::dataRepository();
-        $master = $preview = $location = $product = $detail = $date_from = $date_to = null;
+        $master = $preview = $location = $product = $detail = $date_from = $date_to = $bersih = null;
         
         if(request()->all()){
             $preview = $service->data($linen, $request);
@@ -70,6 +71,26 @@ class LinenKotorController extends Controller
             }
 
             $query->whereNull('linen_kotor_detail_deleted_at');
+
+            $query2 = DeliveryFacades::dataRepository()->with('has_detail');
+
+            if ($company_id = request()->get('company_id')) {
+                $query2->where('linen_delivery_company_id', $company_id);
+            }
+
+            $bersih_from = Carbon::createFromFormat('Y-m-d', request()->get('from'));
+            $bersih_to = Carbon::createFromFormat('Y-m-d', request()->get('to'));
+
+            if ($from = request()->get('from')) {
+                $query2->whereDate('linen_delivery_reported_date', '>=', $bersih_from->format('Y-m-d'));
+            }
+            if ($to = request()->get('to')) {
+                $query2->whereDate('linen_delivery_reported_date', '<=', $bersih_to->format('Y-m-d'));
+            }
+
+            //end kotor
+
+            $bersih = $query2->first();
             
             $company = CompanyFacades::find(request()->get('company_id'));
             $location = $company->has_location ?? [];
@@ -96,6 +117,7 @@ class LinenKotorController extends Controller
             'detail' => $detail,
             'date_from' => $date_from,
             'date_to' => $date_to,
+            'bersih' => $bersih,
         ]));
     }
 

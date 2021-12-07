@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Item\Dao\Repositories\ProductRepository;
+use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Report\Dao\Repositories\ReportLinenHistoryRepository;
 use Modules\Report\Dao\Repositories\ReportLinenRegisterRepository;
 use Modules\Report\Dao\Repositories\ReportLinenSummaryRepository;
 use Modules\Report\Http\Services\ReportSummaryService;
@@ -23,11 +25,13 @@ class RegisterLinenController extends Controller
     public static $template;
     public static $service;
     public static $model;
+    public static $history;
     public static $summary;
 
-    public function __construct(ReportLinenRegisterRepository $model, ReportLinenSummaryRepository $summary, SingleService $service)
+    public function __construct(ReportLinenRegisterRepository $model, ReportLinenHistoryRepository $history, ReportLinenSummaryRepository $summary, SingleService $service)
     {
         self::$summary = self::$summary ?? $summary;
+        self::$history = self::$history ?? $history;
         self::$model = self::$model ?? $model;
         self::$service = self::$service ?? $service;
     }
@@ -38,8 +42,16 @@ class RegisterLinenController extends Controller
         $location = Views::option(new LocationRepository());
         $company = Views::option(new CompanyRepository());
         $user = Views::option(new TeamRepository());
-        $status = Views::status(self::$model->status, true);
-        $rent = Views::status(self::$model->rent, true);
+        $status = LinenStatus::getOptions([
+            LinenStatus::StatusLinen,
+            LinenStatus::Register,
+            LinenStatus::GantiChip
+        ]);
+        $rent = LinenStatus::getOptions([
+            LinenStatus::StatusLinen,
+            LinenStatus::Rental,
+            LinenStatus::Cuci
+        ]);
 
         $view = [
             'product' => $product,
@@ -75,6 +87,32 @@ class RegisterLinenController extends Controller
             return redirect()->route('report_register_linen_detail', $data)->withInput();
         }
         return $service->generate(self::$model, $request, 'report_register_linen_detail');
+    }
+
+    public function history(Request $request, PreviewService $service)
+    {
+        $preview = null;
+        $linen = LinenFacades::linenDetailRepository();
+        dd($linen->get());
+        if(request()->all()){
+            
+            $preview = $service->data($linen, $request);
+        }
+        dd($linen);
+        
+        return view(Views::form(__FUNCTION__,config('page'), config('folder')))->with($this->share([
+            'preview' => $preview,
+            'model' => $linen->getModel(),
+        ]));
+    }
+
+    public function historyExport(Request $request, ReportService $service)
+    {
+        if ($request->get('action') == 'preview') {
+            $data = $request->except('_token');
+            return redirect()->route('report_register_linen_history', $data)->withInput();
+        }
+        return $service->generate(self::$history, $request, 'report_register_linen_detail');
     }
 
     public function summary(Request $request, PreviewService $service)

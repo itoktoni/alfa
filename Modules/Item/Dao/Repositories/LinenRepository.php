@@ -12,6 +12,9 @@ use Modules\System\Dao\Interfaces\CrudInterface;
 use Modules\System\Plugins\Helper;
 use Modules\System\Plugins\Notes;
 use Kirschbaum\PowerJoins\PowerJoins;
+use Modules\Item\Dao\Facades\LinenDetailFacades;
+use Modules\Item\Dao\Facades\LinenFacades;
+use Modules\Item\Dao\Models\LinenDetail;
 
 class LinenRepository extends Linen implements CrudInterface
 {
@@ -20,6 +23,12 @@ class LinenRepository extends Linen implements CrudInterface
         $list = Helper::dataColumn($this->datatable);
         return $this->select($list)->withTrashed();
     }
+
+    public function linenDetailRepository()
+    {
+        return LinenDetailFacades::leftJoin(LinenFacades::getTable(), LinenFacades::getKeyName(), LinenDetailFacades::mask_rfid());
+    }
+
 
     public function saveRepository($request)
     {

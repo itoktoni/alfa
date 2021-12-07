@@ -100,7 +100,7 @@ class Linen extends Model
         'item_linen_ganti_at' => [false => 'Created At'],
         'item_linen_rent' => [true => 'Rental', 'width' => 50, 'class' => 'text-center', 'status' => 'rent'],
         'item_linen_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center', 'status' => 'status'],
-        'item_linen_latest' => [true => 'Status Linen Terakhir', 'width' => 150, 'class' => 'text-center', 'latest' => 'latest'],
+        'item_linen_latest' => [true => 'Posisi Linen Terakhir', 'width' => 150, 'class' => 'text-center', 'latest' => 'latest'],
     ];
 
     protected $casts = [

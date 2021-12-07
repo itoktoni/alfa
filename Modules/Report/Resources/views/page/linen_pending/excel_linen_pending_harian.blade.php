@@ -22,7 +22,8 @@
             <td width="150">Nama Linen</td>
             <td width="130">Rumah Sakit</td>
             <td width="130">Lokasi Ruangan</td>
-            <td width="100">ID RFID Tag</td>
+            <td width="150">ID RFID Tag</td>
+            <td width="100">Tanggal Masuk</td>
             <td width="100">Transaksi Terakhir</td>
         </tr>
     </thead>
@@ -39,6 +40,9 @@
             </td>
             <td>
                 {{ $item->linen_outstanding_rfid }}
+            </td>
+            <td>
+                {{ $item->linen_outstanding_created_at }}
             </td>
             <td>
                 {{ $status[$item->linen_outstanding_status] ?? '' }}

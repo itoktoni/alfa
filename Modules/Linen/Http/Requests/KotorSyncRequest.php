@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Linen\Dao\Enums\ResponseStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\KotorFacades;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
@@ -31,7 +32,7 @@ class KotorSyncRequest extends GeneralRequest
         $data = collect(request()->get('data'));
         $rfid = $data->pluck("linen_rfid")->toArray();
 
-        // GET DATA FROM DATABASE AND MAP TO EACH LINEN
+        // // GET DATA FROM DATABASE AND MAP TO EACH LINEN
         $linen = LinenFacades::dataRepository()->whereIn(LinenFacades::mask_rfid(), $rfid)->with([
             'has_company', 'has_location', 'has_product'
         ])->get();
@@ -42,59 +43,90 @@ class KotorSyncRequest extends GeneralRequest
             });
         }
 
+        $list_outstanding = OutstandingFacades::dataRepository()->whereIn(OutstandingFacades::mask_rfid(), $rfid)->get();
+
+        if ($list_outstanding) {
+            $list_outstanding = $list_outstanding->mapWithKeys(function ($data_outstanding) {
+                return [$data_outstanding[OutstandingFacades::mask_rfid()] => $data_outstanding];
+            });
+        }
+
         foreach ($data as $mapping) {
 
-            $item = $linen[$mapping['linen_rfid']] ?? false;
+            $rfid_key = $mapping['linen_rfid'];
+            $item = $linen[$rfid_key] ?? false;
+            $description = $mapping['linen_description_id'];
+            $form = $mapping['linen_form_id'];
+
+            $mapping['linen_status'] = ResponseStatus::Failed;
+            $sync[$rfid_key] = $mapping;
+
             if ($item) {
 
                 $user = auth()->user();
-                $description = LinenStatus::LinenKotor;
-                if ($mapping['linen_company_id'] != $item->item_linen_company_id) {
+                if ($form == TransactionStatus::Kotor && $mapping['linen_company_id'] != $item->item_linen_company_id) {
                     $description = LinenStatus::BedaRs;
                 }
 
-                $detail_kotor[] = [
+                if (isset($list_outstanding[$rfid_key])) {
 
-                    'linen_kotor_detail_rfid' => $item->mask_rfid,
-                    'linen_kotor_detail_product_id' => $item->mask_product_id ?? '',
-                    'linen_kotor_detail_product_name' => $item->mask_product_name ?? '',
-                    'linen_kotor_detail_ori_company_id' => $item->mask_company_id ?? '',
-                    'linen_kotor_detail_ori_company_name' => $item->mask_company_name ?? '',
-                    'linen_kotor_detail_ori_location_id' => $item->mask_location_id ?? '',
-                    'linen_kotor_detail_ori_location_name' => $item->mask_location_name ?? '',
-                    'linen_kotor_detail_scan_company_id' => $mapping['linen_company_id'] ?? '',
-                    'linen_kotor_detail_scan_company_name' => $mapping['linen_company_name'] ?? '',
-                    'linen_kotor_detail_scan_location_id' => $mapping['linen_location_id'] ?? '',
-                    'linen_kotor_detail_scan_location_name' => $mapping['linen_location_name'] ?? '',
-                    'linen_kotor_detail_created_at' => date('Y-m-d H:i:s') ?? '',
-                    'linen_kotor_detail_created_by' => $user->id ?? '',
-                    'linen_kotor_detail_created_name' => $user->name ?? '',
-                    'linen_kotor_detail_key' => $mapping['linen_key'] ?? '',
-                    'linen_kotor_detail_form' => $mapping['linen_form_id'] ?? '',
-                    'linen_kotor_detail_description' => $description,
-                ];
+                    $mapping['linen_status'] = ResponseStatus::Exists;
+                    $sync[$rfid_key] = $mapping;
+                    
+                } else {
+                    
+                    $mapping['linen_status'] = ResponseStatus::Create;
+                    $sync[$rfid_key] = $mapping;
 
-                $data_outstanding[] = [
+                    $detail_kotor[] = [
 
-                    'linen_outstanding_rfid' => $item->mask_rfid,
-                    'linen_outstanding_product_id' => $item->mask_product_id ?? '',
-                    'linen_outstanding_product_name' => $item->mask_product_name ?? '',
-                    'linen_outstanding_ori_company_id' => $item->mask_company_id ?? '',
-                    'linen_outstanding_ori_company_name' => $item->mask_company_name ?? '',
-                    'linen_outstanding_ori_location_id' => $item->mask_location_id ?? '',
-                    'linen_outstanding_ori_location_name' => $item->mask_location_name ?? '',
-                    'linen_outstanding_scan_company_id' => $mapping['linen_company_id'] ?? '',
-                    'linen_outstanding_scan_company_name' => $mapping['linen_company_name'] ?? '',
-                    'linen_outstanding_scan_location_id' => $mapping['linen_location_id'] ?? '',
-                    'linen_outstanding_scan_location_name' => $mapping['linen_location_name'] ?? '',
-                    'linen_outstanding_created_at' => date('Y-m-d H:i:s') ?? '',
-                    'linen_outstanding_created_by' => $user->id ?? '',
-                    'linen_outstanding_created_name' => $user->name ?? '',
-                    'linen_outstanding_key' => $mapping['linen_key'] ?? '',
-                    'linen_outstanding_process' => TransactionStatus::Kotor ?? '',
-                    'linen_outstanding_status' => $mapping['linen_form_id'] ?? '',
-                    'linen_outstanding_description' => $description,
-                ];
+                        'linen_kotor_detail_rfid' => $item->mask_rfid,
+                        'linen_kotor_detail_product_id' => $item->mask_product_id ?? '',
+                        'linen_kotor_detail_product_name' => $item->mask_product_name ?? '',
+                        'linen_kotor_detail_ori_company_id' => $item->mask_company_id ?? '',
+                        'linen_kotor_detail_ori_company_name' => $item->mask_company_name ?? '',
+                        'linen_kotor_detail_ori_location_id' => $item->mask_location_id ?? '',
+                        'linen_kotor_detail_ori_location_name' => $item->mask_location_name ?? '',
+                        'linen_kotor_detail_scan_company_id' => $mapping['linen_company_id'] ?? '',
+                        'linen_kotor_detail_scan_company_name' => $mapping['linen_company_name'] ?? '',
+                        'linen_kotor_detail_scan_location_id' => $mapping['linen_location_id'] ?? '',
+                        'linen_kotor_detail_scan_location_name' => $mapping['linen_location_name'] ?? '',
+                        'linen_kotor_detail_created_at' => date('Y-m-d H:i:s') ?? '',
+                        'linen_kotor_detail_created_by' => $user->id ?? '',
+                        'linen_kotor_detail_created_name' => $user->name ?? '',
+                        'linen_kotor_detail_key' => $mapping['linen_key'] ?? '',
+                        'linen_kotor_detail_form' => $form ?? '',
+                        'linen_kotor_detail_description' => $description,
+                        'linen_kotor_detail_group' => $mapping['linen_key'] . $mapping['linen_company_id'] . $mapping['linen_location_id'] . $form . $description
+                    ];
+
+                    $data_outstanding[] = [
+
+                        'linen_outstanding_rfid' => $item->mask_rfid,
+                        'linen_outstanding_product_id' => $item->mask_product_id ?? '',
+                        'linen_outstanding_product_name' => $item->mask_product_name ?? '',
+                        'linen_outstanding_ori_company_id' => $item->mask_company_id ?? '',
+                        'linen_outstanding_ori_company_name' => $item->mask_company_name ?? '',
+                        'linen_outstanding_ori_location_id' => $item->mask_location_id ?? '',
+                        'linen_outstanding_ori_location_name' => $item->mask_location_name ?? '',
+                        'linen_outstanding_scan_company_id' => $mapping['linen_company_id'] ?? '',
+                        'linen_outstanding_scan_company_name' => $mapping['linen_company_name'] ?? '',
+                        'linen_outstanding_scan_location_id' => $mapping['linen_location_id'] ?? '',
+                        'linen_outstanding_scan_location_name' => $mapping['linen_location_name'] ?? '',
+                        'linen_outstanding_created_at' => date('Y-m-d H:i:s') ?? '',
+                        'linen_outstanding_created_by' => $user->id ?? '',
+                        'linen_outstanding_created_name' => $user->name ?? '',
+                        'linen_outstanding_key' => $mapping['linen_key'] ?? '',
+                        'linen_outstanding_process' => TransactionStatus::Kotor ?? '',
+                        'linen_outstanding_status' => $mapping['linen_form_id'] ?? '',
+                        'linen_outstanding_description' => $description,
+                    ];
+                }
+            }
+            else{
+
+                $mapping['linen_status'] = ResponseStatus::Failed;
+                $sync[$rfid_key] = $mapping;
             }
         }
 
@@ -102,33 +134,26 @@ class KotorSyncRequest extends GeneralRequest
 
             // GROUPING INTO KEY
             $group = collect($detail_kotor)->mapToGroups(function ($item) {
-                return [$item['linen_kotor_detail_key'].$item['linen_kotor_detail_scan_company_id'].$item['linen_kotor_detail_scan_location_id'].$item['linen_kotor_detail_form'].$item['linen_kotor_detail_description'] => $item];
+                return [$item['linen_kotor_detail_key'] . $item['linen_kotor_detail_scan_company_id'] . $item['linen_kotor_detail_scan_location_id'] . $item['linen_kotor_detail_form'] . $item['linen_kotor_detail_description'] => $item];
             });
 
             foreach ($group as $key => $fix_linen) {
-                $request[$key]["linen_kotor_key"] = $key;
+                $request[$key]["linen_kotor_group"] = $key;
+                $request[$key]["linen_kotor_key"] = $fix_linen[0]['linen_kotor_detail_key'];
                 $request[$key]["linen_kotor_status"] = $fix_linen[0]['linen_kotor_detail_form'];
                 $request[$key]["linen_kotor_description"] = $fix_linen[0]['linen_kotor_detail_description'];
                 $request[$key]["linen_kotor_company_id"] = $fix_linen[0]['linen_kotor_detail_scan_company_id'];
+                $request[$key]["linen_kotor_company_name"] = $fix_linen[0]['linen_kotor_detail_scan_company_name'];
                 $request[$key]["linen_kotor_location_id"] = $fix_linen[0]['linen_kotor_detail_scan_location_id'];
+                $request[$key]["linen_kotor_location_name"] = $fix_linen[0]['linen_kotor_detail_scan_location_name'];
                 $request[$key]["detail"] = $fix_linen->toArray();
             }
         }
 
-        // $outstanding_search = OutstandingFacades::select(OutstandingFacades::mask_rfid())->whereIn(OutstandingFacades::mask_rfid(), $rfid)->get();
-        // $pluck = $outstanding_search->pluck(OutstandingFacades::mask_rfid())->toArray();
-        // if($pluck){
-
-        //     $data_outstanding = collect($data_outstanding)->whereNotIn(OutstandingFacades::mask_rfid(), $pluck)->toArray();
-        // }
-        // else{
-        //     $data_outstanding = 
-        // }
-        // dd($data_outstanding);
-        
         $this->merge([
             'kotor' => $request,
             'outstanding' => $data_outstanding,
+            'sync' => $sync
         ]);
     }
 

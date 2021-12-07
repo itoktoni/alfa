@@ -17,7 +17,7 @@ class Kotor extends Model
     use SoftDeletes, Userstamps;
 
     protected $table = 'linen_kotor';
-    protected $primaryKey = 'linen_kotor_key';
+    protected $primaryKey = 'linen_kotor_group';
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -31,6 +31,7 @@ class Kotor extends Model
         'linen_kotor_created_name',
         'linen_kotor_deleted_by',
         'linen_kotor_key',
+        'linen_kotor_group',
         'linen_kotor_status',
         'linen_kotor_description',
         'linen_kotor_company_id',
@@ -71,6 +72,7 @@ class Kotor extends Model
     public $datatable = [
         'linen_kotor_id' => [false => 'Code', 'width' => 50],
         'linen_kotor_key' => [true => 'No. Linen Kotor', 'width' => 150],
+        'linen_kotor_group' => [true => 'No. Grouping', 'width' => 150],
         'linen_kotor_company_id' => [false => 'Company'],
         'linen_kotor_company_name' => [true => 'Company'],
         'linen_kotor_location_id' => [false => 'Location'],
@@ -96,6 +98,21 @@ class Kotor extends Model
     public function getMaskTotalAttribute()
     {
         return $this->{$this->mask_total()};
+    }
+
+    public function mask_group()
+    {
+        return 'linen_kotor_group';
+    }
+
+    public function setMaskGroupAttribute($value)
+    {
+        $this->attributes[$this->mask_group()] = $value;
+    }
+
+    public function getMaskGroupAttribute()
+    {
+        return $this->{$this->mask_group()};
     }
 
     public function mask_company_id()
@@ -181,7 +198,7 @@ class Kotor extends Model
 
     public function has_detail(){
 
-		return $this->hasMany(KotorDetail::class, 'linen_kotor_detail_key', 'linen_kotor_key');
+		return $this->hasMany(KotorDetail::class, 'linen_kotor_detail_group', 'linen_kotor_group');
     }
     
     public static function boot()

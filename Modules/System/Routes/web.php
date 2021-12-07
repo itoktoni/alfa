@@ -13,6 +13,7 @@
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Modules\System\Dao\Facades\ActionFacades;
 use Modules\System\Http\Controllers\HomeController;
@@ -127,6 +128,10 @@ Route::get('reset', [TeamController::class, 'reset_redis'])->name('reset');
 Route::get('reboot', [TeamController::class, 'reset_routing'])->name('reboot');
 
 Route::get('/', function () {
+
+    File::link(
+        storage_path('app/public'), public_path('storage')
+    );
 
     return redirect()->route('login');
 

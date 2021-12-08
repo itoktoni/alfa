@@ -14,6 +14,7 @@ class ResponseStatus extends Enum
     const Failed     =   0;
     const Create     =   1;
     const Exists     =   2;
+    const Unknown    =   3;
 
     public static function colors()
     {
@@ -22,6 +23,7 @@ class ResponseStatus extends Enum
             self::Response => ColorType::Primary,
             self::Create => ColorType::Pink,
             self::Exists => ColorType::Brown,
+            self::Unknown => ColorType::Brown,
         ];
     }
 

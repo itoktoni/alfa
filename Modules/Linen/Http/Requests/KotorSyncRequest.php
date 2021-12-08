@@ -125,7 +125,7 @@ class KotorSyncRequest extends GeneralRequest
             }
             else{
 
-                $mapping['linen_status'] = ResponseStatus::Failed;
+                $mapping['linen_status'] = ResponseStatus::Unknown;
                 $sync[$rfid_key] = $mapping;
             }
         }

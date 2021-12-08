@@ -41,20 +41,19 @@ class KotorSyncService
                 Outstanding::upsert($data['outstanding'], ['linen_kotor_detail_rfid']);
             }
 
-            // $list_rfid = collect($data['data']);
+            $list_rfid = collect($data['sync']);
             // $return = KotorDetailFacades::select('linen_kotor_detail_rfid')->whereIn(KotorDetailFacades::mask_rfid(), $list_rfid->pluck('linen_rfid')->toArray())->get();
             
-            // $map = $list_rfid->map(function($item) use($return){
+            $map = $list_rfid->map(function($item){
 
-            //     $data_outstanding = $return->pluck('linen_kotor_detail_rfid')->toArray();
-            //     $data['linen_rfid'] = strval($item['linen_rfid']);
-            //     $data['linen_status'] = in_array($item['linen_rfid'], $data_outstanding) ? 1 : 0;
-            //     return $data;
-            // });
+                $data['linen_rfid'] = strval($item['linen_rfid']);
+                $data['linen_status'] = $item['linen_status'];
+                return $data;
+            });
 
             // $check = Notes::create($map->toArray());
 
-            $check = Notes::create($data['sync']);
+            $check = Notes::create($map);
 
 
         } catch (\Throwable $th) {

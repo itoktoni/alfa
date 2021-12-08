@@ -150,6 +150,15 @@ class KotorSyncRequest extends GeneralRequest
             }
         }
 
+        $list_rfid = collect($sync);
+        // $map = $list_rfid->map(function($item){
+
+        //     $send['linen_rfid'] = strval($item['linen_rfid']);
+        //     $send['linen_status'] = $item['linen_status'];
+        //     return $send;
+        // });
+        // dd($map->values()->toArray());
+
         $this->merge([
             'kotor' => $request,
             'outstanding' => $data_outstanding,

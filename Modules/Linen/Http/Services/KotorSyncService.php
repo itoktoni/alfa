@@ -46,14 +46,14 @@ class KotorSyncService
             
             $map = $list_rfid->map(function($item){
 
-                $data['linen_rfid'] = strval($item['linen_rfid']);
-                $data['linen_status'] = $item['linen_status'];
-                return $data;
+                $send['linen_rfid'] = strval($item['linen_rfid']);
+                $send['linen_status'] = $item['linen_status'];
+                return $send;
             });
 
             // $check = Notes::create($map->toArray());
 
-            $check = Notes::create($map);
+            $check = Notes::create($map->values()->toArray());
 
 
         } catch (\Throwable $th) {

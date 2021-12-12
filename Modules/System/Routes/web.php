@@ -129,9 +129,9 @@ Route::get('reboot', [TeamController::class, 'reset_routing'])->name('reboot');
 
 Route::get('/', function () {
 
-    File::link(
-        storage_path('app/public'), public_path('storage')
-    );
+    // File::link(
+    //     storage_path('app/public'), public_path('storage')
+    // );
 
     return redirect()->route('login');
 

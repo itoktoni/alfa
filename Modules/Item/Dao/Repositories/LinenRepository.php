@@ -26,9 +26,8 @@ class LinenRepository extends Linen implements CrudInterface
 
     public function linenDetailRepository()
     {
-        return LinenDetailFacades::leftJoin(LinenFacades::getTable(), LinenFacades::getKeyName(), LinenDetailFacades::mask_rfid());
+        return LinenDetailFacades::query()->leftJoin(LinenFacades::getTable(), LinenFacades::getKeyName(), LinenDetailFacades::mask_rfid());
     }
-
 
     public function saveRepository($request)
     {

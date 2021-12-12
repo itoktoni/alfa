@@ -29,7 +29,9 @@ class KotorRequest extends GeneralRequest
         $session = $this->linen_kotor_session;
         $company = CompanyFacades::find($this->linen_kotor_company_id);
         $location = LocationFacades::find($this->linen_kotor_location_id);
-        $linen = LinenFacades::dataRepository()->whereIn(LinenFacades::mask_rfid(), $this->rfid)->with([
+        $linen = LinenFacades::dataRepository()
+        ->whereIn(LinenFacades::mask_rfid(), $this->rfid)
+        ->with([
             'has_company', 'has_location', 'has_product'
         ])->get();
 
@@ -111,6 +113,7 @@ class KotorRequest extends GeneralRequest
             ];
 
             return $data;
+            
         })->toArray();
 
         $this->merge([

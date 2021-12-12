@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Modules\Linen\Dao\Enums\LinenStatus;
-use Modules\Linen\Dao\Enums\TransactionStatus;
 
 class SyncUpdateOutstanding extends Command
 {

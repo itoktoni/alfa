@@ -40,7 +40,7 @@ class KotorSyncService
             }
             if (!empty($data['outstanding'])) {
 
-                // Outstanding::upsert($data['outstanding'], ['linen_kotor_detail_rfid']);
+                Outstanding::upsert($data['outstanding'], ['linen_kotor_detail_rfid']);
             }
 
             $check_rfid = collect($data['outstanding'])->pluck(OutstandingFacades::mask_rfid());

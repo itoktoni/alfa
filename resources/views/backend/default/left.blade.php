@@ -24,7 +24,7 @@
                     <li class="nav-parent {{ $module === $menu->system_action_module ? 'nav-expanded nav-active' : '' }}">
                         <a id="linkMenu">
                             <i class="fas fa-bars" aria-hidden="true"></i>
-                            <span class="text-capitalize"> {{ $menu->system_module_name }}</span>
+                            <span class="text-capitalize"> {{ __($menu->system_module_name) }}</span>
                         </a>
                         <ul class="nav nav-children">
                             @foreach ($action_list as $data_action)
@@ -32,7 +32,7 @@
                             <li onclick="rmSidebar()"
                                 {{ $action_code == $data_action->system_action_code ? 'class=nav-active' : '' }}>
                                 <a id="childMenu" href="{!! route($data_action->system_action_code) !!}">
-                                    {{ $data_action->system_action_name }}
+                                    {{ __($data_action->system_action_name) }}
                                 </a>
                             </li>
                             @endif

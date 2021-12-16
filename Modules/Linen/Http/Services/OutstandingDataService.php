@@ -17,7 +17,7 @@ class OutstandingDataService extends DataService
         if (!request()->ajax()) {
 
             if(request()->get('status')){
-                return [
+                $data = [
                     'status' => true,
                     'code' => 200,
                     'name' => 'list',
@@ -76,7 +76,7 @@ class OutstandingDataService extends DataService
         //     $filter = $filter->where('item_linen_created_by', $register);
         // }
         if($status = $request['status']){
-            $filter = $filter->where('linen_outstanding_status', $status);
+            $filter = $filter->where('linen_outstanding_process', $status);
         }
         if($description = $request['description']){
             $filter = $filter->where('linen_outstanding_description', $description);

@@ -185,7 +185,7 @@
                                 <div class="col-md-3 col-sm-2">
                                     <div class="row input-group filter-search space-sm">
                                         <span class="input-group-addon">
-                                            {{ __('Status') }}
+                                            {{ __('Process') }}
                                         </span>
                                         {{ Form::select('status', $status, null, ['class'=> 'form-control ']) }}
                                     </div>

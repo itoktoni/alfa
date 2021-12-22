@@ -28,10 +28,13 @@
             <td>Berat (Kg)</td>
             <td>Total (Kg)</td>
             <td>Harga</td>
-            <td>Total Harga</td>
+            <td>Total Invoice</td>
         </tr>
     </thead>
     <tbody>
+        @php
+        $grandtotal = 0;
+        @endphp
         @foreach($detail as $key => $data)
         @php
         $connection = Modules\System\Dao\Facades\CompanyConnectionItemProductFacades::where('company_id', $master->linen_delivery_company_id)->where('item_product_id', $key)->first();
@@ -43,6 +46,7 @@
         $kg = $data->count() * $weight;
         $price = $connection->company_item_price ?? 0;
         $total = $kg * $price;
+        $grandtotal = $grandtotal + $total;
         $item = $data->first();
         @endphp
         <tr>
@@ -51,11 +55,17 @@
             <td>{{ $data->count() ?? '' }} </td>
             <td>{{ $weight }} </td>
             <td>{{ $kg }} </td>
-            <td>{{ $price }} </td>
-            <td>{{ $total }} </td>
+            <td>{{ number_format($price) }} </td>
+            <td>{{ number_format($total) }} </td>
         </tr>
         @endforeach
     </tbody>
+    <tfoot>
+        <tr>
+            <td class="text-right" colspan="6">Grand Total</td>
+            <td>{{ number_format($grandtotal) }}</td>
+        </tr>
+    </tfoot>
 </table>
 
 <style>

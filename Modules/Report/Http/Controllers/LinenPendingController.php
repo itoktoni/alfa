@@ -43,7 +43,11 @@ class LinenPendingController extends Controller
         $product = Views::option(new ProductRepository());
         $location = Views::option(new LocationRepository());
         $user = Views::option(new TeamRepository());
-        $status = TransactionStatus::getOptions();
+        $status = TransactionStatus::getOptions([
+            TransactionStatus::Transaction, 
+            TransactionStatus::Pending,
+            TransactionStatus::Hilang
+        ]);
         $description = LinenStatus::getOptions();
 
         $view = [

@@ -37,6 +37,7 @@ class Opname extends Model
         'linen_opname_location_id',
         'linen_opname_location_name',
         'linen_opname_total',
+        'linen_opname_batch',
     ];
 
     // public $with = ['module'];

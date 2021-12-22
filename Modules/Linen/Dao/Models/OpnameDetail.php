@@ -16,15 +16,18 @@ class OpnameDetail extends Model
     protected $primaryKey = 'linen_opname_detail_id';
 
     protected $fillable = [
-        'linen_opname_detail_id',
         'linen_opname_detail_rfid',
         'linen_opname_detail_key',
         'linen_opname_detail_product_id',
         'linen_opname_detail_product_name',
-        'linen_opname_detail_company_id',
-        'linen_opname_detail_company_name',
-        'linen_opname_detail_location_id',
-        'linen_opname_detail_location_name',
+        'linen_opname_detail_ori_company_id',
+        'linen_opname_detail_ori_company_name',
+        'linen_opname_detail_ori_location_id',
+        'linen_opname_detail_ori_location_name',
+        'linen_opname_detail_scan_company_id',
+        'linen_opname_detail_scan_company_name',
+        'linen_opname_detail_scan_location_id',
+        'linen_opname_detail_scan_location_name',
     ];
 
     // public $with = ['module'];
@@ -73,47 +76,93 @@ class OpnameDetail extends Model
         return $this->{$this->mask_rfid()};
     }
 
-    public function mask_location_id()
+    public function mask_ori_location_id()
     {
-        return 'linen_opname_detail_location_id';
+        return 'linen_opname_detail_ori_location_id';
     }
 
-    public function setMaskLocationIdAttribute($value)
+    public function setMaskOriLocationIdAttribute($value)
     {
-        $this->attributes[$this->mask_location_id()] = $value;
+        $this->attributes[$this->mask_ori_location_id()] = $value;
     }
 
-    public function getMaskLocationIdAttribute()
+    public function getMaskOriLocationIdAttribute()
     {
-        return $this->{$this->mask_location_id()};
+        return $this->{$this->mask_ori_location_id()};
     }
 
-    public function getMaskLocationNameAttribute()
+    public function getMaskOriLocationNameAttribute()
     {
-        return $this->linen_opname_detail_location_name;
+        return $this->linen_opname_detail_ori_location_name;
+    }
+
+    // end ori
+
+    public function mask_scan_location_id()
+    {
+        return 'linen_opname_detail_scan_location_id';
+    }
+
+    public function setMaskScanLocationIdAttribute($value)
+    {
+        $this->attributes[$this->mask_scan_location_id()] = $value;
+    }
+
+    public function getMaskScanLocationIdAttribute()
+    {
+        return $this->{$this->mask_scan_location_id()};
+    }
+
+    public function getMaskScanLocationNameAttribute()
+    {
+        return $this->linen_opname_detail_scan_location_name;
     }
 
     // end location
 
-    public function mask_company_id()
+    public function mask_scan_company_id()
     {
-        return 'linen_opname_detail_company_id';
+        return 'linen_opname_detail_scan_company_id';
     }
 
-    public function setMaskCompanyIdAttribute($value)
+    public function setMaskScanCompanyIdAttribute($value)
     {
-        $this->attributes[$this->company_id()] = $value;
+        $this->attributes[$this->mask_scan_company_id()] = $value;
     }
 
-    public function getMaskCompanyIdAttribute()
+    public function getMaskScanCompanyIdAttribute()
     {
-        return $this->{$this->mask_company_id()};
+        return $this->{$this->mask_scan_company_id()};
     }
 
-    public function getMaskCompanyNameAttribute()
+    public function getMaskScanCompanyNameAttribute()
     {
-        return $this->linen_opname_detail_company_name;
+        return $this->linen_opname_detail_scan_company_name;
     }
+
+    // end scan
+
+    public function mask_ori_company_id()
+    {
+        return 'linen_opname_detail_ori_company_id';
+    }
+
+    public function setMaskOriCompanyIdAttribute($value)
+    {
+        $this->attributes[$this->mask_ori_company_id()] = $value;
+    }
+
+    public function getMaskOriCompanyIdAttribute()
+    {
+        return $this->{$this->mask_ori_company_id()};
+    }
+
+    public function getMaskOriCompanyNameAttribute()
+    {
+        return $this->linen_opname_detail_ori_company_name;
+    }
+
+    //end
 
     public function mask_product_id()
     {

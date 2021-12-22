@@ -24,7 +24,7 @@
             <td width="130">Lokasi Ruangan</td>
             <td width="150">ID RFID Tag</td>
             <td width="100">Tanggal Masuk</td>
-            <td width="100">Transaksi Terakhir</td>
+            <td width="100">Tanggal Delivery</td>
         </tr>
     </thead>
     <tbody>

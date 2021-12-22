@@ -40,4 +40,13 @@ class TransactionStatus extends Enum
     {
         return 'Status Product';
     }
+
+    public static function getDescription($value): string
+    {
+        if ($value === self::Transaction) {
+            return '- Pilih Status - ';
+        }
+
+        return parent::getDescription($value);
+    }
 }

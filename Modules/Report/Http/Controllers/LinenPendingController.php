@@ -15,6 +15,7 @@ use Modules\Report\Dao\Repositories\ReportLinenKotorRumahSakitRepository;
 use Modules\Report\Dao\Repositories\ReportLinenPendingHarianRepository;
 use Modules\Report\Dao\Repositories\ReportLinenRegisterRepository;
 use Modules\Report\Dao\Repositories\ReportLinenSummaryRepository;
+use Modules\Report\Http\Requests\PendingRequest;
 use Modules\Report\Http\Services\ReportSummaryService;
 use Modules\System\Dao\Repositories\CompanyRepository;
 use Modules\System\Dao\Repositories\LocationRepository;
@@ -62,7 +63,7 @@ class LinenPendingController extends Controller
         return array_merge($view, $data);
     }
 
-    public function harian(Request $request, PreviewService $service)
+    public function harian(PendingRequest $request, PreviewService $service)
     {
         $preview = null;
         $linen = OutstandingFacades::dataRepository();

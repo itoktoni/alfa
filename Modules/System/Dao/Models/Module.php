@@ -32,7 +32,7 @@ class Module extends Model
 	public $timestamps = false;
 	public $rules = [
 		'system_module_code' => 'required|unique:system_module|min:3',
-		'system_module_name' => 'required|min:3',
+		'system_module_name' => 'required',
 		'system_module_controller' => 'required|min:3',
 	];
 	

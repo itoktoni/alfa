@@ -18,6 +18,7 @@ use Mehradsadeghi\FilterQueryString\FilterQueryString;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Item\Dao\Facades\CompanyProductFacades;
 use Modules\Item\Dao\Facades\LinenDetailFacades;
+use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\LinenDetail\Dao\Facades\CardFacades;
 use Modules\System\Dao\Models\Company;
@@ -25,9 +26,15 @@ use Modules\System\Plugins\Cards;
 
 class LinenDetail extends Model
 {
-    use Userstamps, HasFactory;
+    use Userstamps, FilterQueryString;
     protected $table = 'item_linen_detail';
     protected $primaryKey = 'item_linen_detail_id';
+
+    protected $filters = [
+        'item_linen_detail_rfid',
+        'item_linen_detail_created_by',
+        'item_linen_detail_status',
+    ];
 
     protected $fillable = [
         'item_linen_detail_id',
@@ -41,7 +48,7 @@ class LinenDetail extends Model
         'item_linen_detail_deleted_by',
     ];
 
-    // public $with = ['location', 'product', 'user'];
+    public $with = ['has_linen', 'has_user'];
 
     public $timestamps = true;
     public $incrementing = true;
@@ -141,5 +148,15 @@ class LinenDetail extends Model
                 $model->item_linen_detail_description = LinenStatus::getDescription($model->mask_status);
             }
         });
+    }
+
+    public function has_user(){
+
+		return $this->hasOne(User::class, TeamFacades::getKeyName(), self::CREATED_BY);
+    }
+
+    public function has_linen(){
+
+		return $this->hasOne(Linen::class, LinenFacades::getKeyName(), $this->mask_rfid());
     }
 }

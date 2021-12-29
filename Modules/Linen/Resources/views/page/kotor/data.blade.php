@@ -6,7 +6,7 @@
 @push('css')
 <style>
 #datatable tr td{
-    font-size: 11px;
+    font-size: 13px;
 }
 </style>
 @endpush

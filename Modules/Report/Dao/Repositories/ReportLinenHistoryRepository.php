@@ -22,9 +22,8 @@ class ReportLinenHistoryRepository extends LinenRepository implements FromCollec
             'Nama Linen',
             'Register Oleh',
             'Tanggal Register',
-            'Tanggal Update',
-            'Rental',
-            'Status',
+            'Log Date',
+            'Log Status',
         ];
     }
 
@@ -35,7 +34,7 @@ class ReportLinenHistoryRepository extends LinenRepository implements FromCollec
 
     public function collection()
     {
-        $query = $this->dataRepository()->addSelect([$this->getCreatedAtColumn(), $this->getUpdatedAtColumn()]);
+        $query = $this->linenDetailRepository()->addSelect([$this->getCreatedAtColumn(), $this->getUpdatedAtColumn()]);
         
         if ($item_linen_company_id = request()->get('item_linen_company_id')) {
             $query->where('item_linen_company_id', $item_linen_company_id);
@@ -75,10 +74,9 @@ class ReportLinenHistoryRepository extends LinenRepository implements FromCollec
            $data->item_linen_location_name, 
            $data->item_linen_product_name, 
            $data->item_linen_created_name, 
-           $data->item_linen_created_at ? $data->item_linen_created_at->isoFormat('dddd, D MMMM Y') : '', 
-           $data->item_linen_updated_at ? $data->item_linen_updated_at->isoFormat('dddd, D MMMM Y') : '', 
-           $data->rent[$data->item_linen_rent][0] ?? '', 
-           $data->status[$data->item_linen_status][0] ?? '', 
+           $data->item_linen_created_at ?? '', 
+           $data->item_linen_detail_created_at ?? '', 
+           $data->item_linen_detail_description ?? '', 
         ];
     }
 

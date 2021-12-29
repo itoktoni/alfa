@@ -25,7 +25,7 @@ $(document).ready( function () {
             </header>
 
             <div class="panel-body line">
-                @includeIf(Views::form('detail_form', $template, $folder))
+                @includeIf(Views::form('history_form', $template, $folder))
             </div>
 
             <div class="navbar-fixed-bottom" id="menu_action">

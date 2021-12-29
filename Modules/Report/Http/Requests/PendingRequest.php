@@ -5,7 +5,7 @@ namespace Modules\Report\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\System\Http\Requests\GeneralRequest;
 
-class LinenRequest extends GeneralRequest
+class PendingRequest extends GeneralRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -31,10 +31,15 @@ class LinenRequest extends GeneralRequest
 
     public function rules()
     {
-        return [
-            'from' => 'required',
-            'to' => 'required',
-            'company_id' => 'required',
-        ];
+        $validation = [];
+        if (request()->has('report_linen_status')) {
+
+            $validation = [
+                'report_linen_status' => 'required',
+            ];
+
+        } 
+
+        return $validation;
     }
 }

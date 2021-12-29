@@ -2,13 +2,13 @@
 
 <div class="form-group">
 
-    {!! Form::label('name', __('Original Company'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
+    {!! Form::label('name', __('Rumah Sakit'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('linen_outstanding_ori_company_id') ? 'has-error' : ''}}">
         {{ Form::select('linen_outstanding_ori_company_id', $company, null, ['class'=> 'form-control ']) }}
         {!! $errors->first('linen_outstanding_ori_company_id', '<p class="help-block">:message</p>') !!}
     </div>
 
-    {!! Form::label('name', __('Scan Company'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
+    {!! Form::label('name', __('Scan di Rumah Sakit'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('linen_outstanding_scan_company_id') ? 'has-error' : ''}}">
         {{ Form::select('linen_outstanding_scan_company_id', $company, null, ['class'=> 'form-control ']) }}
         {!! $errors->first('linen_outstanding_scan_company_id', '<p class="help-block">:message</p>') !!}

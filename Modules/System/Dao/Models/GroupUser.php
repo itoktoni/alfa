@@ -24,7 +24,7 @@ class GroupUser extends Model
     public $incrementing = false;
     public $rules        = [
         'system_group_user_code' => 'required|min:3|unique:system_group_user',
-        'system_group_user_name' => 'required|min:3',
+        'system_group_user_name' => 'required',
     ];
 
     protected $keyType = 'string';

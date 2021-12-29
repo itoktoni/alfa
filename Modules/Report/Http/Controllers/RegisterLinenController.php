@@ -93,12 +93,21 @@ class RegisterLinenController extends Controller
     {
         $preview = null;
         $linen = LinenFacades::linenDetailRepository();
-        dd($linen->get());
         if(request()->all()){
+
+            $query = $linen->whereNull('item_linen_detail_deleted_at');
             
+            if ($from = request()->get('from')) {
+                $query->whereDate('item_linen_detail_created_at', '>=', $from);
+            }
+            if ($to = request()->get('to')) {
+                $query->whereDate('item_linen_detail_created_at','<=', $to);
+            }
+
+            // dd($query->get());
+
             $preview = $service->data($linen, $request);
         }
-        dd($linen);
         
         return view(Views::form(__FUNCTION__,config('page'), config('folder')))->with($this->share([
             'preview' => $preview,
@@ -112,7 +121,7 @@ class RegisterLinenController extends Controller
             $data = $request->except('_token');
             return redirect()->route('report_register_linen_history', $data)->withInput();
         }
-        return $service->generate(self::$history, $request, 'report_register_linen_detail');
+        return $service->generate(self::$history, $request, 'excel_report_history');
     }
 
     public function summary(Request $request, PreviewService $service)

@@ -33,7 +33,7 @@ class GroupModule extends Model
     public $incrementing = true;
     public $rules = [
         'system_group_module_code' => 'required|min:3|unique:system_group_module',
-        'system_group_module_name' => 'required|min:3',
+        'system_group_module_name' => 'required',
     ];
 
     public $searching = 'system_group_module_name';

@@ -3,7 +3,7 @@
 <table>
     <tr>
         <td>
-            REKAP SERAH TERIMA LINEN BERSIH HARIAN
+            REKAP LINEN {{ strtoupper(TransactionStatus::getDescription(intval(request()->get('report_linen_status')))) }}
         </td>
     </tr>
 

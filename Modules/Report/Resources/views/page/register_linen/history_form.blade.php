@@ -84,8 +84,8 @@
             <th class="text-left col-md-3 col-sm-3">{{ __('Product Name') }}</th>
             <th class="text-left col-md-2">{{ __('Company') }}</th>
             <th class="text-left col-md-1">{{ __('Location') }}</th>
-            <th class="text-left col-md-2">{{ __('Register BY') }}</th>
-            <th class="text-left col-md-2">{{ __('Register Date') }}</th>
+            <th class="text-left col-md-2">{{ __('Log Date') }}</th>
+            <th class="text-left col-md-2">{{ __('Log Status') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -95,8 +95,8 @@
             <td>{{ $linen->item_linen_product_name }}</td>
             <td>{{ $linen->item_linen_company_name }}</td>
             <td>{{ $linen->item_linen_location_name }}</td>
-            <td>{{ $linen->item_linen_created_name }}</td>
-            <td>{{ $linen->item_linen_created_at }}</td>
+            <td>{{ $linen->item_linen_detail_created_at }}</td>
+            <td>{{ $linen->item_linen_detail_description }}</td>
         </tr>
         @endforeach
     </tbody>

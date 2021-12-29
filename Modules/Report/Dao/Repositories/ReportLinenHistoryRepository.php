@@ -76,6 +76,7 @@ class ReportLinenHistoryRepository extends LinenRepository implements FromCollec
            $data->item_linen_created_name, 
            $data->item_linen_created_at ?? '', 
            $data->item_linen_detail_created_at ?? '', 
+           
            $data->item_linen_detail_description ?? '', 
         ];
     }

@@ -5,7 +5,7 @@
     <div class="login-box">
 
         <div class="login-logo" data-aos="fade-up" data-aos-duration="300">
-            <a href="http://accufy.kontrakin.com/">
+            <a href="{{ url('/') }}">
                 <img class="circles" src="{{ Helper::files('logo/'.env('WEBSITE_LOGO')) }}" style="height: 45px;margin-left: 0px;cursor:pointer" alt="{{ config('app.name') }}" />
             </a>
             <br>

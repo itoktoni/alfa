@@ -12,7 +12,7 @@
     @else
     <link href="{{ Helper::vendor('default/favicon.png') }}" rel="shortcut icon">
     @endif
-    <title>Accufy - Login</title>
+    <title>{{ env('WEBSITE_DESCRIPTION') }}</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- Bootstrap 4.0-->

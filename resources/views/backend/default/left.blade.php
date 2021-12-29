@@ -16,7 +16,7 @@
                     <li>
                         <a id="linkMenu" href="{{ $menu->system_module_link }}">
                             <i class="fa fa-external-link" aria-hidden="true"></i>
-                            <span>{{ $menu->system_module_name }} </span>
+                            <span>{{ __($menu->system_module_name) }} </span>
                         </a>
                     </li>
                     @else

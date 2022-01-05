@@ -21,7 +21,7 @@ class LinenRepository extends Linen implements CrudInterface
     public function dataRepository()
     {
         $list = Helper::dataColumn($this->datatable);
-        return $this->select($list)->withTrashed();
+        return $this->select($list);
     }
 
     public function linenDetailRepository()

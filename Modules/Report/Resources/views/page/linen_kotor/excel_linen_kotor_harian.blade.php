@@ -58,12 +58,12 @@ $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
 
         @php
         
-        $total_beda_rs_right = $linen_beda_rs->where('linen_kotor_detail_product_id', $item->item_product_id)->count();
+        $total_beda_rs_right = $linen_beda_rs ? $linen_beda_rs->where('linen_kotor_detail_product_id', $item->item_product_id)->count() : 0;
         
-        $total_kotor_pcs = $linen_kotor->where('linen_kotor_detail_product_id', $item->item_product_id)->count();
+        $total_kotor_pcs = $linen_kotor ? $linen_kotor->where('linen_kotor_detail_product_id', $item->item_product_id)->count() : 0;
         $total_kotor_pcs_right = $total_beda_rs_right + $total_kotor_pcs;
 
-        $total_bersih_pcs = $linen_bersih->where('linen_grouping_detail_product_id', $item->item_product_id)->count();
+        $total_bersih_pcs = $linen_bersih ? $linen_bersih->where('linen_grouping_detail_product_id', $item->item_product_id)->count() : 0;
         $total_bersih_pcs_right = $total_bersih_pcs_right + $total_bersih_pcs;
 
         $total_bersih_bottom = $total_bersih_bottom + $total_bersih_pcs_right;

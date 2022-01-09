@@ -34,8 +34,6 @@ class Opname extends Model
         'linen_opname_status',
         'linen_opname_company_id',
         'linen_opname_company_name',        
-        'linen_opname_location_id',
-        'linen_opname_location_name',
         'linen_opname_total',
         'linen_opname_batch',
     ];
@@ -45,7 +43,7 @@ class Opname extends Model
     public $timestamps = true;
     public $incrementing = false;
     public $rules = [
-        'linen_opname_key' => 'required',
+        'linen_opname_company_id' => 'required',
     ];
 
     const CREATED_AT = 'linen_opname_created_at';
@@ -73,11 +71,9 @@ class Opname extends Model
         'linen_opname_key' => [true => 'No. Opname'],
         'linen_opname_company_id' => [false => 'Company'],
         'linen_opname_company_name' => [true => 'Company'],
-        'linen_opname_location_id' => [false => 'Location'],
-        'linen_opname_location_name' => [true => 'Location'],
         'linen_opname_created_by' => [false => 'Created At'],
         'linen_opname_created_at' => [true => 'Created At'],
-        // 'linen_opname_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center'],
+        'linen_opname_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center'],
     ];
 
     public function mask_company_id()
@@ -179,8 +175,6 @@ class Opname extends Model
 
             $company = $model->linen_opname_company_id;
             $model->linen_opname_company_name = CompanyFacades::find($model->mask_company_id)->company_name ?? '';
-            $model->linen_opname_location_name = LocationFacades::find($model->mask_location_id)->location_name ?? '';
-
         });
     }    
 }

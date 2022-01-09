@@ -27,7 +27,7 @@ class OpnameRequest extends GeneralRequest
 
     public function prepareForValidation()
     {
-        $request = $grouping = $sync = $detail_kotor = $data_outstanding = [];
+        $sync = $keys = [];
         // DATA GET FROM POST
         $data = collect(request()->get('data'));
         $rfid = $data->pluck("linen_rfid")->toArray();
@@ -37,43 +37,39 @@ class OpnameRequest extends GeneralRequest
             'has_company', 'has_location', 'has_product'
         ])->get();
 
-        if ($linen) {
-            $linen = $linen->mapWithKeys(function ($data_linen) {
-                return [$data_linen[LinenFacades::mask_rfid()] => $data_linen];
-            });
+        if ($data) {
+
+            foreach ($data as $value) {
+
+                $first_linen = $linen->firstWhere('item_linen_rfid', $value['linen_rfid']);
+                if($first_linen){
+
+                    $sync[$value['linen_rfid']] = [
+                        'linen_opname_detail_rfid' => $value['linen_rfid'],
+                        'linen_opname_detail_key' => $value['linen_key'],
+                        'linen_opname_detail_product_id' => $first_linen->item_linen_product_id,
+                        'linen_opname_detail_product_name' => $first_linen->item_linen_product_name,
+                        'linen_opname_detail_ori_company_id' => $first_linen->item_linen_company_id,
+                        'linen_opname_detail_ori_company_name' => $first_linen->item_linen_company_name,
+                        'linen_opname_detail_ori_location_id' => $first_linen->item_linen_location_id,
+                        'linen_opname_detail_ori_location_name' => $first_linen->item_linen_location_name,
+                        'linen_opname_detail_scan_company_id' => $value['linen_company_id'],
+                        'linen_opname_detail_scan_company_name' => $value['linen_company_name'],
+                        'linen_opname_detail_scan_location_id' => $value['linen_location_id'],
+                        'linen_opname_detail_scan_location_name' => $value['linen_location_name'],
+                        'linen_opname_detail_scaned_by' => auth()->user()->id,
+                        'linen_opname_detail_scaned_name' => auth()->user()->name,
+                    ];
+
+                    $keys[$value['linen_key']] = $value['linen_key'];
+                }
+            }
         }
 
-        // if ($data) {
-
-        //     // GROUPING INTO KEY
-        //     $group = collect($data)->mapToGroups(function ($item) {
-        //         return [$item['linen_key'] . $item['linen_company_id'] . $item['linen_location_id'] . $item['linen_form_id'] . $item['linen_description_id'] => $item];
-        //     });
-        //     foreach ($group as $key => $fix_linen) {
-        //         $request[$key]["linen_opname_batch"] = $key;
-        //         $request[$key]["linen_opname_key"] = $fix_linen[0]['linen_kotor_detail_key'];
-        //         $request[$key]["linen_opname_status"] = $fix_linen[0]['linen_kotor_detail_form'];
-        //         $request[$key]["linen_opname_company_id"] = $fix_linen[0]['linen_kotor_detail_scan_company_id'];
-        //         $request[$key]["linen_opname_company_name"] = $fix_linen[0]['linen_kotor_detail_scan_company_name'];
-        //         $request[$key]["linen_opname_location_id"] = $fix_linen[0]['linen_kotor_detail_scan_location_id'];
-        //         $request[$key]["linen_opname_location_name"] = $fix_linen[0]['linen_kotor_detail_scan_location_name'];
-        //         $request[$key]["detail"] = $fix_linen->toArray();
-        //     }
-        // }
-
-        // $list_rfid = collect($sync);
-        // $map = $list_rfid->map(function($item){
-
-        //     $send['linen_rfid'] = strval($item['linen_rfid']);
-        //     $send['linen_status'] = $item['linen_status'];
-        //     return $send;
-        // });
-        // dd($map->values()->toArray());
-
         $this->merge([
-            'kotor' => $request,
-            'outstanding' => $data_outstanding,
-            'sync' => $sync
+            'sync' => $sync,
+            'detail' => $data,
+            'keys' => $keys,
         ]);
     }
 

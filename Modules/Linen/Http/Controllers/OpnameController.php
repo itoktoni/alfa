@@ -4,6 +4,7 @@ namespace Modules\Linen\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Modules\Item\Dao\Repositories\ProductRepository;
+use Modules\Linen\Dao\Enums\OpnameStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\BalanceFacades;
 use Modules\Linen\Dao\Facades\OpnameFacades;
@@ -16,6 +17,7 @@ use Modules\Linen\Http\Requests\OutstandingBatchRequest;
 use Modules\Linen\Http\Requests\OutstandingMasterRequest;
 use Modules\Linen\Http\Services\OpnameCreateService;
 use Modules\Linen\Http\Services\OpnameSingleService;
+use Modules\Linen\Http\Services\OpnameSyncService;
 use Modules\Linen\Http\Services\OutstandingBatchService;
 use Modules\Linen\Http\Services\OutstandingMasterService;
 use Modules\System\Dao\Repositories\CompanyRepository;
@@ -47,7 +49,7 @@ class OpnameController extends Controller
 
     private function share($data = [])
     {
-        $status = Views::status(self::$model->status, true);
+        $status = OpnameStatus::getOptions();
         $description = Views::status(self::$model->description, true);
         $product = Views::option(new ProductRepository());
         $location = Views::option(new LocationRepository());
@@ -73,12 +75,18 @@ class OpnameController extends Controller
         ]);
     }
 
-    // public function create()
-    // {
-    //     return view(Views::create())->with($this->share());
-    // }
+    public function create()
+    {
+        return view(Views::create())->with($this->share());
+    }
 
-    public function save(OpnameRequest $request, OpnameCreateService $service)
+    public function save(GeneralRequest $request, OpnameCreateService $service)
+    {
+        $data = $service->save(self::$model, $request);
+        return Response::redirectBack($data);
+    }
+
+    public function sync(OpnameRequest $request, OpnameSyncService $service, OpnameDetail $repository)
     {
         $data = $service->save(self::$model, $request);
         return Response::redirectBack($data);

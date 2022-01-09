@@ -2,10 +2,15 @@
 
 namespace Modules\Linen\Http\Services;
 
+use Illuminate\Support\Carbon;
+use Modules\Linen\Dao\Facades\MasterOutstandingFacades;
 use Modules\Linen\Dao\Facades\OpnameFacades;
+use Modules\Linen\Dao\Facades\OutstandingFacades;
+use Modules\Linen\Dao\Facades\OutstandingLockFacades;
 use Modules\Linen\Dao\Models\OpnameDetail;
 use Modules\System\Dao\Interfaces\CrudInterface;
 use Modules\System\Plugins\Alert;
+use Modules\System\Plugins\Helper;
 
 class OpnameCreateService
 {
@@ -13,17 +18,24 @@ class OpnameCreateService
     {
         $check = false;
         try {
-            OpnameDetail::upsert($data['detail'], [
-                'linen_opname_detail_rfid',
-                'linen_opname_detail_key'
-            ]);
-
-            unset($data['detail'], $data['rfid']);
-            $check = OpnameFacades::updateOrCreate([
-                OpnameFacades::getKeyName() => $data->{OpnameFacades::getKeyName()}
-            ], $data->all());
+            $date = Carbon::createFromFormat('Y-m-d', $data->linen_opname_date);
+            $key = Helper::autoNumber(OpnameFacades::getTable(), OpnameFacades::getKeyName(), 'OP' . $date->format('ymd'), env('WEBSITE_AUTONUMBER'));
+            $additional = $data->all();
+            $additional[OpnameFacades::getKeyName()] = $key;
+            $check = $repository->saveRepository($additional);
 
             if(isset($check['status']) && $check['status']){
+
+                $date = $date->format('Y-m-d');
+                $outstanding = OutstandingFacades::whereDate(OutstandingFacades::getCreatedAtColumn(), $date)->get();
+                if($outstanding){
+
+                    foreach($outstanding as $lock){
+                        $data_lock = $lock->toArray();
+                        $data_lock['linen_oustanding_opname'] = $key;
+                        OutstandingLockFacades::insertOrIgnore($data_lock);
+                    }
+                }
 
                 Alert::create();
             }

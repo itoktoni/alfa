@@ -13,11 +13,11 @@ use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\TeamFacades;
 use Wildside\Userstamps\Userstamps;
 
-class Outstanding extends Model
+class OutstandingLock extends Model
 {
     use Userstamps, FilterQueryString;
 
-    protected $table = 'linen_outstanding';
+    protected $table = 'linen_outstanding_lock';
     protected $primaryKey = 'linen_outstanding_rfid';
     protected $keyType = 'string';
 
@@ -56,6 +56,7 @@ class Outstanding extends Model
         'linen_outstanding_ori_company_id',
         'linen_outstanding_ori_company_name',
         'linen_outstanding_description',
+        'linen_oustanding_opname',
     ];
 
     // public $with = ['module'];
@@ -301,7 +302,6 @@ class Outstanding extends Model
         parent::boot();
         
         parent::saving(function ($model) {
-
             // $linen = LinenFacades::where('item_linen_rfid', $model->linen_outstanding_rfid)->first();
             // if ($linen) {
 

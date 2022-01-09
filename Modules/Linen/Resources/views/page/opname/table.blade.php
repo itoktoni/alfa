@@ -10,7 +10,7 @@
     }
 </style>
 @endpush
-
+@if(!empty($summary))
 <table id="transaction" class="table table-no-more table-bordered table-striped">
     <thead>
         <tr>
@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody class="markup">
-        @if(!empty($summary))
+        
         @foreach($summary as $item)
         <tr>
             <td data-title="No.">
@@ -46,8 +46,9 @@
             </td>
         </tr>
         @endforeach
-        @endif
+       
 
     </tbody>
 
 </table>
+@endif

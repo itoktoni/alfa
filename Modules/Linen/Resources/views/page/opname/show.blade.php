@@ -23,10 +23,6 @@
                                 <td>{{ $model->mask_company_name ?? '' }}</td>
                             </tr>
                             <tr>
-                                <th class="col-lg-2">{{ __('Location') }}</th>
-                                <td>{{ $model->mask_location_name ?? '' }}</td>
-                            </tr>
-                            <tr>
                                 <th class="col-lg-2">{{ __('Total') }}</th>
                                 <td>{{ $model->mask_total }}</td>
                             </tr>

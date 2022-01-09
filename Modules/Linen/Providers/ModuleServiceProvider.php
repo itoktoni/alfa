@@ -10,6 +10,7 @@ use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\Linen\Dao\Models\KotorDetail;
 use Modules\Linen\Dao\Models\OpnameDetail;
 use Modules\Linen\Dao\Models\OpnameSummary;
+use Modules\Linen\Dao\Models\OutstandingLock;
 use Modules\Linen\Dao\Models\StockDetail;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -38,6 +39,9 @@ class ModuleServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->bind('outstanding_facades', function () {
             return new \Modules\Linen\Dao\Repositories\OutstandingRepository();
+        });
+        $this->app->bind('outstanding_lock_facades', function () {
+            return new OutstandingLock();
         });
         $this->app->bind('delivery_facades', function () {
             return new \Modules\Linen\Dao\Repositories\DeliveryRepository();

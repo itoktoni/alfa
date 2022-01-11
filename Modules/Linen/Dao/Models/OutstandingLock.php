@@ -56,7 +56,7 @@ class OutstandingLock extends Model
         'linen_outstanding_ori_company_id',
         'linen_outstanding_ori_company_name',
         'linen_outstanding_description',
-        'linen_oustanding_opname',
+        'linen_outstanding_opname',
     ];
 
     // public $with = ['module'];
@@ -106,6 +106,7 @@ class OutstandingLock extends Model
         'linen_outstanding_ori_company_id' => [false => 'Rumah Sakit'],
         'linen_outstanding_ori_company_name' => [true => 'Rumah Sakit'],
         'linen_outstanding_ori_location_id' => [false => 'Location'],
+        'linen_outstanding_opname' => [false => 'Location'],
         'linen_outstanding_ori_location_name' => [true => 'Ruangan'],
         'linen_outstanding_created_at' => [true => 'Tanggal Masuk', 'width' => 50],
         'name' => [true => 'Operator'],
@@ -137,6 +138,21 @@ class OutstandingLock extends Model
     public function getMaskLocationScanAttribute()
     {
         return $this->{$this->mask_location_scan()};
+    }
+
+    public function mask_opname()
+    {
+        return 'linen_outstanding_opname';
+    }
+
+    public function setMaskOpnameAttribute($value)
+    {
+        $this->attributes[$this->mask_opname()] = $value;
+    }
+
+    public function getMaskOpnameAttribute()
+    {
+        return $this->{$this->mask_opname()};
     }
 
     public function mask_location_ori()
@@ -194,6 +210,36 @@ class OutstandingLock extends Model
     public function getMaskCompanyOriNameAttribute()
     {
         return $this->linen_outstanding_ori_company_name;
+    }
+
+    public function mask_pending()
+    {
+        return 'linen_outstanding_pending_at';
+    }
+
+    public function setMaskPendingAttribute($value)
+    {
+        $this->attributes[$this->mask_pending()] = $value;
+    }
+
+    public function getMaskPendingAttribute()
+    {
+        return $this->{$this->mask_pending()};
+    }
+
+    public function mask_hilang()
+    {
+        return 'linen_outstanding_hilang_at';
+    }
+
+    public function setMaskHilangAttribute($value)
+    {
+        $this->attributes[$this->mask_hilang()] = $value;
+    }
+
+    public function getMaskHilangAttribute()
+    {
+        return $this->{$this->mask_hilang()};
     }
 
     /**

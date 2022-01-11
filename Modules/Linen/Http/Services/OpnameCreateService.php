@@ -27,12 +27,13 @@ class OpnameCreateService
             if(isset($check['status']) && $check['status']){
 
                 $date = $date->format('Y-m-d');
-                $outstanding = OutstandingFacades::whereDate(OutstandingFacades::getCreatedAtColumn(), $date)->get();
+                $outstanding = OutstandingFacades::whereDate(OutstandingFacades::getCreatedAtColumn(), $date)
+                ->where(OutstandingFacades::mask_company_ori(), $data->linen_opname_company_id)->get();
                 if($outstanding){
 
                     foreach($outstanding as $lock){
                         $data_lock = $lock->toArray();
-                        $data_lock['linen_oustanding_opname'] = $key;
+                        $data_lock['linen_outstanding_opname'] = $key;
                         OutstandingLockFacades::insertOrIgnore($data_lock);
                     }
                 }

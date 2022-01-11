@@ -72,11 +72,12 @@ class CheckOutstandingPending extends Command
 
         OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid->toArray())
         ->update([
-            OutstandingFacades::mask_status() => TransactionStatus::Pending
+            OutstandingFacades::mask_status() => TransactionStatus::Pending,
+            OutstandingFacades::mask_pending() => date('Y-m-d H:i:s'),
         ]);
 
         LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid->toArray())->update([
-            LinenFacades::mask_latest() => LinenStatus::Pending
+            LinenFacades::mask_latest() => LinenStatus::Pending,
         ]);
 
         $grouped = $outstanding->mapToGroups(function ($item) {

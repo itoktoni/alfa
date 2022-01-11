@@ -10,6 +10,7 @@ use Modules\Linen\Dao\Facades\StockFacades;
 use Modules\Linen\Dao\Models\Grouping;
 use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\Linen\Dao\Models\Outstanding;
+use Modules\Linen\Dao\Models\OutstandingLock;
 use Modules\System\Dao\Interfaces\CrudInterface;
 use Modules\System\Plugins\Alert;
 
@@ -40,6 +41,7 @@ class DeliveryCreateService
             // $linen = LinenFacades::whereIn('item_linen_rfid', $data->detail)->update([LinenFacades::mask_qty() => DB::raw('item_linen_counter + 1')]);
 
             Outstanding::whereIn('linen_outstanding_rfid', $data->detail)->delete();
+            OutstandingLock::whereIn('linen_outstanding_rfid', $data->detail)->delete();
 
             $check = $repository->saveRepository($data->all());
 

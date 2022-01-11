@@ -9,6 +9,7 @@ use Modules\Item\Dao\Facades\ProductFacades;
 use Modules\Linen\Dao\Facades\OpnameDetailFacades;
 use Modules\Linen\Dao\Facades\OpnameFacades;
 use Modules\Linen\Dao\Facades\OpnameSummaryFacades;
+use Modules\Linen\Dao\Facades\OutstandingLockFacades;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\LocationFacades;
 use Modules\System\Dao\Facades\TeamFacades;
@@ -131,6 +132,11 @@ class Opname extends Model
         return $this->{$this->mask_created_by()};
     }
 
+    public function getMaskCreatedAtAttribute()
+    {
+        return $this->{$this->getCreatedAtColumn()}->format('d M Y');
+    }
+
     public function getMaskCreatedNameAttribute()
     {
         return $this->linen_opname_location_name;
@@ -165,6 +171,11 @@ class Opname extends Model
     public function has_detail(){
 
 		return $this->hasMany(OpnameDetail::class, OpnameDetailFacades::mask_key(), OpnameFacades::getKeyName());
+    }
+    
+    public function has_lock(){
+
+		return $this->hasMany(OutstandingLock::class, OutstandingLockFacades::mask_opname(), OpnameFacades::getKeyName());
     }
     
     public static function boot()

@@ -6,7 +6,7 @@
     <div class="panel-body">
         <div class="panel panel-default">
             <header class="panel-heading">
-                <h2 class="panel-title">{{ __('Report Hasil Stock Opname') }}
+                <h2 class="panel-title">{{ __('Report Opname Per ruangan') }}
                 </h2>
             </header>
             <div class="panel-body line">
@@ -36,7 +36,7 @@
 
         <div class="panel panel-default">
             <header class="panel-heading">
-                <h2 class="panel-title">Detail Opname </h2>
+                <h2 class="panel-title">Detail Ruangan </h2>
             </header>
             <div class="panel-body line">
                 <div class="show">
@@ -44,38 +44,33 @@
                         <thead>
                             <tr>
                                 <th style="width: 2%;" class="text-left">No.</th>
+                                <th class="text-left col-md-2">No. Rfid</th>
                                 <th class="text-left col-md-2">Product Name</th>
-                                <th class="text-left col-md-1">Stock Awal</th>
-                                <th class="text-left col-md-1">Hasil Opname</th>
-                                <th class="text-left col-md-1">Pending Obsesiman</th>
-                                <th class="text-left col-md-1">Hilang Obsesiman</th>
-                                <th class="text-left col-md-1">Hilang Rs.</th>
+                                <th class="text-left col-md-1">Ruangan</th>
                             </tr>
                         </thead>
                         <tbody class="markup">
 
-                            @if($register)
-                            @foreach ($register as $item)
-                            @php
-                            $qty_opname = isset($opname[$item->view_product_id]) ? $opname[$item->view_product_id]->count() : 0;
-                            $qty_pending = $qty_hilang = 0;
-                            if($lock){
-                            $qty_pending = $lock->where('linen_outstanding_status','!=', LinenStatus::Hilang)->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
-                            $qty_hilang = $lock->where('linen_outstanding_status', LinenStatus::Hilang)->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
-                            }
-                            $qty_hilang_rs = $qty_opname - ($item->view_register - ($qty_pending + $qty_hilang));
-                            @endphp
+                            @if($detail)
+                            @foreach ($detail as $loc => $location)
+
+                            <tr>
+                                <td class="text-right" colspan="4">{{ $loc }}</td>
+                            </tr>
+
+                            @foreach($location->sortBy('linen_opname_detail_ori_location_name') as $item)
+
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->view_product_name ?? '' }}</td>
-                                <td>{{ $item->view_register ?? '' }}</td>
-                                <td>{{ $qty_opname ?? '' }}</td>
-                                <td>{{ $qty_pending ?? '' }}</td>
-                                <td>{{ $qty_hilang ?? '' }}</td>
-                                <td>{{ abs($qty_hilang_rs) ?? '' }}</td>
+                                <td>{{ $item->linen_opname_detail_rfid ?? '' }}</td>
+                                <td>{{ $item->linen_opname_detail_product_name ?? '' }}</td>
+                                <td>{{ $item->linen_opname_detail_ori_location_name ?? '' }}</td>
                             </tr>
+
                             @endforeach
-                            @endisset
+                            
+                            @endforeach
+                            @endif
 
                         </tbody>
                     </table>

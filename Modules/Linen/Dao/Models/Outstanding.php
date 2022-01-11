@@ -281,6 +281,36 @@ class Outstanding extends Model
         return $this->{$this->mask_rfid()};
     }
 
+    public function mask_pending()
+    {
+        return 'linen_outstanding_pending_at';
+    }
+
+    public function setMaskPendingAttribute($value)
+    {
+        $this->attributes[$this->mask_pending()] = $value;
+    }
+
+    public function getMaskPendingAttribute()
+    {
+        return $this->{$this->mask_pending()};
+    }
+
+    public function mask_hilang()
+    {
+        return 'linen_outstanding_hilang_at';
+    }
+
+    public function setMaskHilangAttribute($value)
+    {
+        $this->attributes[$this->mask_hilang()] = $value;
+    }
+
+    public function getMaskHilangAttribute()
+    {
+        return $this->{$this->mask_hilang()};
+    }
+
     public function has_master()
 	{
 		return $this->hasOne(MasterOutstanding::class, MasterOutstandingFacades::getSessionKeyName(), $this->getSessionKeyName());

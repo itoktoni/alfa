@@ -69,7 +69,8 @@ class CheckOutstandingHilang extends Command
 
         OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid->toArray())
         ->update([
-            OutstandingFacades::mask_status() => TransactionStatus::Hilang
+            OutstandingFacades::mask_status() => TransactionStatus::Hilang,
+            OutstandingFacades::mask_hilang() => date('Y-m-d H:i:s'),
         ]);
 
         LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid->toArray())->update([

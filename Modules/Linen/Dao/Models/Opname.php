@@ -13,6 +13,7 @@ use Modules\Linen\Dao\Facades\OutstandingLockFacades;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\LocationFacades;
 use Modules\System\Dao\Facades\TeamFacades;
+use Modules\System\Dao\Models\Company;
 use Modules\System\Plugins\Helper;
 use Wildside\Userstamps\Userstamps;
 
@@ -32,6 +33,7 @@ class Opname extends Model
         'linen_opname_created_by',
         'linen_opname_deleted_by',
         'linen_opname_key',
+        'linen_opname_date',
         'linen_opname_status',
         'linen_opname_company_id',
         'linen_opname_company_name',        
@@ -59,6 +61,7 @@ class Opname extends Model
         'linen_opname_created_at' => 'datetime:Y-m-d H:i:s',
         'linen_opname_updated_at' => 'datetime:Y-m-d H:i:s',
         'linen_opname_deleted_at' => 'datetime:Y-m-d H:i:s',
+        'linen_opname_status' => 'integer',
     ];
 
     protected $dates = [
@@ -73,7 +76,8 @@ class Opname extends Model
         'linen_opname_company_id' => [false => 'Company'],
         'linen_opname_company_name' => [true => 'Company'],
         'linen_opname_created_by' => [false => 'Created At'],
-        'linen_opname_created_at' => [true => 'Created At'],
+        'linen_opname_date' => [true => 'Tanggal Opname'],
+        'linen_opname_created_at' => [true => 'Tanggal Buat'],
         'linen_opname_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center'],
     ];
 
@@ -90,6 +94,36 @@ class Opname extends Model
     public function getMaskCompanyIdAttribute()
     {
         return $this->{$this->mask_company_id()};
+    }
+
+    public function mask_date()
+    {
+        return 'linen_opname_date';
+    }
+
+    public function setMaskDateAttribute($value)
+    {
+        $this->attributes[$this->mask_date()] = $value;
+    }
+
+    public function getMaskDateAttribute()
+    {
+        return $this->{$this->mask_date()};
+    }
+
+    public function mask_status()
+    {
+        return 'linen_opname_status';
+    }
+
+    public function setMaskStatusAttribute($value)
+    {
+        $this->attributes[$this->mask_status()] = $value;
+    }
+
+    public function getMaskStatusAttribute()
+    {
+        return $this->{$this->mask_status()};
     }
 
     public function getMaskCompanyNameAttribute()
@@ -157,6 +191,10 @@ class Opname extends Model
         return $this->{$this->mask_total()};
     }
 
+    public function has_company(){
+
+		return $this->hasOne(Company::class, CompanyFacades::getKeyName(), $this->mask_company_id());
+    }
 
     public function has_user(){
 

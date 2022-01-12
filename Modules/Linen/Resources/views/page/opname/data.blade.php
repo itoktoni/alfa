@@ -93,7 +93,7 @@
                                 <div class="col-md-3 col-sm-2">
                                     <div class="row input-group filter-search space-sm">
                                     <span class="input-group-addon">
-                                        {{ __('No. Transaksi') }}
+                                        {{ __('No. Opname') }}
                                     </span>
                                     {!! Form::text('linen_opname_key', null, ['class' => 'form-control', 'id' => 'linen_opname_key']) !!}
                                     </div>

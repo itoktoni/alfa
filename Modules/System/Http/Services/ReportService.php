@@ -18,7 +18,12 @@ class ReportService
 
     public function generate($repository, $data, $name)
     {
-        if($data->action == 'excel'){
+        if(isset($data['action']) && $data['action'] == 'excel'){
+            
+            $name = $name .'_'. date('Y_m_d') . '.xlsx';
+            return $this->excel->download($repository, $name);
+        }
+        else if($data->action == 'excel'){
             
             $name = $name .'_'. date('Y_m_d') . '.xlsx';
             return $this->excel->download($repository, $name);

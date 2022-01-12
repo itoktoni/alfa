@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Item\Dao\Facades\ProductFacades;
+use Modules\Linen\Dao\Enums\OpnameStatus;
 use Modules\Linen\Dao\Facades\OpnameDetailFacades;
 use Modules\Linen\Dao\Facades\OpnameFacades;
 use Modules\Linen\Dao\Facades\OpnameSummaryFacades;
@@ -78,6 +79,7 @@ class Opname extends Model
         'linen_opname_created_by' => [false => 'Created At'],
         'linen_opname_date' => [true => 'Tanggal Opname'],
         'linen_opname_created_at' => [true => 'Tanggal Buat'],
+        'linen_opname_finished_at' => [true => 'Tanggal Selesai'],
         'linen_opname_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center'],
     ];
 
@@ -224,6 +226,10 @@ class Opname extends Model
 
             $company = $model->linen_opname_company_id;
             $model->linen_opname_company_name = CompanyFacades::find($model->mask_company_id)->company_name ?? '';
+        
+            if($model->mask_status == OpnameStatus::Selesai){
+                $model->linen_opname_finished_at = date('Y-m-d H:i:s');
+            }
         });
     }    
 }

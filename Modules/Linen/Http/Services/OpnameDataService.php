@@ -68,13 +68,13 @@ class OpnameDataService extends DataService
             $filter = $filter->where('linen_opname_key', $key);
         }
         if ($date = $request['linen_opname_date']) {
-            $filter = $filter->where('linen_opname_date', $date);
+            $filter = $filter->whereDate('linen_opname_date', $date);
+        } 
+        if ($date2 = $request['linen_opname_created_at']) {
+            $filter = $filter->whereDate('linen_opname_created_at', $date2);
         }
         if ($company_ori = $request['linen_opname_company_id']) {
             $filter = $filter->where('linen_opname_company_id', $company_ori);
-        }
-        if ($create = $request['linen_opname_petugas_id']) {
-            $filter = $filter->where('linen_opname_petugas_id', $create);
         }
 
         $this->datatable = Datatables::of($this->filter);

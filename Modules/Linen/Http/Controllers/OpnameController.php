@@ -94,7 +94,7 @@ class OpnameController extends Controller
         return Response::redirectBack($data);
     }
 
-    public function sync(OpnameRequest $request, OpnameSyncService $service, OpnameDetail $repository)
+    public function sync(OpnameRequest $request, OpnameSyncService $service)
     {
         $data = $service->save(self::$model, $request);
         return Response::redirectBack($data);

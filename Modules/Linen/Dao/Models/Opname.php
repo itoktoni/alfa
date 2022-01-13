@@ -170,7 +170,7 @@ class Opname extends Model
 
     public function getMaskCreatedAtAttribute()
     {
-        return $this->{$this->getCreatedAtColumn()}->format('d M Y');
+        return $this->{$this->getCreatedAtColumn()}->format('d / M / Y');
     }
 
     public function getMaskCreatedNameAttribute()

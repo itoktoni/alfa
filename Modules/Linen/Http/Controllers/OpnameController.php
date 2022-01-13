@@ -161,13 +161,13 @@ class OpnameController extends Controller
         if (request()->get('action')) {
 
             $share['action'] = 'excel';
-            return $service->generate(new ReportOpnameRepository($share,'excel_report_opname'), $share, 'excel_report_opname');
+            return $service->generate(new ReportOpnameRepository($share, 'excel_report_opname'), $share, 'excel_report_opname');
         }
 
         return view(Views::show(config('page'), config('folder')))->with($this->share($share));
     }
 
-    public function location($code = null, $relation = ['has_detail'])
+    public function location($code = null, ReportService $service)
     {
         $model = $this->get($code, ['has_detail']);
         $detail = $model->has_detail ?? false;
@@ -177,14 +177,22 @@ class OpnameController extends Controller
             });
         }
 
-        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share([
+        $share = [
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,
             'detail' => $detail,
-        ]));
+        ];
+
+        if (request()->get('action')) {
+
+            $share['action'] = 'excel';
+            return $service->generate(new ReportOpnameRepository($share, 'excel_report_location'), $share, 'excel_report_location');
+        }
+
+        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
     }
 
-    public function pending($code = null, $relation = ['has_detail'])
+    public function pending($code = null, ReportService $service)
     {
         $model = $this->get($code);
         $lock = $model->has_lock ?? false;
@@ -195,15 +203,23 @@ class OpnameController extends Controller
             });
         }
 
-        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share([
+        $share = [
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,
             'register' => $register,
             'lock' => $lock,
-        ]));
+        ];
+
+        if (request()->get('action')) {
+
+            $share['action'] = 'excel';
+            return $service->generate(new ReportOpnameRepository($share, 'excel_report_pending'), $share, 'excel_report_pending');
+        }
+
+        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
     }
 
-    public function hilang($code = null, $relation = ['has_detail'])
+    public function hilang($code = null, ReportService $service)
     {
         $model = $this->get($code);
         $lock = $model->has_lock ?? false;
@@ -214,15 +230,23 @@ class OpnameController extends Controller
             });
         }
 
-        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share([
+        $share = [
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,
             'register' => $register,
             'lock' => $lock,
-        ]));
+        ];
+
+        if (request()->get('action')) {
+
+            $share['action'] = 'excel';
+            return $service->generate(new ReportOpnameRepository($share, 'excel_report_hilang'), $share, 'excel_report_hilang');
+        }
+
+        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
     }
 
-    public function rs($code = null, $relation = ['has_detail'])
+    public function rs($code = null, ReportService $service)
     {
         $model = $this->get($code, ['has_detail']);
         $detail = $model->has_detail ?? false;
@@ -239,14 +263,20 @@ class OpnameController extends Controller
             $register = $register->whereNotIn(LinenFacades::mask_rfid(), $lock_rfid);
         }
 
-        // dd($lock_rfid);
-
-        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share([
+        $share = [
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,
             'detail' => $detail,
             'register' => $register,
-        ]));
+        ];
+
+        if (request()->get('action')) {
+
+            $share['action'] = 'excel';
+            return $service->generate(new ReportOpnameRepository($share, 'excel_report_rs'), $share, 'excel_report_rs');
+        }
+
+        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
     }
 
     public function get($code = null, $relation = ['has_detail'])

@@ -4,39 +4,19 @@
 
 <div class="row">
     <div class="panel-body">
+        
         <div class="panel panel-default">
             <header class="panel-heading">
-                <h2 class="panel-title">{{ __('Report Hasil Stock Opname') }}
-                </h2>
-            </header>
-            <div class="panel-body line">
-                <div class="show">
-                    <table class="table table-table table-bordered table-striped table-hover mb-none">
-                        <tbody>
-
-                            <tr>
-                                <th class="col-lg-2">{{ __('No. Opname') }}</th>
-                                <td>{{ $model->{$model->getKeyName()} ?? '' }}</td>
-                            </tr>
-                            <tr>
-                                <th class="col-lg-2">{{ __('Nama Rs.') }}</th>
-                                <td>{{ $model->mask_company_name ?? '' }}</td>
-                            </tr>
-                            <tr>
-                                <th class="col-lg-2">{{ __('Tanggal') }}</th>
-                                <td>{{ $model->mask_created_at ?? '' }}</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-md-9">
+                        <h2 class="panel-title">Report Hasil Stock Opname</h2>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a class="btn btn-success btn-xs" href="{{ route(Route::currentRouteName(), ['code' => $model->{$model->getKeyName()}]) }}?action=excel">
+                           Export Excel
+                        </a>
+                    </div>
                 </div>
-            </div>
-
-        </div>
-
-        <div class="panel panel-default">
-            <header class="panel-heading">
-                <h2 class="panel-title">Detail Opname </h2>
             </header>
             <div class="panel-body line">
                 <div class="show">

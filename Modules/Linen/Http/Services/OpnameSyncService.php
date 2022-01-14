@@ -18,33 +18,53 @@ class OpnameSyncService
     public function save(CrudInterface $repository, $data)
     {
         $check = false;
+        $map = [];
         try {
 
             $sync = $data->sync;
             $detail = $data->detail;
-            $check = OpnameDetail::insertOrIgnore($sync);
+            $check = OpnameDetail::upsert(
+                $sync,
+                [
+                    'linen_opname_detail_rfid',
+                    'linen_opname_detail_key',
+                ],
+                [
+                    'linen_opname_detail_product_id',
+                    'linen_opname_detail_product_name',
+                    'linen_opname_detail_ori_company_id',
+                    'linen_opname_detail_ori_company_name',
+                    'linen_opname_detail_ori_location_id',
+                    'linen_opname_detail_ori_location_name',
+                    'linen_opname_detail_scan_company_id',
+                    'linen_opname_detail_scan_company_name',
+                    'linen_opname_detail_scan_location_id',
+                    'linen_opname_detail_scan_location_name',
+                    'linen_opname_detail_scaned_by',
+                    'linen_opname_detail_scaned_name',
+                ]
+            );
 
-            if ($check) {
-                if ($check == $detail->count()) {
+            if ($check == $detail->count()) {
 
-                    $map = $detail->map(function ($item) {
+                $map = $detail->map(function ($item) {
 
-                        $send['linen_key'] = $item['linen_key'];
-                        $send['linen_rfid'] = $item['linen_rfid'];
-                        $send['linen_status'] = ResponseStatus::Create;
+                    $send['linen_key'] = $item['linen_key'];
+                    $send['linen_rfid'] = $item['linen_rfid'];
+                    $send['linen_status'] = ResponseStatus::Create;
 
-                        return $send;
-                    });
-                }
+                    return $send;
+                });
+
             } else {
 
-                $getDetail = OpnameDetail::select('linen_opname_detail_rfid', 'linen_opname_detail_key')->whereIn(OpnameDetailFacades::mask_key(), $data->keys)->get()->pluck('linen_opname_detail_key','linen_opname_detail_rfid')->toArray() ?? [];
-                $map = $detail->map(function($item) use($getDetail){
+                $getDetail = OpnameDetail::select('linen_opname_detail_rfid', 'linen_opname_detail_key')->whereIn(OpnameDetailFacades::mask_key(), $data->keys)->get()->pluck('linen_opname_detail_key', 'linen_opname_detail_rfid')->toArray() ?? [];
+                $map = $detail->map(function ($item) use ($getDetail) {
 
                     $rfid = $item['linen_rfid'];
                     $key = $item['linen_key'];
                     $status = 0;
-                    if(isset($getDetail[$rfid])){
+                    if (isset($getDetail[$rfid])) {
                         $status = 1;
                     }
                     return [
@@ -83,7 +103,6 @@ class OpnameSyncService
             }
 
             $check = Notes::create($map->values()->toArray());
-            
         } catch (\Throwable $th) {
             Alert::error($th->getMessage());
             return $th->getMessage();

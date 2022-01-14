@@ -22,7 +22,6 @@ class OpnameSyncService
 
             $sync = $data->sync;
             $detail = $data->detail;
-
             $check = OpnameDetail::insertOrIgnore($sync);
 
             if ($check) {
@@ -30,6 +29,7 @@ class OpnameSyncService
 
                     $map = $detail->map(function ($item) {
 
+                        $send['linen_key'] = $item['linen_key'];
                         $send['linen_rfid'] = $item['linen_rfid'];
                         $send['linen_status'] = ResponseStatus::Create;
 
@@ -38,15 +38,17 @@ class OpnameSyncService
                 }
             } else {
 
-                $getDetail = OpnameDetail::select('linen_opname_detail_rfid')->whereIn(OpnameDetailFacades::mask_key(), $data->keys)->get()->pluck('linen_opname_detail_rfid','linen_opname_detail_rfid')->toArray() ?? [];
+                $getDetail = OpnameDetail::select('linen_opname_detail_rfid', 'linen_opname_detail_key')->whereIn(OpnameDetailFacades::mask_key(), $data->keys)->get()->pluck('linen_opname_detail_key','linen_opname_detail_rfid')->toArray() ?? [];
                 $map = $detail->map(function($item) use($getDetail){
 
                     $rfid = $item['linen_rfid'];
+                    $key = $item['linen_key'];
                     $status = 0;
                     if(isset($getDetail[$rfid])){
                         $status = 1;
                     }
                     return [
+                        'linen_key' => $key,
                         'linen_rfid' => $rfid,
                         'linen_status' => $status
                     ];

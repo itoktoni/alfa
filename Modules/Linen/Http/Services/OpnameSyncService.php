@@ -23,6 +23,9 @@ class OpnameSyncService
 
             $sync = $data->sync;
             $detail = $data->detail;
+            $check = OpnameDetail::insertOrIgnore($sync);
+            
+            /*
             $check = OpnameDetail::upsert(
                 $sync,
                 [
@@ -44,6 +47,7 @@ class OpnameSyncService
                     'linen_opname_detail_scaned_name',
                 ]
             );
+            */
 
             if ($check == $detail->count()) {
 

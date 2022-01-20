@@ -60,8 +60,8 @@ class CheckOutstandingHilang extends Command
                 'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::Hilang),
                 'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                 'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
-                'item_linen_detail_updated_by' => auth()->user()->id,
-                'item_linen_detail_created_by' => auth()->user()->id,
+                'item_linen_detail_updated_by' => 'system',
+                'item_linen_detail_created_by' => 'system',
             ];
             return $data;
         });

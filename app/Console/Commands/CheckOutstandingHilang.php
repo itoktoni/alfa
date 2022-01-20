@@ -76,26 +76,26 @@ class CheckOutstandingHilang extends Command
             LinenFacades::mask_latest() => LinenStatus::Hilang
         ]);
 
-        $grouped = $outstanding->mapToGroups(function ($item) {
+        // $grouped = $outstanding->mapToGroups(function ($item) {
 
-            $combile = $item['linen_outstanding_product_id'] . $item['linen_outstanding_ori_company_id'] . $item['linen_outstanding_ori_location_id'];
-            return [
-                $combile => $item
-            ];
+        //     $combile = $item['linen_outstanding_product_id'] . $item['linen_outstanding_ori_company_id'] . $item['linen_outstanding_ori_location_id'];
+        //     return [
+        //         $combile => $item
+        //     ];
 
-        })->toArray();
+        // })->toArray();
         
-        if ($grouped) {
-            foreach ($grouped as $groups) {
+        // if ($grouped) {
+        //     foreach ($grouped as $groups) {
                 
-                $group = $groups[0] ?? false;
-                if($group){
+        //         $group = $groups[0] ?? false;
+        //         if($group){
 
-                    Cards::Log($group['linen_outstanding_ori_company_id'], $group['linen_outstanding_ori_location_id'], $group['linen_outstanding_product_id'], TransactionStatus::Hilang);
-                }
+        //             Cards::Log($group['linen_outstanding_ori_company_id'], $group['linen_outstanding_ori_location_id'], $group['linen_outstanding_product_id'], TransactionStatus::Hilang);
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
         $this->info('The system has been copied successfully!');
     }

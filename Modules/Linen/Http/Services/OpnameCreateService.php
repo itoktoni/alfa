@@ -27,7 +27,7 @@ class OpnameCreateService
             if(isset($check['status']) && $check['status']){
 
                 $date = $date->format('Y-m-d');
-                $outstanding = OutstandingFacades::whereDate(OutstandingFacades::getCreatedAtColumn(), $date)
+                $outstanding = OutstandingFacades::whereDate(OutstandingFacades::getCreatedAtColumn(),'<', $date)
                 ->where(OutstandingFacades::mask_company_ori(), $data->linen_opname_company_id)->get();
                 if($outstanding){
 

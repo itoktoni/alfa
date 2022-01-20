@@ -45,7 +45,7 @@
         @foreach ($detail as $loc => $location)
 
         <tr>
-            <td class="text-right" colspan="4">{{ $loc }}</td>
+            <td class="text-left" colspan="4">RUANGAN OPNAME : {{ $loc }}</td>
         </tr>
 
         @foreach($location->sortBy('linen_opname_detail_ori_location_name') as $item)

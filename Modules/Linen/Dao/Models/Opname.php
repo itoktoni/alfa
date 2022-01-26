@@ -230,6 +230,8 @@ class Opname extends Model
             if($model->mask_status == OpnameStatus::Selesai){
                 $model->linen_opname_finished_at = date('Y-m-d H:i:s');
             }
+
+            $model->linen_opname_updated_at = date('Y-m-d H:i:s');
         });
     }    
 }

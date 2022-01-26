@@ -104,6 +104,8 @@ class KotorRequest extends GeneralRequest
                 'linen_outstanding_scan_location_name' => $location->location_name ?? '',
                 'linen_outstanding_created_at' => date('Y-m-d H:i:s') ?? '',
                 'linen_outstanding_created_by' => $user->id ?? '',
+                'linen_outstanding_updated_at' => date('Y-m-d H:i:s') ?? '',
+                'linen_outstanding_updated_by' => $user->id ?? '',
                 'linen_outstanding_created_name' => $user->name ?? '',
                 'linen_outstanding_key' => $key ?? '',
                 'linen_outstanding_session' => $session ?? '',

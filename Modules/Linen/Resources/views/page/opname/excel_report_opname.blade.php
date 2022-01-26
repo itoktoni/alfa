@@ -50,10 +50,8 @@
         $qty_opname = isset($opname[$item->view_product_id]) ? $opname[$item->view_product_id]->count() : 0;
         $qty_pending = $qty_hilang = 0;
         if($lock){
-        $qty_pending = $lock->where('linen_outstanding_status','!=',
-        LinenStatus::Hilang)->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
-        $qty_hilang = $lock->where('linen_outstanding_status',
-        LinenStatus::Hilang)->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
+        $qty_pending = $lock->where('linen_outstanding_status','!=',TransactionStatus::Hilang)->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
+        $qty_hilang = $lock->where('linen_outstanding_status',TransactionStatus::Hilang)->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
         }
         $qty_hilang_rs = $qty_opname - ($item->view_register - ($qty_pending + $qty_hilang));
         @endphp

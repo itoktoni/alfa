@@ -48,8 +48,8 @@ class CheckOutstandingPending extends Command
      */
     public function handle()
     {
-        $outstanding = OutstandingFacades::whereDate(OutstandingFacades::mask_created_at(), '>=', Carbon::now()->subDays(1)->toDateString())
-        ->whereDate(OutstandingFacades::mask_created_at(), '<=', Carbon::now()->toDateString())
+        $outstanding = OutstandingFacades::whereDate(OutstandingFacades::mask_updated_at(), '>=', Carbon::now()->subDays(1)->toDateString())
+        ->whereDate(OutstandingFacades::mask_updated_at(), '<', Carbon::now()->toDateString())
         ->get();
 
         $rfid = $outstanding->pluck(OutstandingFacades::mask_rfid());

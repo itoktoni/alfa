@@ -117,6 +117,10 @@ class Outstanding extends Model
         return self::CREATED_AT;
     }
 
+    public function mask_updated_at(){
+        return self::UPDATED_AT;
+    }
+
     public function mask_session(){
         return 'linen_outstanding_session';
     }
@@ -331,6 +335,8 @@ class Outstanding extends Model
         parent::boot();
         
         parent::saving(function ($model) {
+
+            $model->linen_outstanding_updated_at = date('Y-m-d H:i:s');
 
             // $linen = LinenFacades::where('item_linen_rfid', $model->linen_outstanding_rfid)->first();
             // if ($linen) {

@@ -25,7 +25,12 @@ class GroupingRequest extends GeneralRequest
         $company = CompanyFacades::find($this->linen_grouping_company_id);
         $location = LocationFacades::find($this->linen_grouping_location_id);
 
-        $linen = OutstandingFacades::dataRepository()->whereIn('linen_outstanding_rfid', $this->rfid)->get();
+        $out = OutstandingFacades::dataRepository()->whereIn('linen_outstanding_rfid', $this->rfid);
+        $linen = $out->get();
+        $out->update([
+            'linen_outstanding_updated_at' => date('Y-m-d H:i:s')
+        ]);
+
         if ($linen) {
             $linen = $linen->mapWithKeys(function ($data_linen) {
                 return [$data_linen['linen_outstanding_rfid'] => $data_linen];

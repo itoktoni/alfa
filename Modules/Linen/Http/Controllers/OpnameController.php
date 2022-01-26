@@ -19,10 +19,12 @@ use Modules\Linen\Dao\Repositories\OpnameRepository;
 use Modules\Linen\Dao\Repositories\ReportOpnameRepository;
 use Modules\Linen\Http\Requests\GroupBatchRequest;
 use Modules\Linen\Http\Requests\OpnameRequest;
+use Modules\Linen\Http\Requests\OpnameSaveRequest;
 use Modules\Linen\Http\Requests\OutstandingBatchRequest;
 use Modules\Linen\Http\Requests\OutstandingMasterRequest;
 use Modules\Linen\Http\Services\OpnameCreateService;
 use Modules\Linen\Http\Services\OpnameDataService;
+use Modules\Linen\Http\Services\OpnameDeleteService;
 use Modules\Linen\Http\Services\OpnameSingleService;
 use Modules\Linen\Http\Services\OpnameSyncService;
 use Modules\Linen\Http\Services\OutstandingBatchService;
@@ -88,7 +90,7 @@ class OpnameController extends Controller
         return view(Views::create())->with($this->share());
     }
 
-    public function save(GeneralRequest $request, OpnameCreateService $service)
+    public function save(OpnameSaveRequest $request, OpnameCreateService $service)
     {
         $data = $service->save(self::$model, $request);
         return Response::redirectBack($data);
@@ -288,10 +290,11 @@ class OpnameController extends Controller
         return self::$service->get(self::$model, $code);
     }
 
-    public function delete(DeleteRequest $request, DeleteService $service)
+    public function delete(DeleteRequest $request, OpnameDeleteService $service)
     {
         $code = $request->get('code');
         $data = $service->delete(self::$model, $code);
+
         return Response::redirectBack($data);
     }
 }

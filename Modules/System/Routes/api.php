@@ -126,14 +126,14 @@ if (Cache::has('routing')) {
                     $status = TransactionStatus::Retur;
                 }
 
-                OutstandingLockFacades::whereIn('linen_outstanding_rfid', $rfid)->delete();
-
                 $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $opname_data->linen_outstanding_rfid)->update([
                     'linen_outstanding_status' => $status,
                     'linen_outstanding_process' => TransactionStatus::Gate,
                     'linen_outstanding_updated_at' => date('Y-m-d H:i:s'),
                 ]);
             }
+
+            OutstandingLockFacades::whereIn('linen_outstanding_rfid', $rfid)->delete();
             
             $map = collect($rfid)->map(function($item){
                 $data = [

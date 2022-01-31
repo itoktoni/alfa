@@ -40,10 +40,26 @@ class UpdateLinenGroupingListener
                 LinenFacades::mask_latest() => LinenStatus::Grouping,
             ]);
 
-            OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid)
-            ->update([
-                OutstandingFacades::mask_process() => TransactionStatus::Grouping,
-            ]);
+            $getData = OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->get();
+
+            foreach($getData as $opname_data){
+                $status = $proses = null;
+                if($opname_data->linen_outstanding_description == LinenStatus::LinenKotor){
+                    $status = TransactionStatus::Kotor;
+                }
+                else if($opname_data->linen_outstanding_description == LinenStatus::Bernoda || $opname_data->linen_outstanding_description == LinenStatus::BahanUsang){
+                    $status = TransactionStatus::Rewash;
+                }
+                else if($opname_data->linen_outstanding_description == LinenStatus::ChipRusak || $opname_data->linen_outstanding_description == LinenStatus::LinenRusak || $opname_data->linen_outstanding_description == LinenStatus::KelebihanStock){
+                    $status = TransactionStatus::Retur;
+                }
+
+                $check = OutstandingFacades::Where('linen_outstanding_rfid', $opname_data->linen_outstanding_rfid)->update([
+                    'linen_outstanding_status' => $status,
+                    'linen_outstanding_process' => TransactionStatus::Grouping,
+                    'linen_outstanding_updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
 
             $map = $rfid->map(function($item){
                 $data = [

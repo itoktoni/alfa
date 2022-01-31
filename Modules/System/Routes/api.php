@@ -116,13 +116,13 @@ if (Cache::has('routing')) {
             foreach($getData as $opname_data){
 
                 $status = $proses = null;
-                if($opname_data->linen_outstanding_status == LinenStatus::LinenKotor){
+                if($opname_data->linen_outstanding_description == LinenStatus::LinenKotor){
                     $status = TransactionStatus::Kotor;
                 }
-                else if($opname_data->linen_outstanding_status == LinenStatus::Bernoda || $opname_data->linen_outstanding_status == LinenStatus::BahanUsang){
+                else if($opname_data->linen_outstanding_description == LinenStatus::Bernoda || $opname_data->linen_outstanding_description == LinenStatus::BahanUsang){
                     $status = TransactionStatus::Rewash;
                 }
-                else if($opname_data->linen_outstanding_status == LinenStatus::ChipRusak || $opname_data->linen_outstanding_status == LinenStatus::LinenRusak || $opname_data->linen_outstanding_status == LinenStatus::KelebihanStock){
+                else if($opname_data->linen_outstanding_description == LinenStatus::ChipRusak || $opname_data->linen_outstanding_description == LinenStatus::LinenRusak || $opname_data->linen_outstanding_description == LinenStatus::KelebihanStock){
                     $status = TransactionStatus::Retur;
                 }
 

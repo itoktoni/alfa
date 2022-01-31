@@ -114,7 +114,6 @@ if (Cache::has('routing')) {
             $getData = OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->get();
 
             foreach($getData as $opname_data){
-
                 $status = $proses = null;
                 if($opname_data->linen_outstanding_description == LinenStatus::LinenKotor){
                     $status = TransactionStatus::Kotor;

@@ -10,6 +10,8 @@ use Modules\Item\Http\Controllers\LinenController;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
+use Modules\Linen\Dao\Facades\OutstandingLockFacades;
+use Modules\Linen\Dao\Models\OutstandingLock;
 use Modules\System\Http\Controllers\TeamController;
 
 /*
@@ -108,10 +110,29 @@ if (Cache::has('routing')) {
         Route::post('sync_outstanding_update', function () {
 
             $rfid = request()->get('rfid');
-            $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->update([
-                'linen_outstanding_process' => TransactionStatus::Gate,
-                'linen_outstanding_updated_at' => date('Y-m-d H:i:s'),
-            ]);
+
+            $getData = OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->get();
+
+            foreach($getData as $opname_data){
+
+                $status = null;
+                if($opname_data->linen_outstanding_status == LinenStatus::LinenKotor){
+                    $status = TransactionStatus::Kotor;
+                }
+                else if($opname_data->linen_outstanding_status == LinenStatus::Bernoda || $opname_data->linen_outstanding_status == LinenStatus::BahanUsang){
+                    $status = TransactionStatus::Rewash;
+                }
+                else if($opname_data->linen_outstanding_status == LinenStatus::ChipRusak || $opname_data->linen_outstanding_status == LinenStatus::LinenRusak || $opname_data->linen_outstanding_status == LinenStatus::KelebihanStock){
+                    $status = TransactionStatus::Retur;
+                }
+
+                OutstandingLockFacades::whereIn('linen_outstanding_rfid', $rfid)->delete();
+
+                $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $opname_data->linen_outstanding_rfid)->update([
+                    'linen_outstanding_process' => $status,
+                    'linen_outstanding_updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
             
             $map = collect($rfid)->map(function($item){
                 $data = [

@@ -11,6 +11,7 @@ use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Facades\OutstandingLockFacades;
+use Modules\Linen\Dao\Models\Outstanding;
 use Modules\Linen\Dao\Models\OutstandingLock;
 use Modules\System\Http\Controllers\TeamController;
 
@@ -125,7 +126,7 @@ if (Cache::has('routing')) {
                     $status = TransactionStatus::Retur;
                 }
 
-                $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $opname_data->linen_outstanding_rfid)->update([
+                $check = OutstandingFacades::Where('linen_outstanding_rfid', $opname_data->linen_outstanding_rfid)->update([
                     'linen_outstanding_status' => $status,
                     'linen_outstanding_process' => TransactionStatus::Gate,
                     'linen_outstanding_updated_at' => date('Y-m-d H:i:s'),
@@ -138,7 +139,6 @@ if (Cache::has('routing')) {
                 $data = [
                     'item_linen_detail_rfid' => $item,
                     'item_linen_detail_status' => LinenStatus::LinenKotor,
-                    'item_linen_detail_process' => LinenStatus::LinenKotor,
                     'item_linen_detail_description' => LinenStatus::getDescription(LinenStatus::LinenKotor),
                     'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                     'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),

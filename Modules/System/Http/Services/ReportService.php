@@ -16,7 +16,7 @@ class ReportService
         $this->excel = $excel;
     }
 
-    public function generate($repository, $data, $name)
+    public function generate($repository, $data, $name, $layout = 'potrait')
     {
         if(isset($data['action']) && $data['action'] == 'excel'){
             
@@ -29,8 +29,9 @@ class ReportService
             return $this->excel->download($repository, $name);
         }
         else if($data->action == 'pdf'){
-            $pdf = PDF::loadView(Views::pdf(config('page'), config('folder'), $name), $repository)->setPaper('A4', 'potrait');
-            return $pdf->download(); // return $pdf->stream();
+            $pdf = PDF::loadView(Views::pdf(config('page'), config('folder'), $name), ['data' => $repository])->setPaper('A4', $layout);
+            // return $pdf->download(); 
+            return $pdf->stream();
         }
     } 
 }

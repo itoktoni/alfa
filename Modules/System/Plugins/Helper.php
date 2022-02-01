@@ -82,7 +82,7 @@ class Helper
         return self::asset('/files/' . $path);
     }
 
-    function print($path, $disable = false)
+    public static function print($path, $disable = false)
     {
         if ($disable) {
             return $path = public_path('/files/' . $path);

@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Modules\Item\Dao\Repositories\LinenRepository;
+use Modules\Linen\Dao\Enums\LinenStatus;
 
 class ReportLinenRegisterRepository extends LinenRepository implements FromCollection, WithHeadings, ShouldAutoSize, WithColumnFormatting, WithMapping
 {
@@ -77,8 +78,8 @@ class ReportLinenRegisterRepository extends LinenRepository implements FromColle
            $data->item_linen_created_name, 
            $data->item_linen_created_at ? $data->item_linen_created_at->isoFormat('dddd, D MMMM Y') : '', 
            $data->item_linen_updated_at ? $data->item_linen_updated_at->isoFormat('dddd, D MMMM Y') : '', 
-           $data->rent[$data->item_linen_rent][0] ?? '', 
-           $data->status[$data->item_linen_status][0] ?? '', 
+           LinenStatus::getDescription($data->item_linen_rent) ?? '', 
+           LinenStatus::getDescription($data->item_linen_rent) ?? '', 
         ];
     }
 

@@ -50,7 +50,7 @@ class Views
 
     public static function pdf($page = 'master', $folder = 'system', $name = 'default')
     {
-        return ucfirst($folder) . '::page.' .Helper::snake($page) .'_'.$name.'.pdf';
+        return ucfirst($folder) . '::page.' .Helper::snake($page) .'.'.$name;
     }
 
     public static function form($form, $page = 'master', $folder = 'system')

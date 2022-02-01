@@ -97,6 +97,7 @@ class Linen extends Model
         'item_linen_created_name' => [false => 'Key'],
         'item_linen_counter' => [true => 'Cuci', 'width' => 30],
         'item_linen_created_at' => [false => 'Created At'],
+        'item_linen_updated_at' => [false => 'Created At'],
         'item_linen_ganti_at' => [false => 'Created At'],
         'item_linen_rent' => [true => 'Rental', 'width' => 50, 'class' => 'text-center', 'status' => 'rent'],
         'item_linen_status' => [true => 'Status', 'width' => 80, 'class' => 'text-center', 'status' => 'status'],

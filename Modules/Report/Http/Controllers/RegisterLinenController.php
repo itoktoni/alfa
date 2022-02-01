@@ -19,6 +19,7 @@ use Modules\System\Http\Services\PreviewService;
 use Modules\System\Http\Services\ReportService;
 use Modules\System\Http\Services\SingleService;
 use Modules\System\Plugins\Views;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class RegisterLinenController extends Controller
 {
@@ -73,6 +74,13 @@ class RegisterLinenController extends Controller
 
             $preview = $service->data($linen, $request);
         }
+
+        if($request->get('action') == 'pdf'){
+
+            $preview = $service->data($linen, $request);
+            $pdf = PDF::loadView(Views::pdf(config('page'), config('folder'), 'pdf_'.__FUNCTION__), ['data' => $preview])->setPaper('A4', 'landscape');
+            return $pdf->stream();
+        }
         
         return view(Views::form(__FUNCTION__,config('page'), config('folder')))->with($this->share([
             'preview' => $preview,
@@ -82,7 +90,7 @@ class RegisterLinenController extends Controller
 
     public function detailExport(Request $request, ReportService $service)
     {
-        if ($request->get('action') == 'preview') {
+        if ($request->get('action') == 'preview' || $request->get('action') == 'pdf') {
             $data = $request->except('_token');
             return redirect()->route('report_register_linen_detail', $data)->withInput();
         }

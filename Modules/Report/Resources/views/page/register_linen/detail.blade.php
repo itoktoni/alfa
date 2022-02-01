@@ -30,7 +30,7 @@ $(document).ready( function () {
 
             <div class="navbar-fixed-bottom" id="menu_action">
                 <div class="text-right action-wrapper">
-                    <!-- <button type="submit" value="pdf" name="action" class="btn btn-danger">{{ __('PDF') }}</button> -->
+                    <button type="submit" value="pdf" name="action" class="btn btn-danger">{{ __('PDF') }}</button>
                     <button type="submit" value="preview" name="action" class="btn btn-primary">{{ __('Preview') }}</button>
                     <button type="submit" value="excel" name="action" class="btn btn-success">{{ __('Excel') }}</button>
                 </div>

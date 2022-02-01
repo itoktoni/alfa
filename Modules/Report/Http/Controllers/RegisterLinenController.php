@@ -78,7 +78,7 @@ class RegisterLinenController extends Controller
         if($request->get('action') == 'pdf'){
 
             $preview = $service->data($linen, $request);
-            $pdf = PDF::loadView(Views::pdf(config('page'), config('folder'), 'pdf_'.__FUNCTION__), ['data' => $preview])->setPaper('A4', 'landscape');
+            $pdf = PDF::loadView(Views::pdf(config('page'), config('folder'), 'pdf_'.__FUNCTION__), ['data' => $preview])->setPaper('A4', 'potrait');
             return $pdf->stream();
         }
         

@@ -5,6 +5,7 @@ namespace Modules\Linen\Dao\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 use Modules\Linen\Events\CreateDeliveryEvent;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\LocationFacades;
@@ -13,7 +14,7 @@ use Wildside\Userstamps\Userstamps;
 
 class Delivery extends Model
 {
-    use SoftDeletes, Userstamps;
+    use SoftDeletes, Userstamps, FilterQueryString;
 
     protected $table = 'linen_delivery';
     protected $primaryKey = 'linen_delivery_key';

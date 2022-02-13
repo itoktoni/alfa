@@ -5,6 +5,7 @@ namespace Modules\Linen\Dao\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Linen\Dao\Facades\DeliveryFacades;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\LocationFacades;
 use Modules\System\Dao\Facades\TeamFacades;
@@ -44,6 +45,7 @@ class GroupingDetail extends Model
         'linen_grouping_detail_scan_location_name',
         'linen_grouping_detail_status',
         'linen_grouping_detail_description',
+        'linen_grouping_detail_reported_date',
     ];
 
     // public $with = ['module'];
@@ -67,6 +69,7 @@ class GroupingDetail extends Model
         'linen_grouping_detail_created_at' => 'datetime:Y-m-d H:i:s',
         'linen_grouping_detail_updated_at' => 'datetime:Y-m-d H:i:s',
         'linen_grouping_detail_deleted_at' => 'datetime:Y-m-d H:i:s',
+        'linen_grouping_detail_reported_date' => 'date:Y-m-d',
         'linen_grouping_detail_status' => 'string',
         'linen_grouping_detail_total' => 'integer',
     ];
@@ -92,6 +95,11 @@ class GroupingDetail extends Model
     public function mask_barcode()
     {
         return 'linen_grouping_detail_barcode';
+    }
+
+    public function mask_delivery()
+    {
+        return 'linen_grouping_detail_delivery';
     }
 
     public function setMaskBarcodeAttribute($value)
@@ -232,6 +240,11 @@ class GroupingDetail extends Model
     public function user(){
 
 		return $this->hasOne(User::class, TeamFacades::getKeyName(), self::CREATED_BY);
+    }
+
+    public function has_delivery(){
+
+		return $this->hasOne(Delivery::class, DeliveryFacades::getKeyName(), $this->mask_delivery());
     }
     
     public static function boot()

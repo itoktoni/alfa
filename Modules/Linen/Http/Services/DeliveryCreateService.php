@@ -22,16 +22,17 @@ class DeliveryCreateService
         try {
            
             $key = $data->linen_delivery_key;
-            
             Grouping::whereIn('linen_grouping_barcode', $data->barcode)->update([
-                'linen_grouping_delivery' => $key
+                'linen_grouping_delivery' => $key,
+                'linen_grouping_reported_date' => $data->linen_delivery_reported_date,
             ]);
            
             $detail = GroupingDetail::whereIn('linen_grouping_detail_barcode', $data->barcode)
             ->where(function($query) use($data){
                 $query->whereIn('linen_grouping_detail_rfid', $data->detail);
             })->update([
-                'linen_grouping_detail_delivery' => $key
+                'linen_grouping_detail_delivery' => $key,
+                'linen_grouping_detail_reported_date' => $data->linen_delivery_reported_date
             ]);
 
             // $linen = LinenFacades::whereIn('item_linen_rfid', $data->detail)->update([

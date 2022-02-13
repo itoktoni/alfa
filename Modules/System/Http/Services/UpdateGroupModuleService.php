@@ -60,7 +60,7 @@ class UpdateGroupModuleService extends UpdateService
                     $code = $getData->system_group_module_code . '_' . $snake;
                     $moduleName = ucwords(str_replace('_', ' ', $snake));
                     $path = '\Modules\\' . ucfirst($getData->system_group_module_folder) . '\Http\Controllers\\' . $module . 'Controller';
-                    
+
                     $object = ModuleFacades::create([
                         'system_module_code' => $code,
                         'system_module_name' => $moduleName,
@@ -96,15 +96,41 @@ class UpdateGroupModuleService extends UpdateService
                         if (in_array($function, $this->visible)) {
                             $visible = '1';
                         }
+
                         if (strpos($code, 'report') !== false) {
-                            
+
+                            $name = $module.' '.ucwords(str_replace('_', ' ', $function)) . ' ';
+                            if (count($split) > 1) {
+                                $name = ucwords(str_replace('_', ' ', Str::snake($function)));
+                            }
+
                             $visible = '1';
                             $metode = 'GET';
-                            
+
                             if (strpos($function, 'export') !== false || strpos($function, 'Export') !== false) {
                                 $visible = '0';
-                                $metode = 'POST';
+                                $metode = 'GET';
                             }
+                        }
+
+                        if (strpos(strtolower($function), 'form') !== false) {
+                            $visible = '0';
+                            $metode = 'GET';
+                        }
+
+                        if (strpos(strtolower($function), 'post') !== false) {
+                            $visible = '0';
+                            $metode = 'POST';
+                        }
+
+                        if (strpos(strtolower($function), 'list') !== false) {
+                            $visible = '1';
+                            $metode = 'GET';
+                        }
+
+                        if (strpos(strtolower($function), 'print') !== false) {
+                            $visible = '0';
+                            $metode = 'GET';
                         }
 
                         ActionFacades::create([
@@ -122,19 +148,18 @@ class UpdateGroupModuleService extends UpdateService
                             'system_action_api' => $this->api[$function] ?? 0,
                         ]);
                     }
-                    if(isset($func['data'])){
+                    if (isset($func['data'])) {
                         $list_action = [];
-                        foreach($func['data'] as $method){
+                        foreach ($func['data'] as $method) {
                             $list_action[] = $code . '_' . Str::snake($method);
                         }
                         $object->connection_action()->sync($list_action);
                     }
-
                 }
 
                 $list_module = [];
-                foreach($data->get('module') as $mod){
-                    
+                foreach ($data->get('module') as $mod) {
+
                     $list_module[] = $getData->system_group_module_code . '_' . Str::snake($mod);
                 }
 

@@ -5,6 +5,7 @@ namespace Modules\Linen\Dao\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\LocationFacades;
 use Modules\System\Dao\Facades\TeamFacades;
@@ -12,7 +13,7 @@ use Wildside\Userstamps\Userstamps;
 
 class KotorDetail extends Model
 {
-    use SoftDeletes, Userstamps;
+    use SoftDeletes, Userstamps, FilterQueryString;
 
     protected $table = 'linen_kotor_detail';
     protected $primaryKey = 'linen_kotor_detail_rfid';

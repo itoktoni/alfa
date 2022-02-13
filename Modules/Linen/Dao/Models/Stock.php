@@ -5,6 +5,7 @@ namespace Modules\Linen\Dao\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 use Modules\Item\Dao\Facades\ProductFacades;
 use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Facades\LocationFacades;
@@ -14,6 +15,7 @@ use Wildside\Userstamps\Userstamps;
 
 class Stock extends Model
 {
+    use FilterQueryString;
     protected $table = 'view_balance';
     protected $primaryKey = 'view_company_id';
     // protected $keyType = 'string';
@@ -22,6 +24,17 @@ class Stock extends Model
     public $incrementing = false;
 
     public $searching = 'view_product_name';
+
+    protected $filters = [
+        'view_company_id',
+        'view_location_id',
+        'view_product_id',
+    ];
+
+    public $rules = [
+        'view_company_id' => 'required',
+    ];
+
     public $datatable = [
         'view_company_id' => [false => 'Company'],
         'view_company_name' => [true => 'Company Name'],

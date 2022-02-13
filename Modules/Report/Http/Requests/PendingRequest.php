@@ -31,15 +31,9 @@ class PendingRequest extends GeneralRequest
 
     public function rules()
     {
-        $validation = [];
-        if (request()->has('report_linen_status')) {
-
-            $validation = [
-                'report_linen_status' => 'required',
-            ];
-
-        } 
-
-        return $validation;
+        return [
+            'linen_outstanding_ori_company_id' => 'required',
+            'linen_outstanding_status' => 'required',
+        ];
     }
 }

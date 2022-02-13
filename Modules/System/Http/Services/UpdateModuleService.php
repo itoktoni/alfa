@@ -69,6 +69,26 @@ class UpdateModuleService extends UpdateService
                     }
                 }
 
+                if (strpos(strtolower($function), 'form') !== false) {
+                    $visible = '0';
+                    $metode = 'GET';
+                }
+
+                if (strpos(strtolower($function), 'post') !== false) {
+                    $visible = '0';
+                    $metode = 'POST';
+                }
+
+                if (strpos(strtolower($function), 'print') !== false) {
+                    $visible = '0';
+                    $metode = 'GET';
+                }
+
+                if (strpos(strtolower($function), 'list') !== false) {
+                    $visible = '1';
+                    $metode = 'GET';
+                }
+
 
                 $split = explode('_', $function);
                 $name = ucwords(str_replace('_', ' ', $function)) . ' ' . $getData->system_module_controller;

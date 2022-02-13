@@ -3,21 +3,15 @@
 namespace Modules\Report\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Item\Dao\Repositories\ProductRepository;
-use Modules\Linen\Dao\Facades\DeliveryFacades;
-use Modules\Linen\Dao\Repositories\DeliveryRepository;
-use Modules\Report\Dao\Repositories\ReportInvoiceRumahSakitRepository;
-use Modules\Report\Dao\Repositories\ReportLinenRegisterRepository;
-use Modules\Report\Dao\Repositories\ReportLinenSummaryRepository;
-use Modules\Report\Http\Services\ReportSummaryService;
+use Modules\Report\Dao\Repositories\ReportInvoiceRepository;
+use Modules\Report\Dao\Repositories\ReportStockRepository;
+use Modules\Report\Http\Requests\CompanyRequest;
+use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Repositories\CompanyRepository;
 use Modules\System\Dao\Repositories\LocationRepository;
-use Modules\System\Dao\Repositories\TeamRepository;
-use Modules\System\Http\Services\PreviewService;
 use Modules\System\Http\Services\ReportService;
-use Modules\System\Http\Services\SingleService;
+use Modules\System\Plugins\Helper;
 use Modules\System\Plugins\Views;
 
 class InvoiceController extends Controller
@@ -25,61 +19,42 @@ class InvoiceController extends Controller
     public static $template;
     public static $service;
     public static $model;
+    public static $history;
     public static $summary;
-
-    public function __construct(ReportInvoiceRumahSakitRepository $model, SingleService $service)
-    {
-        self::$model = self::$model ?? $model;
-        self::$service = self::$service ?? $service;
-    }
 
     private function share($data = [])
     {
-        $company = Views::option(new CompanyRepository());
-        $delivery = Views::option(new DeliveryRepository(), false, true);
+        $list_company = Views::option(new CompanyRepository());
+        $list_product = Views::option(new ProductRepository());
 
-        $data_delivery = $delivery->mapWithKeys(function ($data, $item) {
-            return [$data->linen_delivery_key => $data->linen_delivery_key . ' - ' . $data->linen_delivery_company_name];
-        });
+        $company = CompanyFacades::find(request()->get('view_company_id'));
+        $product = $company->has_product ?? [];
         $view = [
-
             'company' => $company,
-            'delivery' => $data_delivery,
+            'product' => $product,
+            'list_product' => $list_product,
+            'list_company' => $list_company,
         ];
 
         return array_merge($view, $data);
     }
 
-    public function rumahSakit(Request $request, PreviewService $service)
+    public function detail(ReportInvoiceRepository $repository)
     {
-        $linen = DeliveryFacades::dataRepository()->with('has_detail');
-
-        $master = $detail = $previw = [];
-        if ($key = request()->get('key')) {
-            $linen->where('linen_delivery_key', $key);
-            $linen->whereNull('linen_delivery_deleted_at');
-            $master = $linen->first();
+        $preview = false;
+        if ($name = request()->get('name')) {
+            $preview = $repository->generate($name, $this->share())->data();
         }
-
-        if ($master) {
-
-            $detail = $master->has_detail()->get()->groupBy('linen_grouping_detail_product_id');
-        }
-
-        return view(Views::form(__FUNCTION__, config('page'), config('folder')))->with($this->share([
-            'preview' => $master,
-            'model' => $linen->getModel(),
-            'master' => $master,
-            'detail' => $detail
-        ]));
+        return view(Views::form(__FUNCTION__, config('page'), config('folder')))
+            ->with($this->share([
+                'model' => $repository,
+                'preview' => $preview,
+                'include' => __FUNCTION__
+            ]));
     }
 
-    public function rumahSakitExport(Request $request, ReportService $service)
+    public function detailExport(CompanyRequest $request, ReportService $service, ReportInvoiceRepository $repository)
     {
-        if ($request->get('action') == 'preview') {
-            $data = $request->except('_token');
-            return redirect()->route('report_invoice_rumah_sakit', $data)->withInput();
-        }
-        return $service->generate(self::$model, $request, 'excel_report_invoice');
+        return $service->generate([$repository, 'share' => $this->share()], Helper::snake(__FUNCTION__));
     }
 }

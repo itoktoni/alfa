@@ -18,19 +18,20 @@ $(document).ready( function () {
 
 <div class="row">
     <div class="panel-body">
-        {!! Form::model($model, ['route'=>[Route::currentRouteName().'_export', 'code' => $model->{$model->getKeyName()}],'class'=>'form-horizontal','files'=>true]) !!}
+    {!! Form::model($model, ['route'=>[Route::currentRouteName().'_export', 'code' => $model->{$model->getKeyName()}],'class'=>'form-horizontal','method'=> 'GET']) !!}
         <div class="panel panel-default">
             <header class="panel-heading">
                 <h2 class="panel-title">{{ __('Report') }} {{ __('Linen') }} {{ __('Summary') }}</h2>
             </header>
 
             <div class="panel-body line">
-                @includeIf(Views::form('summary_form', $template, $folder))
+                @includeIf(Views::form($include.'_form', $template, $folder))
             </div>
 
             <div class="navbar-fixed-bottom" id="menu_action">
                 <div class="text-right action-wrapper">
-                    <!-- <button type="submit" value="pdf" name="action" class="btn btn-danger">{{ __('PDF') }}</button> -->
+                    <button type="submit" value="pdf" name="action" class="btn btn-danger">{{ __('PDF') }}</button>
+                    <button type="reset" class="btn btn-warning">{{ __('Reset') }}</button>
                     <button type="submit" value="preview" name="action" class="btn btn-primary">{{ __('Preview') }}</button>
                     <button type="submit" value="excel" name="action" class="btn btn-success">{{ __('Excel') }}</button>
                 </div>

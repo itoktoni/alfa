@@ -35,6 +35,7 @@ class Grouping extends Model
         'linen_grouping_company_name',
         'linen_grouping_location_id',
         'linen_grouping_location_name',
+        'linen_grouping_reported_date',
     ];
 
     // public $with = ['module'];
@@ -60,6 +61,7 @@ class Grouping extends Model
         'linen_grouping_created_at' => 'datetime:Y-m-d',
         'linen_grouping_updated_at' => 'datetime:Y-m-d H:i:s',
         'linen_grouping_deleted_at' => 'datetime:Y-m-d H:i:s',
+        'linen_grouping_reported_date' => 'date:Y-m-d',
         'linen_grouping_status' => 'integer',
         'linen_grouping_total' => 'integer',
     ];

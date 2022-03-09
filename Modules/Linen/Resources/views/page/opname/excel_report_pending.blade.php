@@ -43,8 +43,8 @@
     </thead>
     <tbody class="markup">
 
-        @if($lock)
-        @foreach ($lock->where('linen_outstanding_status', '!=', TransactionStatus::Hilang) as $item)
+        @if($outstanding)
+        @foreach ($outstanding->where('linen_outstanding_status', TransactionStatus::Pending) as $item)
         @php
         $tanggal_register = isset($register[$item->mask_rfid]) ? $register[$item->mask_rfid]->item_linen_created_at : '';
         @endphp

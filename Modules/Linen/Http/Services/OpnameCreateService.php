@@ -11,6 +11,7 @@ use Modules\Linen\Dao\Models\OpnameDetail;
 use Modules\System\Dao\Interfaces\CrudInterface;
 use Modules\System\Plugins\Alert;
 use Modules\System\Plugins\Helper;
+use Modules\System\Plugins\Notes;
 
 class OpnameCreateService
 {
@@ -26,24 +27,34 @@ class OpnameCreateService
 
             if(isset($check['status']) && $check['status']){
 
-                $date = $date->format('Y-m-d');
-                $outstanding = OutstandingFacades::whereDate(OutstandingFacades::getCreatedAtColumn(),'<', $date)
-                ->where(OutstandingFacades::mask_company_ori(), $data->linen_opname_company_id)->get();
-                if($outstanding){
-
-                    foreach($outstanding as $lock){
-                        $data_lock = $lock->toArray();
-                        $data_lock['linen_outstanding_opname'] = $key;
-                        OutstandingLockFacades::insertOrIgnore($data_lock);
-                    }
-                }
-
                 Alert::create();
             }
             else{
+                
                 $message = env('APP_DEBUG') ? $check['data'] : $check['message'];
                 Alert::error($message);
             }
+
+            // if(isset($check['status']) && $check['status']){
+
+            //     $date = $date->format('Y-m-d');
+            //     $outstanding = OutstandingFacades::whereDate(OutstandingFacades::getCreatedAtColumn(),'<', $date)
+            //     ->where(OutstandingFacades::mask_company_ori(), $data->linen_opname_company_id)->get();
+            //     if($outstanding){
+
+            //         foreach($outstanding as $lock){
+            //             $data_lock = $lock->toArray();
+            //             $data_lock['linen_outstanding_opname'] = $key;
+            //             OutstandingLockFacades::insertOrIgnore($data_lock);
+            //         }
+            //     }
+
+            //     Alert::create();
+            // }
+            // else{
+            //     $message = env('APP_DEBUG') ? $check['data'] : $check['message'];
+            //     Alert::error($message);
+            // }
         } catch (\Throwable $th) {
             Alert::error($th->getMessage());
             return $th->getMessage();

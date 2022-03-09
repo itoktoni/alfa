@@ -12,6 +12,7 @@ use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\BalanceFacades;
 use Modules\Linen\Dao\Facades\OpnameFacades;
 use Modules\Linen\Dao\Facades\OpnameSummaryFacades;
+use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Facades\OutstandingLockFacades;
 use Modules\Linen\Dao\Models\OpnameDetail;
 use Modules\Linen\Dao\Models\OutstandingLock;
@@ -141,7 +142,11 @@ class OpnameController extends Controller
     {
         $model = $this->get($code, ['has_detail']);
         $detail = $model->has_detail ?? false;
-        $lock = $model->has_lock ?? false;
+
+        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)->where(function ($model) {
+            $model->where(OutstandingFacades::mask_status(), TransactionStatus::Pending)->orWhere(OutstandingFacades::mask_status(), TransactionStatus::Hilang);
+        })->get();
+
         $opname = false;
         if ($detail) {
             $opname = $detail->mapToGroups(function ($item) {
@@ -150,14 +155,14 @@ class OpnameController extends Controller
         }
 
         $register = DB::table('view_opname_register')->where('view_company_id', $model->mask_company_id)->get();
-
+        // dd($register);
         $share = [
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,
             'detail' => $detail,
             'register' => $register,
             'opname' => $opname,
-            'lock' => $lock,
+            'outstanding' => $outstanding,
         ];
 
         if (request()->get('action')) {
@@ -197,7 +202,10 @@ class OpnameController extends Controller
     public function pending($code = null, ReportService $service)
     {
         $model = $this->get($code);
-        $lock = $model->has_lock ?? false;
+
+        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
+            ->where(OutstandingFacades::mask_status(), TransactionStatus::Pending)->get();
+
         $register = LinenFacades::where(LinenFacades::mask_company_id(), $model->mask_company_id)->get();
         if ($register) {
             $register = $register->mapWithKeys(function ($item) {
@@ -209,7 +217,7 @@ class OpnameController extends Controller
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,
             'register' => $register,
-            'lock' => $lock,
+            'outstanding' => $outstanding,
         ];
 
         if (request()->get('action')) {
@@ -224,7 +232,9 @@ class OpnameController extends Controller
     public function hilang($code = null, ReportService $service)
     {
         $model = $this->get($code);
-        $lock = $model->has_lock ?? false;
+        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
+            ->where(OutstandingFacades::mask_status(), TransactionStatus::Hilang)->get();
+
         $register = LinenFacades::where(LinenFacades::mask_company_id(), $model->mask_company_id)->get();
         if ($register) {
             $register = $register->mapWithKeys(function ($item) {
@@ -236,7 +246,7 @@ class OpnameController extends Controller
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,
             'register' => $register,
-            'lock' => $lock,
+            'outstanding' => $outstanding,
         ];
 
         if (request()->get('action')) {
@@ -252,7 +262,8 @@ class OpnameController extends Controller
     {
         $model = $this->get($code, ['has_detail']);
         $detail = $model->has_detail ?? false;
-        $lock = $model->has_lock ?? false;
+        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
+            ->where(OutstandingFacades::mask_status(), TransactionStatus::Pending)->get();
 
         $register = LinenFacades::where(LinenFacades::mask_company_id(), $model->mask_company_id)->get();
         if ($detail) {
@@ -260,9 +271,9 @@ class OpnameController extends Controller
             $register = $register->whereNotIn(LinenFacades::mask_rfid(), $detail_rfid);
         }
 
-        if ($lock) {
-            $lock_rfid = $lock->pluck(OutstandingLockFacades::mask_rfid())->toArray();
-            $register = $register->whereNotIn(LinenFacades::mask_rfid(), $lock_rfid);
+        if ($outstanding) {
+            $outstanding_rfid = $outstanding->pluck(OutstandingFacades::mask_rfid())->toArray();
+            $register = $register->whereNotIn(LinenFacades::mask_rfid(), $outstanding_rfid);
         }
 
         $share = [

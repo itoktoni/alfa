@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class Console extends Command {
 
@@ -37,6 +38,7 @@ class Console extends Command {
      */
     public function handle() {
         
+        Log::debug('test');
         // copy(resource_path().'/views/vendor/console/window.blade.php', base_path().'/vendor/alkhachatryan/laravel-web-console/resources/views/window.blade.php');
         $this->info('The system has been copied successfully!');
     }

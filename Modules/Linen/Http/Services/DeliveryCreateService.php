@@ -42,7 +42,7 @@ class DeliveryCreateService
             // $linen = LinenFacades::whereIn('item_linen_rfid', $data->detail)->update([LinenFacades::mask_qty() => DB::raw('item_linen_counter + 1')]);
 
             Outstanding::whereIn('linen_outstanding_rfid', $data->detail)->delete();
-            OutstandingLock::whereIn('linen_outstanding_rfid', $data->detail)->delete();
+            // OutstandingLock::whereIn('linen_outstanding_rfid', $data->detail)->delete();
 
             $check = $repository->saveRepository($data->all());
 

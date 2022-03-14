@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
@@ -52,6 +53,8 @@ class CheckOutstandingPending extends Command
         ->whereDate(OutstandingFacades::mask_updated_at(), '<', Carbon::now()->toDateString())
         ->get();
 
+        Log::info($outstanding);
+
         $rfid = $outstanding->pluck(OutstandingFacades::mask_rfid());
 
         $map = $rfid->map(function($item){
@@ -66,6 +69,8 @@ class CheckOutstandingPending extends Command
             ];
             return $data;
         });
+
+        Log::warning($map);
         
         LinenDetailFacades::insert($map->unique()->toArray());
 
@@ -78,6 +83,8 @@ class CheckOutstandingPending extends Command
         LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid->toArray())->update([
             LinenFacades::mask_latest() => LinenStatus::Pending,
         ]);
+
+        Log::error('error');
 
         // $grouped = $outstanding->mapToGroups(function ($item) {
 

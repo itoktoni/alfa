@@ -53,9 +53,7 @@ class CheckOutstandingPending extends Command
         ->whereDate(OutstandingFacades::mask_updated_at(), '<', Carbon::now()->toDateString())
         ->get();
         
-        dump($outstanding);
-
-        Log::info($outstanding);
+        Log::info($outstanding->count());
 
         $rfid = $outstanding->pluck(OutstandingFacades::mask_rfid());
 
@@ -72,7 +70,6 @@ class CheckOutstandingPending extends Command
             return $data;
         });
 
-        Log::warning($map);
         
         LinenDetailFacades::insert($map->unique()->toArray());
 
@@ -86,7 +83,6 @@ class CheckOutstandingPending extends Command
             LinenFacades::mask_latest() => LinenStatus::Pending,
         ]);
 
-        Log::error('error');
 
         // $grouped = $outstanding->mapToGroups(function ($item) {
 

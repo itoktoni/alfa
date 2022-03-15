@@ -52,6 +52,8 @@ class CheckOutstandingPending extends Command
         $outstanding = OutstandingFacades::whereDate(OutstandingFacades::mask_updated_at(), '>=', Carbon::now()->subDays(1)->toDateString())
         ->whereDate(OutstandingFacades::mask_updated_at(), '<', Carbon::now()->toDateString())
         ->get();
+        
+        dump($outstanding);
 
         Log::info($outstanding);
 

@@ -75,6 +75,13 @@ class StockController extends Controller
     public function data(StockDataService $service)
     {
         return $service
+            ->EditColumn([
+                'view_kotor' => 'mask_kotor',
+                'view_retur' => 'mask_retur',
+                'view_rewash' => 'mask_rewash',
+                'view_hilang' => 'mask_hilang',
+                'view_pending' => 'mask_pending',
+            ])
             ->setModel(self::$model)->make();
     }
 

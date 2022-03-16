@@ -137,7 +137,7 @@ class Stock extends Model
 
     public function getMaskKotorAttribute()
     {
-        return $this->{$this->mask_kotor()};
+        return $this->{$this->mask_kotor()} ?? 0;
     }
 
     public function mask_retur()
@@ -147,7 +147,7 @@ class Stock extends Model
 
     public function getMaskReturAttribute()
     {
-        return $this->{$this->mask_retur()};
+        return $this->{$this->mask_retur()} ?? 0;
     }
 
     public function mask_rewash()
@@ -157,7 +157,7 @@ class Stock extends Model
 
     public function getMaskRewashAttribute()
     {
-        return $this->{$this->mask_rewash()};
+        return $this->{$this->mask_rewash()} ?? 0;
     }
 
     public function mask_pending()
@@ -167,7 +167,7 @@ class Stock extends Model
 
     public function getMaskPendingAttribute()
     {
-        return $this->{$this->mask_pending()};
+        return $this->{$this->mask_pending()} ?? 0;
     }
 
     public function mask_hilang()
@@ -177,7 +177,7 @@ class Stock extends Model
 
     public function getMaskHilangAttribute()
     {
-        return $this->{$this->mask_hilang()};
+        return $this->{$this->mask_hilang()} ?? 0;
     }
 
 }

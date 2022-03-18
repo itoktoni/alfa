@@ -33,25 +33,8 @@
                                 </select>
                             </div>
                         </div>
-
-                        <div class="col-md-3 col-sm-4 {{ $errors->has($search_code) ? 'has-error' : ''}}">
-                            <div class="row input-group filter-search space-sm">
-                                <span class="input-group-addon">
-                                    {{ __('Operator') }}
-                                </span>
-                                <select name="aggregate" class="form-control">
-                                    <option value="">{{ __('Search With') }}</option>
-                                    <option value="=">{{ __('Equal') }}</option>
-                                    <option value="!=">{{ __('Not Equal') }}</option>
-                                    <option value="like">{{ __('Contains') }}</option>
-                                    <option value="not like">{{ __('Not Contains') }}</option>
-                                    <option value=">">{{ __('More Than') }}</option>
-                                    <option value="<">{{ __('Less Than') }}</option>
-                                </select>
-                            </div>
-                        </div>
                         
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-9 col-sm-12">
                             <div class="row input-group filter-search">
                                 <span class="input-group-addon">
                                     {{ __('Searching') }}

@@ -1,6 +1,6 @@
 <div class="form-group">
 
-    {!! Form::label('name', __('Name'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
+    {!! Form::label('name', __('Nama Linen'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('item_product_name') ? 'has-error' : ''}}">
         {!! Form::text('item_product_name', null, ['class' => 'form-control']) !!}
         {!! $errors->first('item_product_name', '<p class="help-block">:message</p>') !!}

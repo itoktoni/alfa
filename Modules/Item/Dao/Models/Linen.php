@@ -73,6 +73,8 @@ class Linen extends Model
         'item_linen_company_id' => 'required|exists:system_company,company_id',
         'item_linen_product_id' => 'required|exists:item_product,item_product_id',
         'item_linen_rfid' => 'required|unique:item_linen',
+        'item_linen_status' => 'required',
+        'item_linen_rent' => 'required',
     ];
 
     const CREATED_AT = 'item_linen_created_at';

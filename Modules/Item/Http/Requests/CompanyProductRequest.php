@@ -28,7 +28,13 @@ class CompanyProductRequest extends GeneralRequest
         $check = false;
         if (request()->segment(3) == 'create' || ($this->old_company_id != $this->company_id) || ($this->old_product_id != $this->item_product_id)) {
             
-            $check = CompanyProductFacades::where('item_product_id', $this->item_product_id)->where('company_id', $this->company_id)->count();
+            $check = CompanyProductFacades::where('item_product_id', $this->item_product_id)
+            ->where('company_id', $this->company_id)
+            ->where('location_id', $this->location_id)
+            // ->where('company_item_size_id', $this->company_item_size_id)
+            // ->where('company_item_weight', $this->company_item_weight)
+            ->count();
+            
             if ($check) {
 
                 $validator->after(function ($validator) {
@@ -42,6 +48,9 @@ class CompanyProductRequest extends GeneralRequest
     {
         return [
             'company_id' => 'required',
+            'location_id' => 'required',
+            'company_item_size_id' => 'required',
+            'company_item_weight' => 'required',
             'item_product_id' => 'required',
             'company_item_target' => 'required',
             'company_item_weight' => 'required',

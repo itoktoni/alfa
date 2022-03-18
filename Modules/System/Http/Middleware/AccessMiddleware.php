@@ -37,7 +37,7 @@ class AccessMiddleware
     public static $list_group_module;
 
     public $white_list = [
-        'home','beranda', 'dashboard', 'console', 'configuration', 'route', 'file', 'livewire', 'user', 'profile', 'language',
+        'home', 'beranda', 'dashboard', 'console', 'configuration', 'route', 'file', 'livewire', 'user', 'profile', 'language',
     ];
 
     public function __construct(Action $action, Module $module, ModuleConnectionAction $module_connection_action, GroupModuleConnectionModule $group_module_connection_module, GroupModuleRepository $group_module)
@@ -54,12 +54,14 @@ class AccessMiddleware
             self::$groupAccess = session()->get(Auth::User()->username . '_group_access') ?? null;
         }
 
-        
+
         if (self::$list_group_module == null && auth()->check()) {
             if (Cache::has(self::$username . '_group_list')) {
                 self::$list_group_module = Cache::get(self::$username . '_group_list');
             } else {
-                $group_list = DB::table(GroupUserConnectionGroupModuleFacades::getTable())->join(self::$group_module->getTable(), self::$group_module->getTable().'.'.self::$group_module->getKeyName(), GroupUserConnectionGroupModuleFacades::getTable().'.'.self::$group_module->getKeyName())->where(GroupUserFacades::getKeyName(), auth()->user()->group_user)->get();
+                $group_list = DB::table(GroupUserConnectionGroupModuleFacades::getTable())
+                    ->join(self::$group_module->getTable(), self::$group_module->getTable() . '.' . self::$group_module->getKeyName(), GroupUserConnectionGroupModuleFacades::getTable() . '.' . self::$group_module->getKeyName())
+                    ->where(GroupUserFacades::getKeyName(), auth()->user()->group_user)->get();
                 // $group_list = GroupUserConnectionGroupModuleFacades::find(self::$groupUser);
                 self::$list_group_module = $group_list;
                 Cache::rememberForever(self::$username . '_group_list', function () use ($group_list) {
@@ -84,7 +86,7 @@ class AccessMiddleware
         $data_action = $access->where('system_action_code', $action_code)->first();
         $action_function = $route->getActionMethod() ?? false;
         $template = null;
-        if(isset($route->getAction()['controller'])){
+        if (isset($route->getAction()['controller'])) {
 
             $arrayController = explode('@', $route->getAction()['controller']) ?? [];
             $template = Helper::getTemplate($arrayController[0]);
@@ -170,14 +172,13 @@ class AccessMiddleware
                 ->leftJoin(self::$module->getTable(), self::$module->getTable() . '.' . self::$module->getKeyName(), '=', self::$module_connection_action->getTable() . '.' . self::$module->getKeyName())
                 ->leftJoin(self::$group_module_connection_module->getTable(), self::$group_module_connection_module->getTable() . '.' . self::$module->getKeyName(), '=', self::$module->getTable() . '.' . self::$module->getKeyName())
                 ->where('system_module_enable', 1)
+                ->orderBy('system_module_sort', 'asc')
                 ->orderBy('system_action_path', 'asc')
                 ->orderBy('system_action_function', 'asc')
-                ->orderBy('system_module_sort', 'asc')
                 ->orderBy('system_action_sort', 'asc');
 
             return $routing->get();
         });
-
     }
 
     public function gate($access)

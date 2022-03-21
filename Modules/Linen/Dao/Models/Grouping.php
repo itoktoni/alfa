@@ -75,7 +75,7 @@ class Grouping extends Model
     public $searching = 'linen_grouping_barcode';
     public $datatable = [
         'linen_grouping_id' => [false => 'Code', 'width' => 50],
-        'linen_grouping_delivery' => [true => 'Delivery'],
+        'linen_grouping_delivery' => [true => 'No. DO'],
         'linen_grouping_barcode' => [true => 'Barcode'],
         'linen_grouping_company_id' => [false => 'Company'],
         'linen_grouping_company_name' => [true => 'Company'],

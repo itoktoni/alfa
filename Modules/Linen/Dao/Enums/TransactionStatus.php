@@ -47,6 +47,10 @@ class TransactionStatus extends Enum
             return '- Pilih Status - ';
         }
 
+        if ($value === self::Grouping) {
+            return 'Delivery';
+        }
+
         return parent::getDescription($value);
     }
 }

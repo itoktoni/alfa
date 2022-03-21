@@ -9,10 +9,10 @@ $each_product = $preview->unique('linen_grouping_detail_product_id')->pluck('lin
 $detail = [];
 if($preview){
 
-    $detail = $preview->mapToGroups(function($item){
-        $format = $item->linen_grouping_detail_reported_date ? $item->linen_grouping_detail_reported_date->format('d-m') : '0';
-        return [$format => $item];
-    });
+$detail = $preview->mapToGroups(function($item){
+$format = $item->linen_grouping_detail_reported_date ? $item->linen_grouping_detail_reported_date->format('d-m') : '0';
+return [$format => $item];
+});
 }
 
 $invoice = 0;
@@ -64,10 +64,10 @@ $invoice = 0;
                 </td>
                 @endforeach
                 <td><span class="small">Qty</span></td>
-                <td><span class="small">Berat (Kg)</span></td>
-                <td><span class="small">Total (Kg)</span></td>
-                <td><span class="small">Harga</span></td>
-                <td><span class="small">Total Invoice</span></td>
+                <td style="width: 100px;"><span class="small">Berat (Kg)</span></td>
+                <td style="width: 100px;"><span class="small">Total (Kg)</span></td>
+                <td style="width: 150px;"><span class="small">Harga</span></td>
+                <td style="width: 200px;"><span class="small">Total Invoice</span></td>
             </tr>
         </thead>
         <tbody>
@@ -113,8 +113,12 @@ $invoice = 0;
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="{{ $periode->count() + 6 }}"><p class="small">Grand Total</p></td>
-                <td colspan=""><p class="small">{{ number_format($invoice) }}</p></td>
+                <td colspan="{{ $periode->count() + 6 }}">
+                    <p class="small">Grand Total</p>
+                </td>
+                <td colspan="">
+                    <p class="small">{{ number_format($invoice) }}</p>
+                </td>
             </tr>
         </tfoot>
     </table>

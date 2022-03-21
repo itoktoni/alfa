@@ -64,10 +64,10 @@ $invoice = 0;
                 </td>
                 @endforeach
                 <td><span class="small">Qty</span></td>
-                <td style="width: 100px;"><span class="small">Berat (Kg)</span></td>
-                <td style="width: 100px;"><span class="small">Total (Kg)</span></td>
-                <td style="width: 150px;"><span class="small">Harga</span></td>
-                <td style="width: 200px;"><span class="small">Total Invoice</span></td>
+                <td style="width: 30px;"><span class="small">Berat (Kg)</span></td>
+                <td style="width: 30px;"><span class="small">Total (Kg)</span></td>
+                <td style="width: 70px;"><span class="small">Harga</span></td>
+                <td style="width: 70px;"><span class="small">Total Invoice</span></td>
             </tr>
         </thead>
         <tbody>

@@ -36,8 +36,8 @@
         <thead>
             <tr>
                 <td style="width: 20px;" width="30">No.</td>
-                <td style="width: 100px;" width="120">No. Seri Rfid</td>
-                <td width="200">Nama Rumah Sakit</td>
+                <td style="width: 150px;">No. Seri Rfid</td>
+                <td width="150">Nama Rumah Sakit</td>
                 <td width="50">Nama Ruangan</td>
                 <td width="200">Nama Linen</td>
                 <td width="50">Register Oleh</td>

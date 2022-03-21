@@ -6,9 +6,13 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
 $periode = Carbon\CarbonPeriod::create(request()->get('from'), request()->get('to'));
 $each_product = $preview->unique('linen_grouping_detail_product_id')->pluck('linen_grouping_detail_product_name', 'linen_grouping_detail_product_id');
 
-$detail = $preview->mapToGroups(function($item){
-return [$item->linen_grouping_detail_reported_date->format('d-m') => $item];
-});
+$detail = [];
+if($preview){
+
+    $detail = $preview->mapToGroups(function($item){
+        return [$item->linen_grouping_detail_reported_date->format('d-m') => $item];
+    });
+}
 
 $invoice = 0;
 

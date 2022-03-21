@@ -10,7 +10,8 @@ $detail = [];
 if($preview){
 
     $detail = $preview->mapToGroups(function($item){
-        return [$item->linen_grouping_detail_reported_date->format('d-m') => $item];
+        $format = $item->linen_grouping_detail_reported_date ? $item->linen_grouping_detail_reported_date->format('d-m') : '0';
+        return [$format => $item];
     });
 }
 

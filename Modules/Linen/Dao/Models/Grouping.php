@@ -15,7 +15,7 @@ class Grouping extends Model
 {
     use Userstamps;
 
-    protected $table = 'linen_grouping';
+    protected $table = 'linen_groupings';
     protected $primaryKey = 'linen_grouping_barcode';
     protected $keyType = 'string';
 

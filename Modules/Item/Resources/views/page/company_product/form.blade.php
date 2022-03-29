@@ -1,3 +1,34 @@
+@push('javascript')
+<script>
+    $('#company').change(function() {
+        var id = $("#company option:selected").val();
+
+        var uri = window.location.toString();
+        var clean_uri = window.location.toString();
+        if (uri.indexOf("?") > 0) {
+            clean_uri = uri.substring(0, uri.indexOf("?"));
+            window.history.replaceState({}, document.title, clean_uri);
+        }
+
+        window.location = clean_uri + '?company_id=' + id;
+    });
+
+    $('#status').change(function() {
+        var id = $("#status option:selected").val();
+
+        var uri = window.location.toString();
+        var clean_uri = window.location.toString();
+        if (uri.indexOf("&") > 0) {
+            clean_uri = uri.substring(0, uri.indexOf("&"));
+            window.history.replaceState({}, document.title, clean_uri);
+        }
+
+        window.location = clean_uri + '&status=' + id;
+
+    });
+</script>
+@endpush
+
 <div class="form-group">
     {!! Form::label('name', __('Company'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     @if(isset($master['lock_id']))
@@ -43,7 +74,7 @@
         {!! $errors->first('company_item_size_id', '<p class="help-block">:message</p>') !!}
     </div>
 
-   
+
 
 </div>
 
@@ -75,8 +106,8 @@
 {!! Form::label('name', __('Description'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4">
         {!! Form::textarea('company_item_description', null, ['class' => 'form-control', 'rows' => '3']) !!}
-    </div>   
-<!-- 
+    </div>
+<!--
     {!! Form::label('name', __('Unit'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('company_item_unit_id') ? 'has-error' : ''}}">
         {{ Form::select('company_item_unit_id', $unit, null, ['class'=> 'form-control ']) }}
@@ -88,13 +119,13 @@
 <hr>
 
 <div class="form-group">
-   
+
     {!! Form::label('name', __('Parstok'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('company_item_target') ? 'has-error' : ''}}">
         {!! Form::text('company_item_target', null, ['class' => 'form-control']) !!}
         {!! $errors->first('company_item_target', '<p class="help-block">:message</p>') !!}
     </div>
-    
+
     {!! Form::label('name', __('Realisasi'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('company_item_realisasi') ? 'has-error' : ''}}">
         {!! Form::text('company_item_realisasi', null, ['class' => 'form-control', 'readonly']) !!}
@@ -122,7 +153,7 @@
         {!! $errors->first('company_item_kekurangan', '<p class="help-block">:message</p>') !!}
     </div>
 
-    
+
     {!! Form::label('name', __('Price'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('company_item_price') ? 'has-error' : ''}}">
         {!! Form::text('company_item_price', null, ['class' => 'form-control']) !!}

@@ -12,7 +12,6 @@ use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Repositories\CompanyRepository;
 use Modules\System\Dao\Repositories\LocationRepository;
 use Modules\System\Http\Requests\DeleteRequest;
-use Modules\System\Http\Requests\GeneralRequest;
 use Modules\System\Http\Services\CreateService;
 use Modules\System\Http\Services\DataService;
 use Modules\System\Http\Services\DeleteService;
@@ -43,13 +42,16 @@ class CompanyProductController extends Controller
         $size = Views::option(new SizeRepository());
         $master = request()->all();
 
-        if(request()->get('company_id') || isset($data['model'])){
+        if (request()->get('company_id') || isset($data['model'])) {
 
             $id = request()->get('company_id') ?? $data['model']->item_linen_company_id;
 
             $data_company = CompanyFacades::where(CompanyFacades::getKeyName(), $id)->first();
-            if(isset($data_company->has_product)){
+            if (isset($data_company->has_product)) {
                 $product = $data_company->has_product->pluck('item_product_name', 'item_product_id');
+            }
+            if (isset($data_company->has_location)) {
+                $location = $data_company->has_location->pluck('location_name', 'location_id');
             }
         }
 

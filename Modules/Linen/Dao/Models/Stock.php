@@ -42,7 +42,7 @@ class Stock extends Model
         'view_location_name' => [true => 'Location Name'],
         'view_product_id' => [false => 'Company'],
         'view_product_name' => [true => 'Product Name'],
-        'view_register' => [true => 'Par Stock', 'width' => '40'],
+        'view_register' => [true => 'Register Linen', 'width' => '40'],
         'view_qty' => [true => 'Stock RS', 'width' => '40'],
         'view_cuci' => [true => 'Obsesiman', 'width' => '60'],
         'view_kotor' => [true => 'Kotor', 'width' => '40'],

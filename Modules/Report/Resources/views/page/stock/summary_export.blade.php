@@ -39,7 +39,7 @@
                 <td width="150">Nama Rumah Sakit</td>
                 <td width="100">Nama Ruangan</td>
                 <td width="200">Nama Linen</td>
-                <td width="80">Par Stock</td>
+                <td width="80">Register Linen</td>
                 <td width="120">Stock Rumah Sakit</td>
                 <td width="120">Stock Obsesiman</td>
                 <td width="50">Kotor</td>

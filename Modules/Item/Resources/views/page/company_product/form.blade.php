@@ -1,17 +1,17 @@
 @push('javascript')
 <script>
-    $('#company').change(function() {
-        var id = $("#company option:selected").val();
+    // $('#company').change(function() {
+    //     var id = $("#company option:selected").val();
 
-        var uri = window.location.toString();
-        var clean_uri = window.location.toString();
-        if (uri.indexOf("?") > 0) {
-            clean_uri = uri.substring(0, uri.indexOf("?"));
-            window.history.replaceState({}, document.title, clean_uri);
-        }
+    //     var uri = window.location.toString();
+    //     var clean_uri = window.location.toString();
+    //     if (uri.indexOf("?") > 0) {
+    //         clean_uri = uri.substring(0, uri.indexOf("?"));
+    //         window.history.replaceState({}, document.title, clean_uri);
+    //     }
 
-        window.location = clean_uri + '?company_id=' + id;
-    });
+    //     window.location = clean_uri + '?company_id=' + id;
+    // });
 
     $('#status').change(function() {
         var id = $("#status option:selected").val();

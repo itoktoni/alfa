@@ -1,18 +1,30 @@
 @push('javascript')
 <script>
-    $('#status').change(function() {
-        var id = $("#status option:selected").val();
+$('#company').change(function() {
+    var id = $("#company option:selected").val();
+    var uri = window.location.toString();
+    var clean_uri = window.location.toString();
+    if (uri.indexOf("?") > 0) {
+        clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+    window.location = clean_uri + '?company_id=' + id;
+});
 
-        var uri = window.location.toString();
-        var clean_uri = window.location.toString();
-        if (uri.indexOf("&") > 0) {
-            clean_uri = uri.substring(0, uri.indexOf("&"));
-            window.history.replaceState({}, document.title, clean_uri);
-        }
 
-        window.location = clean_uri + '&status=' + id;
+$('#status').change(function() {
+    var id = $("#status option:selected").val();
 
-    });
+    var uri = window.location.toString();
+    var clean_uri = window.location.toString();
+    if (uri.indexOf("&") > 0) {
+        clean_uri = uri.substring(0, uri.indexOf("&"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+
+    window.location = clean_uri + '&status=' + id;
+
+});
 </script>
 @endpush
 
@@ -72,7 +84,7 @@
     <div class="col-md-4 col-sm-4">
         {!! Form::textarea('item_linen_description', null, ['class' => 'form-control', 'rows' => '3']) !!}
     </div>
-    
+
     @if(request()->get('status') == LinenStatus::GantiChip)
     {!! Form::label('name', __('No. Seri RFID Lama'), ['class' => 'col-md-2 col-sm-2 control-label']) !!}
     <div class="col-md-4 col-sm-4 {{ $errors->has('item_linen_rfid_old') ? 'has-error' : ''}}">

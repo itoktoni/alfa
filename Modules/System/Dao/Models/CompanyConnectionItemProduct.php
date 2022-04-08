@@ -13,6 +13,7 @@ use Modules\Item\Dao\Models\Unit;
 use Modules\Item\Dao\Repositories\CompanyProductRepository;
 use Modules\Linen\Dao\Facades\StockFacades;
 use Modules\System\Dao\Facades\CompanyFacades;
+use Modules\System\Dao\Facades\LocationFacades;
 
 class CompanyConnectionItemProduct extends Model
 {
@@ -78,6 +79,21 @@ class CompanyConnectionItemProduct extends Model
     public function getMaskCompanyIdAttribute()
     {
         return $this->{$this->mask_company_id()};
+    }
+
+    public function mask_location_id()
+    {
+        return 'location_id';
+    }
+
+    public function setMaskLocationIdAttribute($value)
+    {
+        $this->attributes[$this->mask_location_id()] = $value;
+    }
+
+    public function getMaskLocationIdAttribute()
+    {
+        return $this->{$this->mask_location_id()};
     }
 
 	public function mask_product_id()
@@ -147,7 +163,7 @@ class CompanyConnectionItemProduct extends Model
 
 	public function has_location()
     {
-        return $this->hasOne(Location::class, CompanyFacades::getKeyName(), CompanyFacades::getKeyName());
+        return $this->hasOne(Location::class, CompanyFacades::getKeyName(), LocationFacades::getKeyName());
 	}
 	
 	public function has_product()

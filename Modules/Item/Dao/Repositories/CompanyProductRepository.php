@@ -20,7 +20,7 @@ class CompanyProductRepository extends CompanyConnectionItemProduct implements C
         return $this->select($list)->addSelect(DB::raw('company_item_target - company_item_realisasi as company_item_outstanding'))
         ->leftJoinRelationship('has_product')
         ->leftJoinRelationship('has_company')
-        ->leftJoinRelationship('has_location')
+        // ->leftJoinRelationship('has_location')
         ->leftJoinRelationship('has_size')
         ->leftJoinRelationship('has_unit')->groupby($this->getKeyName());
     }

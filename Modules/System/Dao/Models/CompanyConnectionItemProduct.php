@@ -163,7 +163,7 @@ class CompanyConnectionItemProduct extends Model
 
 	public function has_location()
     {
-        return $this->hasOne(Location::class, CompanyFacades::getKeyName(), LocationFacades::getKeyName());
+        return $this->hasOne(Location::class, $this->mask_location_id(), LocationFacades::getKeyName());
 	}
 	
 	public function has_product()

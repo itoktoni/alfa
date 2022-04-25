@@ -50,9 +50,11 @@ class CheckOutstandingPending extends Command
     public function handle()
     {
         $outstanding = OutstandingFacades::whereDate(OutstandingFacades::mask_updated_at(), '>=', Carbon::now()->subDays(1)->toDateString())
-        ->whereDate(OutstandingFacades::mask_updated_at(), '<', Carbon::now()->toDateString())->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)
+        ->whereDate(OutstandingFacades::mask_updated_at(), '<', Carbon::now()->toDateString())
+        ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)
+        ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Pending)
         ->get();
-        
+
         Log::info($outstanding->count());
 
         $rfid = $outstanding->pluck(OutstandingFacades::mask_rfid());
@@ -70,7 +72,7 @@ class CheckOutstandingPending extends Command
             return $data;
         });
 
-        
+
         LinenDetailFacades::insert($map->unique()->toArray());
 
         OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $rfid->toArray())
@@ -92,10 +94,10 @@ class CheckOutstandingPending extends Command
         //     ];
 
         // })->toArray();
-        
+
         // if ($grouped) {
         //     foreach ($grouped as $groups) {
-                
+
         //         $group = $groups[0] ?? false;
         //         if($group){
 

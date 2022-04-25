@@ -11,7 +11,7 @@
     </div>
     <div class="header-right">
         <ul class="notifications">
-            <li class="mail">
+            <!-- <li class="mail">
                 <a onclick="showEmail();" class="dropdown-toggle notification-icon">
                     <i class="fa fa-envelope"></i>
                     <span class="badge">4</span>
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                 </div>
-            </li>
+            </li> -->
             <li style="border-left: 1px solid grey;padding-left: 10px;">
                 <a id="rightMenu" href="#" style="border:none;background-color: #191c21;color:white;"
                     class="sidebar-right-toggle notification-icon" data-open="sidebar-right">
@@ -98,7 +98,7 @@
                             List Routes
                         </div>
                     </li>
-                    
+
                     <li>
                         <a role="menuitem" tabindex="-1" href="{{ route('configuration') }}"><i
                                 class="fa fa-wrench"></i> &nbsp; System Setting</a>

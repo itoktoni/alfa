@@ -29,7 +29,7 @@ class CompanyDataService extends DataService
             $pagination = request()->get('page') ? $this->filter->paginate(request()->get('limit') ?? config('website.pagination')) : $this->filter->get();
             return new CompanyCollection($pagination);
         }
-        
+
         $this->datatable = Datatables::of($this->filter);
         $this->setAction();
         $this->setStatus();

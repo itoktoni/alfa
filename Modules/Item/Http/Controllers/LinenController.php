@@ -151,7 +151,7 @@ class LinenController extends Controller
                 LinenDetailFacades::mask_rfid() => $code,
                 LinenDetailFacades::mask_status() => LinenStatus::Activated,
             ]);
-            
+
             return redirect()->back();
         }
         return view(Views::update())->with($this->share([

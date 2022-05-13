@@ -194,33 +194,35 @@ if (Cache::has('routing')) {
 
         })->name('sync_outstanding_upload');
 
-        Route::post('linen_detail', function () {
-
-            $rfid = request()->get('rfid');
-            
-            $linen = LinenFacades::whereIn(LinenFacades::getKeyName(), $rfid)->get();
-
-            if($linen){
-                $linen = $linen->map(function($item){
-                    return [
-                        "linen_rfid" => $item->item_linen_rfid,
-                        "linen_product_name" => $item->item_linen_product_name,
-                         "linen_company_name" => $item->item_linen_company_name,
-                         "linen_location_name" => $item->item_linen_location_name,
-                         "linen_latest" => LinenStatus::getDescription($item->item_linen_latest) ?? 'Unknown',
-                         "linen_counter" => $item->item_linen_counter,
-                         "linen_updated_at" => $item->item_linen_updated_at->format('d-m-Y h:i:s') ?? '',
-                         "linen_created_at" => $item->item_linen_created_at->format('d-m-Y h:i:s'),
-                    ];
-                });
-            }
-
-            return Notes::data($linen);
-
-        })->name('linen_detail');
-
+       
     });
 }
+
+Route::post('linen_detail', function () {
+
+    $rfid = request()->get('rfid');
+    
+    $linen = LinenFacades::whereIn(LinenFacades::getKeyName(), $rfid)->get();
+
+    if($linen){
+        $linen = $linen->map(function($item){
+            return [
+                "linen_rfid" => $item->item_linen_rfid,
+                "linen_product_name" => $item->item_linen_product_name,
+                 "linen_company_name" => $item->item_linen_company_name,
+                 "linen_location_name" => $item->item_linen_location_name,
+                 "linen_latest" => LinenStatus::getDescription($item->item_linen_latest) ?? 'Unknown',
+                 "linen_counter" => $item->item_linen_counter,
+                 "linen_updated_at" => $item->item_linen_updated_at->format('d-m-Y h:i:s') ?? '',
+                 "linen_created_at" => $item->item_linen_created_at->format('d-m-Y h:i:s'),
+            ];
+        });
+    }
+
+    return Notes::data($linen);
+
+})->name('linen_detail');
+
 
 Route::post('login', [TeamController::class, 'login'])->name('api_login');
 

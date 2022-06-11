@@ -11,8 +11,6 @@ use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Facades\OutstandingLockFacades;
-use Modules\Linen\Dao\Models\Outstanding;
-use Modules\Linen\Dao\Models\OutstandingLock;
 use Modules\System\Http\Controllers\TeamController;
 use Modules\System\Plugins\Notes;
 
@@ -89,8 +87,8 @@ if (Cache::has('routing')) {
             ])->whereNull('linen_outstanding_downloaded_at')->limit($limit)->get();
 
             $id = $outstanding->pluck('linen_outstanding_rfid');
-            
-            $map = $outstanding->map(function($item){
+
+            $map = $outstanding->map(function ($item) {
                 $data = [
                     'item_linen_detail_rfid' => $item->linen_kotor_detail_rfid,
                     'item_linen_detail_status' => LinenStatus::Download,
@@ -102,7 +100,7 @@ if (Cache::has('routing')) {
                 ];
                 return $data;
             });
-            
+
             LinenDetailFacades::insert($map->unique()->toArray());
 
             return $outstanding->toArray();
@@ -115,15 +113,13 @@ if (Cache::has('routing')) {
 
             $getData = OutstandingFacades::whereIn('linen_outstanding_rfid', $rfid)->get();
 
-            foreach($getData as $opname_data){
+            foreach ($getData as $opname_data) {
                 $status = $proses = null;
-                if($opname_data->linen_outstanding_description == LinenStatus::LinenKotor){
+                if ($opname_data->linen_outstanding_description == LinenStatus::LinenKotor) {
                     $status = TransactionStatus::Kotor;
-                }
-                else if($opname_data->linen_outstanding_description == LinenStatus::Bernoda || $opname_data->linen_outstanding_description == LinenStatus::BahanUsang){
+                } else if ($opname_data->linen_outstanding_description == LinenStatus::Bernoda || $opname_data->linen_outstanding_description == LinenStatus::BahanUsang) {
                     $status = TransactionStatus::Rewash;
-                }
-                else if($opname_data->linen_outstanding_description == LinenStatus::ChipRusak || $opname_data->linen_outstanding_description == LinenStatus::LinenRusak || $opname_data->linen_outstanding_description == LinenStatus::KelebihanStock){
+                } else if ($opname_data->linen_outstanding_description == LinenStatus::ChipRusak || $opname_data->linen_outstanding_description == LinenStatus::LinenRusak || $opname_data->linen_outstanding_description == LinenStatus::KelebihanStock) {
                     $status = TransactionStatus::Retur;
                 }
 
@@ -135,8 +131,8 @@ if (Cache::has('routing')) {
             }
 
             OutstandingLockFacades::whereIn('linen_outstanding_rfid', $rfid)->delete();
-            
-            $map = collect($rfid)->map(function($item){
+
+            $map = collect($rfid)->map(function ($item) {
                 $data = [
                     'item_linen_detail_rfid' => $item,
                     'item_linen_detail_status' => LinenStatus::LinenKotor,
@@ -148,9 +144,9 @@ if (Cache::has('routing')) {
                 ];
                 return $data;
             });
-            
+
             LinenDetailFacades::insert($map->unique()->toArray());
-            
+
             $check = Linen::whereIn('item_linen_rfid', $rfid)->update([
                 LinenFacades::mask_latest() => LinenStatus::LinenKotor,
             ]);
@@ -164,7 +160,7 @@ if (Cache::has('routing')) {
             $insert = request()->get('insert');
             $collect = collect($insert)->pluck('linen_outstanding_rfid');
 
-            $map = collect($collect)->map(function($item){
+            $map = collect($collect)->map(function ($item) {
                 $data = [
                     'item_linen_detail_rfid' => $item,
                     'item_linen_detail_status' => LinenStatus::BelumDiScan,
@@ -176,7 +172,7 @@ if (Cache::has('routing')) {
                 ];
                 return $data;
             });
-            
+
             LinenDetailFacades::insert($map->unique()->toArray());
 
             $check = OutstandingFacades::whereIn('linen_outstanding_rfid', $collect);
@@ -194,35 +190,33 @@ if (Cache::has('routing')) {
 
         })->name('sync_outstanding_upload');
 
-       
+        Route::post('linen_detail', function () {
+
+            $rfid = request()->get('rfid');
+
+            $linen = LinenFacades::whereIn(LinenFacades::getKeyName(), $rfid)->get();
+
+            if ($linen) {
+                $linen = $linen->map(function ($item) {
+                    return [
+                        "linen_rfid" => $item->item_linen_rfid,
+                        "linen_product_name" => $item->item_linen_product_name,
+                        "linen_company_name" => $item->item_linen_company_name,
+                        "linen_location_name" => $item->item_linen_location_name,
+                        "linen_latest" => LinenStatus::getDescription($item->item_linen_latest) ?? 'Unknown',
+                        "linen_counter" => $item->item_linen_counter,
+                        "linen_updated_at" => $item->item_linen_updated_at->format('d-m-Y h:i:s') ?? '',
+                        "linen_created_at" => $item->item_linen_created_at->format('d-m-Y h:i:s'),
+                    ];
+                });
+            }
+
+            return Notes::data($linen);
+
+        })->name('linen_detail');
+
     });
 }
-
-Route::post('linen_detail', function () {
-
-    $rfid = request()->get('rfid');
-    
-    $linen = LinenFacades::whereIn(LinenFacades::getKeyName(), $rfid)->get();
-
-    if($linen){
-        $linen = $linen->map(function($item){
-            return [
-                "linen_rfid" => $item->item_linen_rfid,
-                "linen_product_name" => $item->item_linen_product_name,
-                 "linen_company_name" => $item->item_linen_company_name,
-                 "linen_location_name" => $item->item_linen_location_name,
-                 "linen_latest" => LinenStatus::getDescription($item->item_linen_latest) ?? 'Unknown',
-                 "linen_counter" => $item->item_linen_counter,
-                 "linen_updated_at" => $item->item_linen_updated_at->format('d-m-Y h:i:s') ?? '',
-                 "linen_created_at" => $item->item_linen_created_at->format('d-m-Y h:i:s'),
-            ];
-        });
-    }
-
-    return Notes::data($linen);
-
-})->name('linen_detail');
-
 
 Route::post('login', [TeamController::class, 'login'])->name('api_login');
 

@@ -39,7 +39,11 @@ class RekapLinenController extends Controller
         $list_status = TransactionStatus::getOptions([
             TransactionStatus::Transaction,
             TransactionStatus::Pending,
-            TransactionStatus::Hilang
+            TransactionStatus::Kotor,
+            TransactionStatus::Retur,
+            TransactionStatus::Rewash,
+            TransactionStatus::Pending,
+            TransactionStatus::Hilang,
         ]);
         $list_description = LinenStatus::getOptions();
 

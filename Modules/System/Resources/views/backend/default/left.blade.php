@@ -44,7 +44,7 @@
                                     {{ $menu->system_module_name == 'Module' ? __($menu->system_module_name.'s') : __($menu->system_module_name) }}
                                     @else
                                     {{ $menu->system_module_name == 'Module' ? __($menu->system_module_name.'s') : __($menu->system_module_name) }}
-                                    {{ __(str_replace('Index', 'Data', $function_name)) }}
+                                    {{ $function_name != 'Pending' ? __(str_replace('Index', 'Data', $function_name)) : '' }}
                                     @endif
                                 </a>
                             </li>

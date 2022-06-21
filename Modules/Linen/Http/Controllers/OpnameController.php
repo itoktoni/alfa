@@ -256,7 +256,7 @@ class OpnameController extends Controller
         return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
     }
 
-    public function rs($code = null, ReportService $service)
+    public function rs($code = null, ReportService $service, ReportOpnameRepository $repository)
     {
         $model = $this->get($code, ['has_detail']);
         $detail = $model->has_detail ?? false;
@@ -284,7 +284,7 @@ class OpnameController extends Controller
         if (request()->get('action')) {
 
             $share['action'] = 'excel';
-            return $service->generate(new ReportOpnameRepository($share, 'excel_report_rs'), $share, 'excel_report_rs');
+            return $service->generate([$repository, 'share' => $share], 'excel_report_rs');
         }
 
         return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));

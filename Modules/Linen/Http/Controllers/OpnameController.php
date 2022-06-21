@@ -138,7 +138,7 @@ class OpnameController extends Controller
         return Response::redirectBack($data);
     }
 
-    public function show($code, ReportService $service)
+    public function show($code, ReportService $service, ReportOpnameRepository $repository)
     {
         $model = $this->get($code, ['has_detail']);
         $detail = $model->has_detail ?? false;
@@ -155,7 +155,6 @@ class OpnameController extends Controller
         }
 
         $register = DB::table('view_opname_register')->where('view_company_id', $model->mask_company_id)->get();
-        // dd($register);
         $share = [
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,
@@ -168,13 +167,13 @@ class OpnameController extends Controller
         if (request()->get('action')) {
 
             $share['action'] = 'excel';
-            return $service->generate(new ReportOpnameRepository($share, 'excel_report_opname'), $share, 'excel_report_opname');
+            return $service->generate([$repository, 'share' => $share], 'excel_report_opname');
         }
 
         return view(Views::show(config('page'), config('folder')))->with($this->share($share));
     }
 
-    public function location($code = null, ReportService $service)
+    public function location($code = null, ReportService $service, ReportOpnameRepository $repository)
     {
         $model = $this->get($code, ['has_detail']);
         $detail = $model->has_detail ?? false;
@@ -193,13 +192,13 @@ class OpnameController extends Controller
         if (request()->get('action')) {
 
             $share['action'] = 'excel';
-            return $service->generate(new ReportOpnameRepository($share, 'excel_report_location'), $share, 'excel_report_location');
+            return $service->generate([$repository, 'share' => $share], 'excel_report_location');
         }
 
         return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
     }
 
-    public function pending($code = null, ReportService $service)
+    public function pending($code = null, ReportService $service, ReportOpnameRepository $repository)
     {
         $model = $this->get($code);
 
@@ -221,15 +220,14 @@ class OpnameController extends Controller
         ];
 
         if (request()->get('action')) {
-
             $share['action'] = 'excel';
-            return $service->generate(new ReportOpnameRepository($share, 'excel_report_pending'), $share, 'excel_report_pending');
+            return $service->generate([$repository, 'share' => $share], 'excel_report_pending');
         }
 
         return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
     }
 
-    public function hilang($code = null, ReportService $service)
+    public function hilang($code = null, ReportService $service, ReportOpnameRepository $repository)
     {
         $model = $this->get($code);
         $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
@@ -252,7 +250,7 @@ class OpnameController extends Controller
         if (request()->get('action')) {
 
             $share['action'] = 'excel';
-            return $service->generate(new ReportOpnameRepository($share, 'excel_report_hilang'), $share, 'excel_report_hilang');
+            return $service->generate([$repository, 'share' => $share], 'excel_report_hilang');
         }
 
         return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));

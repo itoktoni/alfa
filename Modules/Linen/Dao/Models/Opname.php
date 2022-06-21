@@ -5,6 +5,7 @@ namespace Modules\Linen\Dao\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 use Modules\Item\Dao\Facades\ProductFacades;
 use Modules\Linen\Dao\Enums\OpnameStatus;
 use Modules\Linen\Dao\Facades\OpnameDetailFacades;
@@ -20,7 +21,7 @@ use Wildside\Userstamps\Userstamps;
 
 class Opname extends Model
 {
-    use SoftDeletes, Userstamps;
+    use SoftDeletes, Userstamps, FilterQueryString;
 
     protected $table = 'linen_opname';
     protected $primaryKey = 'linen_opname_key';
@@ -40,6 +41,12 @@ class Opname extends Model
         'linen_opname_company_name',        
         'linen_opname_total',
         'linen_opname_batch',
+    ];
+
+    protected $filters = [
+        'view_company_id',
+        'view_location_id',
+        'view_product_id',
     ];
 
     // public $with = ['module'];

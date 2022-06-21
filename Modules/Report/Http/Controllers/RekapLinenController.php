@@ -38,12 +38,9 @@ class RekapLinenController extends Controller
         $list_user = Views::option(new TeamRepository());
         $list_status = TransactionStatus::getOptions([
             TransactionStatus::Transaction,
-            TransactionStatus::Pending,
             TransactionStatus::Kotor,
             TransactionStatus::Retur,
             TransactionStatus::Rewash,
-            TransactionStatus::Pending,
-            TransactionStatus::Hilang,
         ]);
         $list_description = LinenStatus::getOptions();
 

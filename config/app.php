@@ -2,6 +2,7 @@
 
 use Kirschbaum\PowerJoins\PowerJoinsServiceProvider;
 use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Linen\Dao\Enums\OpnameStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\System\Plugins\Views;
 use Modules\System\Plugins\Notes;
@@ -280,6 +281,7 @@ return [
         'Cards' => Cards::class,
         'Chrome' => Chrome::class,
         'LinenStatus' => LinenStatus::class,
+        'OpnameStatus' => OpnameStatus::class,
         'TransactionStatus' => TransactionStatus::class,
         'PdfFacade' => Barryvdh\DomPDF\PdfFacade::class,
         'DotenvEditor' => Jackiedo\DotenvEditor\Facades\DotenvEditor::class,

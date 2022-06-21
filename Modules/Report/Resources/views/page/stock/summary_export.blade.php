@@ -24,12 +24,6 @@
         </tr>
         @endif
 
-        <tr>
-            <td colspan="12" align="center">
-                Periode : {{ request()->get('from') }} - {{ request()->get('to') }}
-            </td>
-        </tr>
-
     </table>
 
     <table id="datatable" class="responsive table-striped table-condensed table-bordered table-hover">

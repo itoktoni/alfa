@@ -12,7 +12,7 @@
     }
 
     .export .logo img {
-        width: 250px;
+        width: 150px;
     }
 
     #header {

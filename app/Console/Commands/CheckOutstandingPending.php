@@ -53,6 +53,7 @@ class CheckOutstandingPending extends Command
         ->whereDate(OutstandingFacades::mask_updated_at(), '<', Carbon::now()->toDateString())
         ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)
         ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Pending)
+        ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Grouping)
         ->get();
 
         Log::info($outstanding->count());

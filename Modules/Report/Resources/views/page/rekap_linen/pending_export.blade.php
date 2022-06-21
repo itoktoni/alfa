@@ -12,7 +12,7 @@
     <table id="header">
         <tr>
             <td colspan="12" align="center">
-                <h2>REKAP LINEN PENDING</h2>
+                <h2>REKAP LINEN {{ strtoupper(TransactionStatus::getDescription((intval(request()->get('linen_outstanding_status'))))) }}</h2>
             </td>
         </tr>
 

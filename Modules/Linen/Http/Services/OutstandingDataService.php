@@ -52,7 +52,7 @@ class OutstandingDataService extends DataService
         $filter = $this->filter;
 
         if($key = $request['linen_outstanding_key']){
-            $filter = $filter->where('linen_outstanding_key', $key);
+            $filter = $filter->where('linen_outstanding_key','like', '%'.$key.'%');
         }
         if($rfid = $request['linen_outstanding_rfid']){
             $filter = $filter->where('linen_outstanding_rfid', $rfid);

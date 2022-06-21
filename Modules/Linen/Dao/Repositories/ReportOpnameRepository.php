@@ -15,13 +15,14 @@ use Modules\System\Plugins\Views;
 
 class ReportOpnameRepository extends OpnameRepository implements FromView, ShouldAutoSize, WithColumnWidths, WithStyles, WithEvents
 {
-    public $request;
     public $name;
+    public $share;
 
-    public function __construct($request, $name)
+    public function generate($name, $share)
     {
         $this->name = $name;
-        $this->request = $request;
+        $this->share = $share;
+        return $this;
     }
 
     public function styles(Worksheet $sheet)
@@ -49,9 +50,17 @@ class ReportOpnameRepository extends OpnameRepository implements FromView, Shoul
         ];
     }
 
+    public function data()
+    {
+        $query = $this->dataRepository()->filter();
+
+        return $query->get();
+    }
 
     public function view(): View
     {
-        return view(Views::form($this->name, config('page'), config('folder')))->with($this->request);
+        $send = $this->share['share'];
+        $send['preview'] = $this->data();
+        return view('Linen::page.' . config('page') . '.' . $this->name, $send);
     }
 }

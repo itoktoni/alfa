@@ -86,7 +86,8 @@ class RekapLinenController extends Controller
     {
         $preview = $bersih = false;
         if ($name = request()->get('name')) {
-            $preview = $repository->generate($name, $this->share())->data();
+            $preview = $repository->generate($name, $this->share([
+            ]))->data();
             $bersih = $repository->data2();
         }
 
@@ -102,7 +103,7 @@ class RekapLinenController extends Controller
     public function kotorExport(CompanyRequest $request, ReportService $service, ReportKotorRepository $repository)
     {
         return $service->generate([$repository, 'share' => $this->share([
-            'kotor' => $repository->data2(),
+            'bersih' => $repository->data2(),
         ])], Helper::snake(__FUNCTION__));
     }
 
@@ -116,6 +117,7 @@ class RekapLinenController extends Controller
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))
             ->with($this->share([
                 'model' => $repository,
+                'kotor' => $repository->data2(),
                 'preview' => $preview,
                 'include' => __FUNCTION__
             ]));

@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Modules\Linen\Dao\Facades\DeliveryFacades;
+use Modules\Linen\Dao\Facades\GroupingDetailFacades;
 use Modules\Linen\Dao\Models\KotorDetail;
 use Modules\Report\Dao\Interfaces\GenerateReport;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
@@ -44,21 +45,21 @@ class ReportKotorRepository extends KotorDetail implements FromView, WithColumnF
 
     public function data2()
     {
-        $query = DeliveryFacades::dataRepository()->with('has_detail');
+        $query = GroupingDetailFacades::query();
 
         if ($company_id = request()->get('view_company_id')) {
-            $query->where('linen_delivery_company_id', $company_id);
+            $query->where('linen_grouping_detail_ori_company_id', $company_id);
         }
 
         if ($from = request()->get('from')) {
-            $query->whereDate('linen_delivery_reported_date', '>=', $from);
+            $query->whereDate('linen_grouping_detail_created_at', '>=', $from);
         }
 
         if ($to = request()->get('to')) {
-            $query->whereDate('linen_delivery_reported_date', '<=', $to);
+            $query->whereDate('linen_grouping_detail_created_at', '<=', $to);
         }
 
-        return $query->first();
+        return $query->get();
     }
 
     public function view(): View

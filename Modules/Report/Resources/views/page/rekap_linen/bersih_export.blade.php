@@ -4,10 +4,10 @@ $date_from = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('from'));
 $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
 
 $linen_delivery = $preview;
-$linen_kotor = $kotor->has_detail ?? [];
+$linen_kotor = $kotor->where('linen_kotor_detail_description', LinenStatus::LinenKotor) ?? [];
 $total_location = count($location)+6;
 
-$group_location = $linen_delivery->groupBy('linen_grouping_detail_ori_location_id');
+$group_location = $linen_delivery->where('linen_grouping_detail_description', LinenStatus::LinenKotor)->groupBy('linen_grouping_detail_ori_location_id');
 
 @endphp
 
@@ -72,8 +72,7 @@ $group_location = $linen_delivery->groupBy('linen_grouping_detail_ori_location_i
             @foreach($product as $item)
 
             @php
-
-            $total_delivery_pcs = $linen_delivery ? $linen_delivery->where('linen_grouping_detail_product_id', $item->item_product_id)->count() : 0;
+            $total_delivery_pcs = $linen_delivery ? $linen_delivery->where('linen_grouping_detail_product_id', $item->item_product_id)->where('linen_grouping_detail_description', LinenStatus::LinenKotor)->count() : 0;
             $total_kotor_pcs_right = $linen_kotor ? $linen_kotor->where('linen_kotor_detail_product_id', $item->item_product_id)->count() : 0;
             $total_delivery_pcs_right = $total_delivery_pcs ?? 0;
 
@@ -96,7 +95,7 @@ $group_location = $linen_delivery->groupBy('linen_grouping_detail_ori_location_i
                 @foreach($location as $loc)
                 <td>
                     @php
-                    $detail_product = $linen_delivery->where('linen_grouping_detail_product_id', $item->item_product_id)->where('linen_grouping_detail_ori_location_id', $loc->location_id);
+                    $detail_product = $linen_delivery->where('linen_grouping_detail_product_id', $item->item_product_id)->where('linen_grouping_detail_ori_location_id', $loc->location_id)->where('linen_grouping_detail_description', LinenStatus::LinenKotor);
                     $total_sub_product = count($detail_product) > 0 ? count($detail_product) : 0;
                     @endphp
                     {{ $total_sub_product }}

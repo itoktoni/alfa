@@ -9,7 +9,7 @@ $linen_kotor = $preview->where('linen_kotor_detail_description', LinenStatus::Li
 $linen_beda_rs = $preview->where('linen_kotor_detail_description', LinenStatus::BedaRs);
 $total_location = count($location)+6;
 $group_location = $linen_kotor->groupBy('linen_kotor_detail_ori_location_id');
-$linen_bersih = $bersih->has_detail ?? [];
+$linen_bersih = $bersih->where('linen_grouping_detail_description', LinenStatus::LinenKotor) ?? [];
 
 }
 

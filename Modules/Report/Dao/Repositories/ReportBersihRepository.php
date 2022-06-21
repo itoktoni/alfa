@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Modules\Linen\Dao\Facades\DeliveryFacades;
+use Modules\Linen\Dao\Facades\KotorDetailFacades;
 use Modules\Linen\Dao\Facades\KotorFacades;
 use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\Linen\Dao\Models\KotorDetail;
@@ -52,29 +53,27 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
 
     public function data2()
     {
-        $query = KotorFacades::dataRepository()->with('has_detail');
+        $query = KotorDetailFacades::query();
 
         if ($company_id = request()->get('company_id')) {
-            $query->where('linen_kotor_company_id', $company_id);
+            $query->where('linen_kotor_detail_ori_company_id', $company_id);
         }
 
         if ($key = request()->get('key')) {
-            $query->where('linen_kotor_key', $key);
+            $query->where('linen_kotor_detail_key', $key);
         }
 
         $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from'));
         $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to'));
 
         if ($from = request()->get('from')) {
-            $query->whereDate('linen_kotor_created_at', '>=', $kotor_from->addDay(-1)->format('Y-m-d'));
+            $query->whereDate('linen_kotor_detail_created_at', '>=', $kotor_from->addDay(-1)->format('Y-m-d'));
         }
         if ($to = request()->get('to')) {
-            $query->whereDate('linen_kotor_created_at', '<=', $kotor_to->addDay(-1)->format('Y-m-d'));
+            $query->whereDate('linen_kotor_detail_created_at', '<=', $kotor_to->addDay(-1)->format('Y-m-d'));
         }
 
-        $query->whereNull('linen_kotor_deleted_at');
-
-        return $query->first();
+        return $query->get();
     }
 
     public function view(): View

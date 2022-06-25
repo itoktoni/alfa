@@ -26,6 +26,7 @@ class KotorSyncService
         $check = false;
         // DB::beginTransaction();
         try {
+
             if (!empty($data['kotor'])) {
                 foreach ($data['kotor'] as $key => $kotor) {
                     $master_kotor = KotorFacades::find($key);
@@ -54,7 +55,6 @@ class KotorSyncService
                 //     Cards::Log($log_first['linen_outstanding_scan_company_id'], $log_first['linen_outstanding_scan_location_id'], $log_first['linen_outstanding_product_id'], $log_first['linen_outstanding_description']);
                 // }
             }
-
             $check_rfid = collect($data['outstanding'])->pluck(OutstandingFacades::mask_rfid());
             $succes = OutstandingFacades::whereIn(OutstandingFacades::mask_rfid(), $check_rfid)->get();
 
@@ -62,10 +62,9 @@ class KotorSyncService
 
                 $list_rfid = collect($data['sync']);
                 $map = $list_rfid->map(function ($item) {
-
                     $sql = LinenFacades::find($item['linen_rfid'])
                         ->update([
-                            LinenFacades::mask_latest() => LinenStatus::LinenKotor,
+                            LinenFacades::mask_latest() => $item['linen_description_id'],
                             LinenFacades::mask_qty() => 0,
                         ]);
 
@@ -100,7 +99,7 @@ class KotorSyncService
 
                         $sql = LinenFacades::whereIn(LinenFacades::mask_rfid(), $item['linen_rfid'])
                             ->update([
-                                LinenFacades::mask_latest() => LinenStatus::LinenKotor,
+                                LinenFacades::mask_latest() => $item['linen_description_id'],
                                 LinenFacades::mask_qty() => 0,
                             ]);
 

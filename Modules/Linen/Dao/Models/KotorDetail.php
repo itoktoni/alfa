@@ -85,6 +85,21 @@ class KotorDetail extends Model
         'name' => [true => 'Created By'],
     ];
 
+    public function mask_key()
+    {
+        return 'linen_kotor_detail_key';
+    }
+
+    public function setMaskKeyAttribute($value)
+    {
+        $this->attributes[$this->mask_rfid()] = $value;
+    }
+
+    public function getMaskKeyAttribute()
+    {
+        return $this->{$this->mask_rfid()};
+    }
+
     public function mask_rfid()
     {
         return 'linen_kotor_detail_rfid';
@@ -101,7 +116,7 @@ class KotorDetail extends Model
     }
 
     // start location
-    
+
     public function mask_location_scan()
     {
         return 'linen_kotor_detail_scan_location_id';
@@ -163,7 +178,7 @@ class KotorDetail extends Model
     {
         return $this->linen_kotor_detail_scan_company_name;
     }
-    
+
     public function mask_company_ori()
     {
         return 'linen_kotor_detail_ori_company_id';
@@ -178,12 +193,12 @@ class KotorDetail extends Model
     {
         return $this->{$this->mask_company_ori()};
     }
-    
+
     public function getMaskCompanyOriNameAttribute()
     {
         return $this->linen_kotor_detail_ori_company_name;
     }
-    
+
     /**
      * product id
      *
@@ -214,7 +229,7 @@ class KotorDetail extends Model
 
 		return $this->hasOne(User::class, TeamFacades::getKeyName(), self::CREATED_BY);
     }
-    
+
     public static function boot()
     {
         parent::boot();
@@ -236,5 +251,5 @@ class KotorDetail extends Model
                 'linen_kotor_total' => $detail
             ]);
         });
-    }    
+    }
 }

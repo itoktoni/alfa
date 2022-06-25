@@ -27,7 +27,7 @@ class EventServiceProvider extends ServiceProvider
             UpdateLinenKotorListener::class,
             CreateKotorLinenDetailListener::class,
             // RemoveStockDetailKotorListener::class,
-            LogCardKotorListener::class,
+            // LogCardKotorListener::class,
         ],
         CreateGroupingEvent::class => [
             UpdateLinenGroupingListener::class,

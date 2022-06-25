@@ -72,9 +72,9 @@ class KotorSyncRequest extends GeneralRequest
 
                     $mapping['linen_status'] = ResponseStatus::Exists;
                     $sync[$rfid_key] = $mapping;
-                    
+
                 } else {
-                    
+
                     $mapping['linen_status'] = ResponseStatus::Create;
                     $sync[$rfid_key] = $mapping;
 
@@ -166,6 +166,8 @@ class KotorSyncRequest extends GeneralRequest
             'outstanding' => $data_outstanding,
             'sync' => $sync
         ]);
+
+        // dd($this->all());
     }
 
 

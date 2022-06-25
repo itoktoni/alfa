@@ -33,7 +33,7 @@ class UpdateLinenKotorListener
 
             $sql = LinenFacades::whereIn(LinenFacades::mask_rfid(), $rfid)
             ->update([
-                LinenFacades::mask_latest() => LinenStatus::LinenKotor,
+                // LinenFacades::mask_latest() => LinenStatus::LinenKotor,
                 LinenFacades::mask_qty() => 0,
             ]);
         }

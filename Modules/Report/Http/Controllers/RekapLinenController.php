@@ -34,20 +34,24 @@ class RekapLinenController extends Controller
         $list_product = Views::option(new ProductRepository());
         $list_location = Views::option(new LocationRepository());
         $list_company = Views::option(new CompanyRepository());
-
+        $list_status = [];
+        
         $list_user = Views::option(new TeamRepository());
-        $list_status = TransactionStatus::getOptions([
-            TransactionStatus::Transaction,
-            TransactionStatus::Kotor,
-            TransactionStatus::Retur,
-            TransactionStatus::Rewash,
-        ]);
-        $list_description = LinenStatus::getOptions();
+        if(isset($data['list_status']) && !empty($data['list_status'])){
 
+            $list_status = TransactionStatus::getOptions([
+                TransactionStatus::Transaction,
+                TransactionStatus::Kotor,
+                TransactionStatus::Retur,
+                TransactionStatus::Rewash,
+            ]);
+        }
+        $list_description = LinenStatus::getOptions();
+        
         $company = CompanyFacades::find(request()->get('view_company_id'));
         $location = $company->has_location ?? [];
         $product = $company->has_product ?? [];
-
+        
         $view = [
             'list_product' => $list_product,
             'list_location' => $list_location,
@@ -59,7 +63,7 @@ class RekapLinenController extends Controller
             'location' => $location,
             'product' => $product,
         ];
-
+        
         return array_merge($view, $data);
     }
 
@@ -78,6 +82,33 @@ class RekapLinenController extends Controller
     }
 
     public function pendingExport(PendingRequest $request, ReportService $service, ReportOutstandingRepository $repository)
+    {
+        return $service->generate([$repository, 'share' => $this->share()], Helper::snake(__FUNCTION__));
+    }
+
+    public function hilang(ReportOutstandingRepository $repository)
+    {
+        $preview = false;
+        $list_status = TransactionStatus::getOptions([
+            TransactionStatus::Transaction,
+            TransactionStatus::Pending,
+            TransactionStatus::Hilang,
+        ]);
+
+        if ($name = request()->get('name')) {
+            $preview = $repository->generate($name, $this->share())->data();
+        }
+        return view(Views::form(__FUNCTION__, config('page'), config('folder')))
+            ->with($this->share([
+                
+                'model' => $repository,
+                'preview' => $preview,
+                'list_status' => $list_status, 
+                'include' => __FUNCTION__
+            ]));
+    }
+
+    public function hilangExport(PendingRequest $request, ReportService $service, ReportOutstandingRepository $repository)
     {
         return $service->generate([$repository, 'share' => $this->share()], Helper::snake(__FUNCTION__));
     }

@@ -46,7 +46,18 @@ class RekapLinenController extends Controller
                 TransactionStatus::Rewash,
             ]);
         }
-        $list_description = LinenStatus::getOptions();
+        $list_description = LinenStatus::getOptions([
+            LinenStatus::Register,
+            LinenStatus::GantiChip,
+            LinenStatus::Rental,
+            LinenStatus::Cuci,
+            LinenStatus::LinenKotor,
+            LinenStatus::KelebihanStock,
+            LinenStatus::ChipRusak,
+            LinenStatus::LinenRusak,
+            LinenStatus::Bernoda,
+            LinenStatus::BahanUsang,
+        ]);
         
         $company = CompanyFacades::find(request()->get('view_company_id'));
         $location = $company->has_location ?? [];

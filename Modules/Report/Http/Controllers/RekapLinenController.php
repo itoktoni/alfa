@@ -70,6 +70,13 @@ class RekapLinenController extends Controller
     public function pending(ReportOutstandingRepository $repository)
     {
         $preview = false;
+        $list_status = TransactionStatus::getOptions([
+            TransactionStatus::Transaction,
+            TransactionStatus::Kotor,
+            TransactionStatus::Retur,
+            TransactionStatus::Rewash,
+        ]);
+
         if ($name = request()->get('name')) {
             $preview = $repository->generate($name, $this->share())->data();
         }
@@ -77,6 +84,7 @@ class RekapLinenController extends Controller
             ->with($this->share([
                 'model' => $repository,
                 'preview' => $preview,
+                'list_status' => $list_status,
                 'include' => __FUNCTION__
             ]));
     }

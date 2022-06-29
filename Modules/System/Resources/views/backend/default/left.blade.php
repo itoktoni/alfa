@@ -43,8 +43,14 @@
                                     {{ __(str_replace('Index', 'Data', $function_name)) }}
                                     {{ $menu->system_module_name == 'Module' ? __($menu->system_module_name.'s') : __($menu->system_module_name) }}
                                     @else
-                                    {{ $menu->system_module_name == 'Module' ? __($menu->system_module_name.'s') : __($menu->system_module_name) }}
-                                    {{ $function_name != 'Pending' ? __(str_replace('Index', 'Data', $function_name)) : '' }}
+                                    @if($function_name == 'Pending')
+                                    {{ 'Rekap Linen ' }}
+                                    @elseif($function_name == 'Hilang')
+                                    {{ 'Rekap Pending/Hilang' }}
+                                    @else  
+                                        {{ $menu->system_module_name == 'Module' ? __($menu->system_module_name.'s') : __($menu->system_module_name) }}
+                                        {{ __(str_replace('Index', 'Data', $function_name)) }}  
+                                        @endif
                                     @endif
                                 </a>
                             </li>

@@ -35,8 +35,8 @@
         <tr>
             <th style="width: 2%;" class="col-md-1 text-left">No.</th>
             <th class="text-left col-md-2">Product Name</th>
-            <th class="text-left col-md-1">Stock Awal</th>
-            <th class="text-left col-md-1">Hasil Opname</th>
+            <th class="text-left col-md-1" style="width: 6%;">Stock Awal</th>
+            <th class="text-left col-md-1" style="width: 8%;">Hasil Opname</th>
             <th class="text-left col-md-1">Pending Obsesiman</th>
             <th class="text-left col-md-1">Hilang Obsesiman</th>
             <th class="text-left col-md-1">Hilang Rs.</th>
@@ -50,10 +50,10 @@
         $qty_opname = isset($opname[$item->view_product_id]) ? $opname[$item->view_product_id]->count() : 0;
         $qty_pending = $qty_hilang = 0;
         if($outstanding){
-        $qty_pending = $outstanding->where('linen_outstanding_status',TransactionStatus::Pending)->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
-        $qty_hilang = $outstanding->where('linen_outstanding_status',TransactionStatus::Hilang)->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
+        $qty_pending = $outstanding->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
+        $qty_hilang = $hilang->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
         }
-        $qty_hilang_rs = $qty_opname - ($item->view_register - ($qty_pending + $qty_hilang));
+        $qty_hilang_rs = $item->view_register - ($qty_opname + $qty_pending + $qty_hilang);
         @endphp
         <tr>
             <td>{{ $loop->iteration }}</td>

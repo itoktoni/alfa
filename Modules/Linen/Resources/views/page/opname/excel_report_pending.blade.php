@@ -36,15 +36,16 @@
             <th style="width: 2%;" class="text-left">No.</th>
             <th class="text-left col-md-2">No. Rfid</th>
             <th class="text-left col-md-2">Product Name</th>
-            <th class="text-left col-md-1">Tgl Register Awal</th>
+            <th class="text-left col-md-2">Tgl Register Awal</th>
             <th class="text-left col-md-1">Ruangan</th>
-            <th class="text-left col-md-1">Tgl Tembak</th>
+            <th class="text-left col-md-1">Status</th>
+            <th class="text-left col-md-2">Tgl Tembak</th>
         </tr>
     </thead>
     <tbody class="markup">
 
         @if($outstanding)
-        @foreach ($outstanding->where('linen_outstanding_status', TransactionStatus::Pending) as $item)
+        @foreach ($outstanding as $item)
         @php
         $tanggal_register = isset($register[$item->mask_rfid]) ? $register[$item->mask_rfid]->item_linen_created_at : '';
         @endphp
@@ -54,6 +55,7 @@
             <td>{{ $item->mask_product_name }}</td>
             <td>{{ $tanggal_register }}</td>
             <td>{{ $item->linen_outstanding_ori_location_name }}</td>
+            <td>{{ TransactionStatus::getDescription($item->linen_outstanding_status) }}</td>
             <td>{{ $item->linen_outstanding_created_at }}</td>
         </tr>
         @endforeach

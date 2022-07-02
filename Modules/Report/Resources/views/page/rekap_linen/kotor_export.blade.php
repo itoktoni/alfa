@@ -77,7 +77,7 @@ $group_location = $linen_delivery->where('linen_grouping_detail_description', Li
             $total_delivery_pcs_right = $total_delivery_pcs ?? 0;
 
             $pivot_berat = $item->pivot->company_item_weight ?? 0;
-            $kg_delivery_right = $total_kotor_pcs_right * $pivot_berat;
+            $kg_delivery_right = $kg_delivery_right * $pivot_berat;
 
             $total_delivery_pcs_bottom = $total_delivery_pcs_bottom + $total_delivery_pcs_right;
             $total_kotor_pcs_bottom = $total_kotor_pcs_bottom + $total_kotor_pcs_right;

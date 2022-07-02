@@ -130,9 +130,9 @@ $group_location = $linen_delivery->where('linen_grouping_detail_description', Li
                     @endif
                 </td>
                 @endforeach
-                <td>{{ $total_delivery_pcs_bottom ?? '' }}</td>
-                <td>{{ $kg_delivery_bottom ?? 0 }}</td>
                 <td>{{ $total_kotor_pcs_bottom ?? 0 }}</td>
+                <td>{{ $kg_delivery_bottom ?? 0 }}</td>
+                <td>{{ $total_delivery_pcs_bottom ?? '' }}</td>
                 <td>{{ $total_selisih ?? 0 }}</td>
             </tr>
         </tfoot>

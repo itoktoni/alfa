@@ -6,10 +6,7 @@ use App\Http\Controllers\Controller;
 use Modules\Item\Dao\Repositories\ProductRepository;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
-use Modules\Report\Dao\Repositories\HistoryLinenRepository;
 use Modules\Report\Dao\Repositories\ReportBersihRepository;
-use Modules\Report\Dao\Repositories\ReportKotorRepository;
-use Modules\Report\Dao\Repositories\ReportLinenRepository;
 use Modules\Report\Dao\Repositories\ReportOutstandingRepository;
 use Modules\Report\Http\Requests\CompanyRequest;
 use Modules\Report\Http\Requests\PendingRequest;
@@ -35,9 +32,9 @@ class RekapLinenController extends Controller
         $list_location = Views::option(new LocationRepository());
         $list_company = Views::option(new CompanyRepository());
         $list_status = [];
-        
+
         $list_user = Views::option(new TeamRepository());
-        if(isset($data['list_status']) && !empty($data['list_status'])){
+        if (isset($data['list_status']) && !empty($data['list_status'])) {
 
             $list_status = TransactionStatus::getOptions([
                 TransactionStatus::Transaction,
@@ -58,11 +55,11 @@ class RekapLinenController extends Controller
             LinenStatus::Bernoda,
             LinenStatus::BahanUsang,
         ]);
-        
+
         $company = CompanyFacades::find(request()->get('view_company_id'));
         $location = $company->has_location ?? [];
         $product = $company->has_product ?? [];
-        
+
         $view = [
             'list_product' => $list_product,
             'list_location' => $list_location,
@@ -74,7 +71,7 @@ class RekapLinenController extends Controller
             'location' => $location,
             'product' => $product,
         ];
-        
+
         return array_merge($view, $data);
     }
 
@@ -96,7 +93,7 @@ class RekapLinenController extends Controller
                 'model' => $repository,
                 'preview' => $preview,
                 'list_status' => $list_status,
-                'include' => __FUNCTION__
+                'include' => __FUNCTION__,
             ]));
     }
 
@@ -119,11 +116,11 @@ class RekapLinenController extends Controller
         }
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))
             ->with($this->share([
-                
+
                 'model' => $repository,
                 'preview' => $preview,
-                'list_status' => $list_status, 
-                'include' => __FUNCTION__
+                'list_status' => $list_status,
+                'include' => __FUNCTION__,
             ]));
     }
 
@@ -132,28 +129,41 @@ class RekapLinenController extends Controller
         return $service->generate([$repository, 'share' => $this->share()], Helper::snake(__FUNCTION__));
     }
 
-    public function kotor(ReportKotorRepository $repository)
+    public function kotor(ReportBersihRepository $repository)
     {
-        $preview = $bersih = false;
+        $preview = false;
         if ($name = request()->get('name')) {
-            $preview = $repository->generate($name, $this->share([
-            ]))->data();
-            $bersih = $repository->data2();
+            $preview = $repository->generate($name, $this->share())->data();
         }
 
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))
             ->with($this->share([
                 'model' => $repository,
+                'kotor' => $repository->data2(),
                 'preview' => $preview,
-                'bersih' => $bersih,
                 'include' => __FUNCTION__,
             ]));
+
+        // $preview = $bersih = false;
+        // if ($name = request()->get('name')) {
+        //     $preview = $repository->generate($name, $this->share([
+        //     ]))->data();
+        //     $bersih = $repository->data2();
+        // }
+
+        // return view(Views::form(__FUNCTION__, config('page'), config('folder')))
+        //     ->with($this->share([
+        //         'model' => $repository,
+        //         'preview' => $preview,
+        //         'bersih' => $bersih,
+        //         'include' => __FUNCTION__,
+        //     ]));
     }
 
-    public function kotorExport(CompanyRequest $request, ReportService $service, ReportKotorRepository $repository)
+    public function kotorExport(CompanyRequest $request, ReportService $service, ReportBersihRepository $repository)
     {
         return $service->generate([$repository, 'share' => $this->share([
-            'bersih' => $repository->data2(),
+            'kotor' => $repository->data2(),
         ])], Helper::snake(__FUNCTION__));
     }
 
@@ -169,7 +179,7 @@ class RekapLinenController extends Controller
                 'model' => $repository,
                 'kotor' => $repository->data2(),
                 'preview' => $preview,
-                'include' => __FUNCTION__
+                'include' => __FUNCTION__,
             ]));
     }
 

@@ -283,19 +283,16 @@ class OpnameController extends Controller
             $detail_rfid = $detail->pluck('linen_opname_detail_rfid')->toArray();
             $register = $register->whereNotIn(LinenFacades::mask_rfid(), $detail_rfid);
         }
-        // dd($register->pluck('item_linen_rfid')->toArray());
 
         if ($outstanding) {
             $outstanding_rfid = $outstanding->pluck(OutstandingFacades::mask_rfid())->toArray();
             $register = $register->whereNotIn(LinenFacades::mask_rfid(), $outstanding_rfid);
         }
-        // dd($register->pluck('item_linen_rfid')->toArray());
 
         if ($hilang) {
             $hilang_rfid = $hilang->pluck(OutstandingFacades::mask_rfid())->toArray();
             $register = $register->whereNotIn(LinenFacades::mask_rfid(), $hilang_rfid);
         }
-        // dd($register);
 
         $share = [
             'fields' => Helper::listData(self::$model->datatable),

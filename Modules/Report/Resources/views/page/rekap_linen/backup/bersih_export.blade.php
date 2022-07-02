@@ -58,9 +58,9 @@ $group_location = $linen_delivery->where('linen_grouping_detail_description', Li
                 @foreach($location as $loc)
                 <td width="130">{{ $loc->location_name }}</td>
                 @endforeach
-                <td width="100">Total Kotor (Pcs)</td>
-                <td width="100">(Kg) kotor</td>
                 <td width="100">Total Bersih (Pcs)</td>
+                <td width="100">(Kg) Bersih</td>
+                <td width="100">Total Kotor (Pcs)</td>
                 <td width="80">Selisih</td>
             </tr>
         </thead>
@@ -77,7 +77,7 @@ $group_location = $linen_delivery->where('linen_grouping_detail_description', Li
             $total_delivery_pcs_right = $total_delivery_pcs ?? 0;
 
             $pivot_berat = $item->pivot->company_item_weight ?? 0;
-            $kg_delivery_right = $total_kotor_pcs_right * $pivot_berat;
+            $kg_delivery_right = $total_delivery_pcs_right * $pivot_berat;
 
             $total_delivery_pcs_bottom = $total_delivery_pcs_bottom + $total_delivery_pcs_right;
             $total_kotor_pcs_bottom = $total_kotor_pcs_bottom + $total_kotor_pcs_right;
@@ -103,13 +103,13 @@ $group_location = $linen_delivery->where('linen_grouping_detail_description', Li
                 @endforeach
 
                 <td>
-                    </td>
-                    {{ $total_kotor_pcs_right }}
-                    <td>
-                        {{ $kg_delivery_right }}
-                    </td>
-                    <td>
                     {{ $total_delivery_pcs_right }}
+                </td>
+                <td>
+                    {{ $kg_delivery_right }}
+                </td>
+                <td>
+                    {{ $total_kotor_pcs_right }}
                 </td>
                 <td>
                     {{ $selisih }}

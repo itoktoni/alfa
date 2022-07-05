@@ -49,7 +49,7 @@ class CheckOutstandingPending extends Command
      */
     public function handle()
     {
-        $outstanding = OutstandingFacades::whereDate(OutstandingFacades::mask_updated_at(), '>=', Carbon::now()->subDays(1)->toDateString())
+        $outstanding = OutstandingFacades::whereDate(OutstandingFacades::mask_updated_at(), '>=', Carbon::now()->subMinutes(24)->toDateString())
         ->whereDate(OutstandingFacades::mask_updated_at(), '<', Carbon::now()->toDateString())
         ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)
         ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Pending)

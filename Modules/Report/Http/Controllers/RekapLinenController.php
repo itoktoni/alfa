@@ -44,6 +44,7 @@ class RekapLinenController extends Controller
             ]);
         }
         $list_description = LinenStatus::getOptions([
+            LinenStatus::StatusLinen,
             LinenStatus::Register,
             LinenStatus::GantiChip,
             LinenStatus::Rental,

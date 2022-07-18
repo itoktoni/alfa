@@ -126,7 +126,7 @@ class Outstanding extends Model
     }
 
     // start location
-    
+
     public function mask_location_scan()
     {
         return 'linen_outstanding_scan_location_id';
@@ -178,7 +178,7 @@ class Outstanding extends Model
     {
         return $this->{$this->mask_mask_company_scan()};
     }
-    
+
     public function mask_company_ori()
     {
         return 'linen_outstanding_ori_company_id';
@@ -193,7 +193,7 @@ class Outstanding extends Model
     {
         return $this->{$this->mask_company_ori()};
     }
-    
+
     public function getMaskCompanyOriNameAttribute()
     {
         return $this->linen_outstanding_ori_company_name;
@@ -219,7 +219,7 @@ class Outstanding extends Model
     {
         return $this->{$this->mask_product_id()};
     }
-    
+
     public function getMaskProductNameAttribute()
     {
         return $this->linen_outstanding_product_name;
@@ -329,11 +329,11 @@ class Outstanding extends Model
 
 		return $this->hasOne(User::class, TeamFacades::getKeyName(), self::CREATED_BY);
     }
-    
+
     public static function boot()
     {
         parent::boot();
-        
+
         parent::saving(function ($model) {
 
             $model->linen_outstanding_updated_at = date('Y-m-d H:i:s');

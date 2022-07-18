@@ -31,16 +31,19 @@ class RekapLinenController extends Controller
         $list_product = Views::option(new ProductRepository());
         $list_location = Views::option(new LocationRepository());
         $list_company = Views::option(new CompanyRepository());
-        $list_status = [];
+        $list_status = TransactionStatus::getOptions([
+            TransactionStatus::Transaction,
+            TransactionStatus::Pending,
+            TransactionStatus::Hilang,
+        ]);
 
         $list_user = Views::option(new TeamRepository());
         if (isset($data['list_status']) && !empty($data['list_status'])) {
 
             $list_status = TransactionStatus::getOptions([
                 TransactionStatus::Transaction,
-                TransactionStatus::Kotor,
-                TransactionStatus::Retur,
-                TransactionStatus::Rewash,
+                TransactionStatus::Pending,
+                TransactionStatus::Hilang,
             ]);
         }
         $list_description = LinenStatus::getOptions([

@@ -48,7 +48,7 @@ class CheckOutstandingHilang extends Command
      */
     public function handle()
     {
-        $outstanding = OutstandingFacades::whereDate(OutstandingFacades::mask_updated_at(), '<=', Carbon::now()->subMinutes(72)->toDateString())
+        $outstanding = OutstandingFacades::whereDate(OutstandingFacades::mask_updated_at(), '<=', Carbon::now()->subMinutes(4320)->toDateString())
         ->where(OutstandingFacades::mask_process(), '!=', TransactionStatus::Grouping)->get();
 
         $rfid = $outstanding->pluck(OutstandingFacades::mask_rfid());

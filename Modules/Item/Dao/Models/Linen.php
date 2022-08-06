@@ -168,12 +168,12 @@ class Linen extends Model
     {
         return $this->{$this->mask_company_id()};
     }
-    
+
     public function getMaskCompanyNameAttribute()
     {
         return $this->item_linen_company_name;
     }
-      
+
     /**
      * product id
      *
@@ -194,13 +194,13 @@ class Linen extends Model
     {
         return $this->{$this->mask_location_id()};
     }
-    
+
     public function getMaskLocationNameAttribute()
     {
         return $this->item_linen_location_name;
     }
 
-    
+
     /**
      * product id
      *
@@ -226,7 +226,7 @@ class Linen extends Model
     {
         return $this->item_linen_product_name;
     }
-    
+
 
     /**
      * product id
@@ -266,7 +266,7 @@ class Linen extends Model
 
 
     /**
-     * 
+     *
      * End Product ID
      */
 
@@ -291,17 +291,17 @@ class Linen extends Model
         return $this->{$this->mask_latest()};
     }
 
-        
+
     public function getMaskLatestName($value)
     {
         return $this->mask_latest()[$value][0];
     }
 
     /**
-     * 
+     *
      * End latest
      */
-    
+
 
      /**
      * latest
@@ -340,7 +340,7 @@ class Linen extends Model
     }
 
     /**
-     * 
+     *
      * End latest
      */
 
@@ -366,10 +366,10 @@ class Linen extends Model
     }
 
     /**
-     * 
+     *
      * End latest
      */
-    
+
     public function has_company()
     {
         return $this->hasOne(Company::class, CompanyFacades::getKeyName(), $this->mask_company_id());
@@ -392,7 +392,7 @@ class Linen extends Model
 
     public function has_detail()
     {
-        return $this->hasMany(LinenDetail::class, LinenDetailFacades::mask_rfid(), $this->getKeyName());   
+        return $this->hasMany(LinenDetail::class, LinenDetailFacades::mask_rfid(), $this->getKeyName());
     }
 
     public static function boot()

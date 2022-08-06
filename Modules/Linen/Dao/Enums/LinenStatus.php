@@ -11,7 +11,7 @@ class LinenStatus extends Enum
     use StatusTrait;
 
     const StatusLinen       =  null;
-    // const Register     
+    // const Register
     const Register          =  1;
     const GantiChip         =  2;
     const Rental            =  3;
@@ -19,18 +19,18 @@ class LinenStatus extends Enum
     const GantiProduct      =  5;
     const GantiRuangan      =  6;
     const GantiRs           =  7;
-    // const Kotor        
+    // const Kotor
     const LinenKotor        =  8;
-    const BedaRs            =  9;    
-    const BelumDiScan       = 10;    
-    // const Retur     
+    const BedaRs            =  9;
+    const BelumDiScan       = 10;
+    // const Retur
     const ChipRusak         = 11;
     const LinenRusak        = 12;
     const KelebihanStock    = 13;
-    // const Rewash      
+    // const Rewash
     const Bernoda           = 14;
     const BahanUsang        = 15;
-    // const Pending Hilang      
+    // const Pending Hilang
     const Grouping          = 16;
     const Bersih            = 17;
     const Pending           = 18;

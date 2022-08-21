@@ -48,7 +48,7 @@ Route::group(
 
                             $link = $route->system_action_link;
                         }
-                        
+
                         $path = $route->system_action_path . '@' . $route->system_action_function;
                         Route::match($route->system_action_method, $link, $path)->name($route->system_action_code);
                     }
@@ -154,7 +154,7 @@ Route::get('/', function () {
     }
 
     $mapping = Cache::get('routing')->where('system_action_api', 1)
-    
+
         ->mapToGroups(function ($model) {
             return [$model->system_action_controller => $model];
         });

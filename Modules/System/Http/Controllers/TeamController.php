@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Response as FacadesResponse;
 use Modules\System\Dao\Repositories\CompanyRepository;
 use Modules\System\Dao\Repositories\GroupUserRepository;
 use Modules\System\Dao\Repositories\HoldingRepository;
@@ -153,7 +154,7 @@ class TeamController extends Controller
             'password' => bcrypt($password),
         ]);
         Alert::create('Change password success !');
-        return Response::redirectToRoute('reset');
+        return FacadesResponse::redirectToRoute('reset');
     }
 
     public function reset_redis()

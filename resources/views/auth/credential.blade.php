@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    @if(file_exists(Helper::files('logo/'.config('website.favicon')))) 
+    @if(file_exists(Helper::files('logo/'.config('website.favicon'))))
     <link href="{{ Avatar::create(config('website.name'))->setShape('square') }}" rel="shortcut icon">
     @else
     <link href="{{ Helper::vendor('default/favicon.png') }}" rel="shortcut icon">

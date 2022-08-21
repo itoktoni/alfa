@@ -7,6 +7,7 @@ use App\Console\Commands\CheckOutstandingPending;
 use App\Console\Commands\CleanGroupingConsole;
 use App\Console\Commands\CleanKotorConsole;
 use App\Console\Commands\CleanRegisterConsole;
+use App\Console\Commands\CreateUserConsole;
 use App\Console\Commands\RegisterConsole;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -28,6 +29,7 @@ class Kernel extends ConsoleKernel {
         CleanGroupingConsole::class,
         CheckOutstandingPending::class,
         CheckOutstandingHilang::class,
+        CreateUserConsole::class,
     ];
 
     /**

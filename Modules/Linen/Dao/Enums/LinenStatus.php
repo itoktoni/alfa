@@ -79,4 +79,13 @@ class LinenStatus extends Enum
     {
         return 'Linen Status';
     }
+
+    public static function getDescription($value): string
+    {
+        if ($value === self::Grouping) {
+            return 'Delivery';
+        }
+
+        return parent::getDescription($value);
+    }
 }

@@ -42,7 +42,10 @@ class CreateUserConsole extends Command {
         $user = $this->argument('user');
         $group = $this->argument('group');
 
-        User::where('username', Str::snake($user))->delete();
+        $data = User::where('username', Str::snake($user));
+        if($data->first()){
+            $data->delete();
+        }
 
         User::create([
             'name' => $user,

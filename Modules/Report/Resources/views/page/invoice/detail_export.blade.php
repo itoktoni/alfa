@@ -59,7 +59,7 @@ $invoice = 0;
                 <td style="width: 5px;" width="30"><span class="small">No</span></td>
                 <td style="width: 50px;" width="200"><span class="small">Nama Linen</span></td>
                 @foreach($periode as $date)
-                <td style="width: 5px;" width="20">
+                <td>
                     <span class="small">{{ $date->format('j') }}</span>
                 </td>
                 @endforeach

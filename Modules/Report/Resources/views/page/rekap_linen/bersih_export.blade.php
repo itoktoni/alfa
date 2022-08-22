@@ -136,11 +136,11 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                 <td data="total bersih">
                     {{ $total_bersih_bawah }}
                 </td>
-                <td data="kg bersih">
+                <td>
                     {{ $total_pcs_bawah }}
                 </td>
-                <td  data="total kotor">{{ $total_kotor_bawah ?? 0 }}</td>
-                <td  data="selisih">{{ $total_bersih_bawah - $total_kotor_bawah ?? 0 }}</td>
+                <td>{{ $total_kotor_bawah ?? 0 }}</td>
+                <td>{{ $total_bersih_bawah - $total_kotor_bawah ?? 0 }}</td>
             </tr>
         </tfoot>
     </table>

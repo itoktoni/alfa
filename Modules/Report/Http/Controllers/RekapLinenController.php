@@ -167,8 +167,16 @@ class RekapLinenController extends Controller
 
     public function kotorExport(CompanyRequest $request, ReportService $service, ReportBersihRepository $repository)
     {
+        $preview = false;
+        if ($name = request()->get('name')) {
+            $preview = $repository->data();
+        }
+
         return $service->generate([$repository, 'share' => $this->share([
+            'model' => $repository,
             'kotor' => $repository->data2(),
+            'preview' => $preview,
+            'include' => __FUNCTION__,
         ])], Helper::snake(__FUNCTION__));
     }
 
@@ -191,8 +199,17 @@ class RekapLinenController extends Controller
 
     public function bersihExport(ReportService $service, ReportBersihRepository $repository)
     {
+        $repository = new ReportBersihRepository();
+        $preview = false;
+        if ($name = request()->get('name')) {
+            $preview = $repository->data()->get();
+        }
+
         return $service->generate([$repository, 'share' => $this->share([
+            'model' => $repository,
             'kotor' => $repository->data2(),
+            'preview' => $preview,
+            'include' => __FUNCTION__,
         ])], Helper::snake(__FUNCTION__));
     }
 }

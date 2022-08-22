@@ -4,7 +4,7 @@ $date_from = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('from'));
 $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
 
 $periode = Carbon\CarbonPeriod::create(request()->get('from'), request()->get('to'));
-$each_product = $preview->unique('linen_grouping_detail_product_id')->pluck('linen_grouping_detail_product_name', 'linen_grouping_detail_product_id');
+$each_product = $preview->sortBy('linen_grouping_detail_product_name')->unique('linen_grouping_detail_product_id')->pluck('linen_grouping_detail_product_name', 'linen_grouping_detail_product_id');
 
 $detail = [];
 if($preview){
@@ -57,7 +57,7 @@ $invoice = 0;
         <thead>
             <tr>
                 <td style="width: 10px;" width="30"><span class="small">No</span></td>
-                <td><span class="small">Nama Linen</span></td>
+                <td style="width: 100px;"><span class="small">Nama Linen</span></td>
                 @foreach($periode as $date)
                 <td style="width: 40px;text-align:center">
                     <span class="small">Tgl : {{ $date->format('j') }}</span>

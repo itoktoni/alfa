@@ -59,15 +59,15 @@ $invoice = 0;
                 <td style="width: 10px;" width="30"><span class="small">No</span></td>
                 <td style="width: 100px;"><span class="small">Nama Linen</span></td>
                 @foreach($periode as $date)
-                <td style="width: 40px;text-align:center">
+                <td style="width: 30px;text-align:center">
                     <span class="small">Tgl : {{ $date->format('j') }}</span>
                 </td>
                 @endforeach
-                <td style="width: 50px;text-align:center"><span class="small">Qty</span></td>
-                <td style="width: 30px;"><span class="small">Berat (Kg)</span></td>
-                <td style="width: 30px;"><span class="small">Total (Kg)</span></td>
-                <td style="width: 70px;text-align:right"><span class="small">Harga</span></td>
-                <td style="width: 70px;text-align:right"><span class="small">Total Invoice</span></td>
+                <td style="width: 30px;text-align:center"><span class="small">Qty</span></td>
+                <td style="width: 30px;text-align:center"><span class="small">Berat (Kg)</span></td>
+                <td style="width: 30px;text-align:center"><span class="small">Total (Kg)</span></td>
+                <td style="width: 40px;text-align:right"><span class="small">Harga</span></td>
+                <td style="width: 40px;text-align:right"><span class="small">Total Invoice</span></td>
             </tr>
         </thead>
         <tbody>
@@ -116,7 +116,7 @@ $invoice = 0;
                 <td colspan="{{ $periode->count() + 6 }}">
                     <p class="small">Grand Total</p>
                 </td>
-                <td colspan="">
+                <td style="text-align: right;" colspan="">
                     <p class="small">{{ number_format($invoice) }}</p>
                 </td>
             </tr>

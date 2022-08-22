@@ -32,11 +32,11 @@ class ReportInvoiceRepository extends GroupingDetail implements FromView, WithCo
         $query = $this->with(['has_delivery' => function($query){
 
             if ($from = request()->get('from')) {
-                $query->whereDate('linen_delivery_created_at', '>=', $from);
+                $query->whereDate('linen_grouping_detail_reported_date', '>=', $from);
             }
 
             if ($to = request()->get('to')) {
-                $query->whereDate('linen_delivery_created_at', '<=', $to);
+                $query->whereDate('linen_grouping_detail_reported_date', '<=', $to);
             }
 
             if ($company = request()->get('view_company_id')) {

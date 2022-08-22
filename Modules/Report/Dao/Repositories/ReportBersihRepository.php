@@ -30,26 +30,21 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
 
     public function data()
     {
-        $query = $this->with(['has_delivery' => function($query){
+        $query = GroupingDetail::query();
+        if ($from = request()->get('from')) {
+            $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from')) ?? null;
+            $query = $query->whereDate('linen_grouping_detail_reported_date', '>=', $kotor_from);
+        }
+        if ($to = request()->get('to')) {
+            $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to')) ?? null;
+            $query = $query->whereDate('linen_grouping_detail_reported_date', '<=', $kotor_to);
+        }
 
-            if ($from = request()->get('from')) {
-                $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from')) ?? null;
-                $query->whereDate('linen_delivery_created_at', '>=', $kotor_from->addDay(+1)->format('Y-m-d'));
-            }
-            if ($to = request()->get('to')) {
-                $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to')) ?? null;
-                $query->whereDate('linen_delivery_created_at', '<=', $kotor_to->addDay(+1)->format('Y-m-d'));
-            }
+        if ($company = request()->get('view_company_id')) {
+            $query = $query->where('linen_grouping_detail_ori_company_id', $company);
+        }
 
-            if ($company = request()->get('view_company_id')) {
-                $query->where('linen_delivery_company_id', $company);
-            }
-
-            return $query;
-
-        }]);
-
-        return $query->get();
+        return $query;
     }
 
     public function data2()
@@ -66,11 +61,11 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
 
         if ($from = request()->get('from')) {
             $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from')) ?? null;
-            $query->whereDate('linen_kotor_detail_created_at', '>=', $kotor_from->format('Y-m-d'));
+            $query->whereDate('linen_kotor_detail_created_at', '>=', $kotor_from->addDay(-1)->format('Y-m-d'));
         }
         if ($to = request()->get('to')) {
             $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to')) ?? null;
-            $query->whereDate('linen_kotor_detail_created_at', '<=', $kotor_to->format('Y-m-d'));
+            $query->whereDate('linen_kotor_detail_created_at', '<=', $kotor_to->addDay(-1)->format('Y-m-d'));
         }
 
         return $query->get();

@@ -1,0 +1,52 @@
+{
+    "name": "dietercoopman/laravel-showsql",
+    "description": "A Laravel package to output an sql as given to the database",
+    "keywords": [
+        "dietercoopman",
+        "laravel",
+        "showsql"
+    ],
+    "homepage": "https://github.com/dietercoopman/showsql",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dieter Coopman",
+            "email": "dieter@deltasolutions.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0|^8.1",
+        "illuminate/support": "^6|^7|^8|^9"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.15"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dietercoopman\\Showsql\\": "src",
+            "Dietercoopman\\Showsql\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dietercoopman\\Showsql\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "./vendor/bin/pest --no-coverage",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Dietercoopman\\Showsql\\ShowsqlServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

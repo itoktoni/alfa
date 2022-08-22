@@ -38,7 +38,7 @@ class ReportService
             $data = $repository['share'];
             $data['preview'] = $repository[0]->data();
             $pdf = PDF::loadView(Views::pdf(config('page'), config('folder'), $name), $data)
-                ->setPaper('A4', $layout);
+                ->setPaper('A3', $layout);
             return $pdf->stream(); // return $pdf->stream();
         }
     }

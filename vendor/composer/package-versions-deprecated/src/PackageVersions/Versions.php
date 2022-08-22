@@ -43,6 +43,7 @@ final class Versions
   'composer/package-versions-deprecated' => '1.11.99.4@b174585d1fe49ceed21928a945138948cb394600',
   'consoletvs/charts' => '6.5.5@0005d14e4fe6715f4146a4dc3b56add768233001',
   'dflydev/dot-access-data' => 'v3.0.1@0992cc19268b259a39e86f296da5f0677841f42c',
+  'dietercoopman/laravel-showsql' => 'v1.3.3@e596e2b8f2ca4628b7a38e8e36ca7238d32c60d2',
   'doctrine/cache' => '2.1.1@331b4d5dbaeab3827976273e9356b3b453c300ce',
   'doctrine/dbal' => '3.2.0@5d54f63541d7bed1156cb5c9b79274ced61890e4',
   'doctrine/deprecations' => 'v0.5.3@9504165960a1f83cc1480e2be1dd0a0478561314',
@@ -192,7 +193,7 @@ final class Versions
   'sebastian/version' => '3.0.2@c6c1022351a901512170118436c764e473f6de8c',
   'symfony/debug' => 'v4.4.31@43ede438d4cb52cd589ae5dc070e9323866ba8e0',
   'theseer/tokenizer' => '1.2.1@34a41e998c2183e22995f158c581e7b5e755ab9e',
-  'laravel/laravel' => 'dev-master@ab46a373d928d22bcbf8e170537f2e551ea30955',
+  'laravel/laravel' => 'dev-master@c64515111858ad678bd4c720144323148848b190',
 );
 
     private function __construct()

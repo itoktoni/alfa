@@ -46,6 +46,13 @@
       0 => 'ConsoleTVs\\Charts\\ChartsServiceProvider',
     ),
   ),
+  'dietercoopman/laravel-showsql' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Dietercoopman\\Showsql\\ShowsqlServiceProvider',
+    ),
+  ),
   'fideloper/proxy' => 
   array (
     'providers' => 

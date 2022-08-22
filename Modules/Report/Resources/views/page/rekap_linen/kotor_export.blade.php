@@ -32,7 +32,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
 
         <tr>
             <td colspan="12" align="left">
-                <h5 style="text-align: left;">Tanggal Linen Bersih : {{ $date_from->format('d/m/Y') ?? '' }} - {{ $date_to->format('d/m/Y') ?? '' }}</h5>
+                <h5 style="text-align: left;">Tanggal Linen Bersih : {{ $date_from->addDays(+1)->format('d/m/Y') ?? '' }} - {{ $date_to->addDays(+1)->format('d/m/Y') ?? '' }}</h5>
             </td>
         </tr>
         <tr>

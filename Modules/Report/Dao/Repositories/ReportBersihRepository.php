@@ -33,13 +33,14 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
         $query = $this->with(['has_delivery' => function($query){
 
             if ($from = request()->get('from')) {
-                $query->whereDate('linen_delivery_created_at', '>=', $from);
+                $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from')) ?? null;
+                $query->whereDate('linen_delivery_created_at', '>=', $kotor_from->addDay(+1)->format('Y-m-d'));
             }
-    
             if ($to = request()->get('to')) {
-                $query->whereDate('linen_delivery_created_at', '<=', $to);
+                $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to')) ?? null;
+                $query->whereDate('linen_delivery_created_at', '<=', $kotor_to->addDay(+1)->format('Y-m-d'));
             }
-    
+
             if ($company = request()->get('view_company_id')) {
                 $query->where('linen_delivery_company_id', $company);
             }
@@ -62,14 +63,14 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
         if ($key = request()->get('key')) {
             $query->where('linen_kotor_detail_key', $key);
         }
-        
+
         if ($from = request()->get('from')) {
             $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from')) ?? null;
-            $query->whereDate('linen_kotor_detail_created_at', '>=', $kotor_from->addDay(-1)->format('Y-m-d'));
+            $query->whereDate('linen_kotor_detail_created_at', '>=', $kotor_from->format('Y-m-d'));
         }
         if ($to = request()->get('to')) {
             $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to')) ?? null;
-            $query->whereDate('linen_kotor_detail_created_at', '<=', $kotor_to->addDay(-1)->format('Y-m-d'));
+            $query->whereDate('linen_kotor_detail_created_at', '<=', $kotor_to->format('Y-m-d'));
         }
 
         return $query->get();

@@ -62,7 +62,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
             $total_bersih_bawah = $total_pcs_bawah = $total_kotor_bawah = 0;
             @endphp
 
-            @foreach($product as $item)
+            @foreach($product->sortBy('item_product_name') as $item)
 
             @php
             $pivot_berat = $item->pivot->company_item_weight ?? 0;

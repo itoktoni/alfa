@@ -53,21 +53,21 @@ $invoice = 0;
 
     </table>
 
-    <table style="margin-left: -20px;" id="datatable" class="responsive table-striped table-condensed table-bordered table-hover">
+    <table style="margin-left: 0px;" id="datatable" class="responsive table-striped table-condensed table-bordered table-hover">
         <thead>
             <tr>
-                <td style="width: 5px;" width="30"><span class="small">No</span></td>
-                <td style="width: 50px;" width="200"><span class="small">Nama Linen</span></td>
+                <td style="width: 10px;" width="30"><span class="small">No</span></td>
+                <td><span class="small">Nama Linen</span></td>
                 @foreach($periode as $date)
-                <td>
-                    <span class="small">{{ $date->format('j') }}</span>
+                <td style="width: 40px;text-align:center">
+                    <span class="small">Tgl : {{ $date->format('j') }}</span>
                 </td>
                 @endforeach
-                <td><span class="small">Qty</span></td>
+                <td style="width: 50px;text-align:center"><span class="small">Qty</span></td>
                 <td style="width: 30px;"><span class="small">Berat (Kg)</span></td>
                 <td style="width: 30px;"><span class="small">Total (Kg)</span></td>
-                <td style="width: 70px;"><span class="small">Harga</span></td>
-                <td style="width: 70px;"><span class="small">Total Invoice</span></td>
+                <td style="width: 70px;text-align:right"><span class="small">Harga</span></td>
+                <td style="width: 70px;text-align:right"><span class="small">Total Invoice</span></td>
             </tr>
         </thead>
         <tbody>
@@ -103,10 +103,10 @@ $invoice = 0;
                     <p class="small text-center">{{ $total_weight }}</p>
                 </td>
                 <td>
-                    <p class="small text-center">{{ number_format($price) }}</p>
+                    <p class="small text-right">{{ number_format($price) }}</p>
                 </td>
                 <td>
-                    <p class="small text-center">{{ number_format($total_price) }}</p>
+                    <p class="small text-right">{{ number_format($total_price) }}</p>
                 </td>
             </tr>
             @endforeach

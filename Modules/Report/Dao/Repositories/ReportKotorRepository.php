@@ -3,6 +3,7 @@
 namespace Modules\Report\Dao\Repositories;
 
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
@@ -26,18 +27,18 @@ class ReportKotorRepository extends KotorDetail implements FromView, WithColumnF
 
     public function data()
     {
-        $query = $this->filter();
+        $query = KotorDetail::query();
 
         if ($from = request()->get('from')) {
-            $query->whereDate('linen_kotor_detail_created_at', '>=', $from);
+            $query = $query->whereDate('linen_kotor_detail_created_at', '>=', $from);
         }
 
         if ($to = request()->get('to')) {
-            $query->whereDate('linen_kotor_detail_created_at', '<=', $to);
+            $query = $query->whereDate('linen_kotor_detail_created_at', '<=', $to);
         }
 
         if ($company = request()->get('view_company_id')) {
-            $query->where('linen_kotor_detail_scan_company_id', $company);
+            $query = $query->where('linen_kotor_detail_scan_company_id', $company);
         }
 
         return $query->get();
@@ -48,16 +49,19 @@ class ReportKotorRepository extends KotorDetail implements FromView, WithColumnF
         $query = GroupingDetailFacades::query();
 
         if ($company_id = request()->get('view_company_id')) {
-            $query->where('linen_grouping_detail_ori_company_id', $company_id);
+            $query = $query->where('linen_grouping_detail_ori_company_id', $company_id);
         }
 
         if ($from = request()->get('from')) {
-            $query->whereDate('linen_grouping_detail_created_at', '>=', $from);
+            $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from')) ?? null;
+            $query = $query->whereDate('linen_grouping_detail_reported_date', '>=', $kotor_from->addDay(1)->format('Y-m-d'));
         }
 
         if ($to = request()->get('to')) {
-            $query->whereDate('linen_grouping_detail_created_at', '<=', $to);
+            $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to')) ?? null;
+            $query = $query->whereDate('linen_grouping_detail_reported_date', '<=', $kotor_to->addDay(1)->format('Y-m-d'));
         }
+
 
         return $query->get();
     }

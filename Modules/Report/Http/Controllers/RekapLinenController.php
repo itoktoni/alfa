@@ -7,6 +7,7 @@ use Modules\Item\Dao\Repositories\ProductRepository;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Report\Dao\Repositories\ReportBersihRepository;
+use Modules\Report\Dao\Repositories\ReportKotorRepository;
 use Modules\Report\Dao\Repositories\ReportOutstandingRepository;
 use Modules\Report\Http\Requests\CompanyRequest;
 use Modules\Report\Http\Requests\PendingRequest;
@@ -133,11 +134,11 @@ class RekapLinenController extends Controller
         return $service->generate([$repository, 'share' => $this->share()], Helper::snake(__FUNCTION__));
     }
 
-    public function kotor(ReportBersihRepository $repository)
+    public function kotor(ReportKotorRepository $repository)
     {
         $preview = false;
         if ($name = request()->get('name')) {
-            $preview = $repository->generate($name, $this->share())->data();
+            $preview = $repository->data();
         }
 
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))

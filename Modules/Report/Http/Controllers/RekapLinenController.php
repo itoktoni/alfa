@@ -176,14 +176,14 @@ class RekapLinenController extends Controller
         $repository = new ReportBersihRepository();
         $preview = false;
         if ($name = request()->get('name')) {
-            $preview = $repository->data();
+            $preview = $repository->data()->get();
         }
 
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))
             ->with($this->share([
                 'model' => $repository,
                 'kotor' => $repository->data2(),
-                'preview' => $preview->get(),
+                'preview' => $preview,
                 'include' => __FUNCTION__,
             ]));
     }

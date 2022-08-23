@@ -9,7 +9,7 @@ use Wildside\Userstamps\Userstamps;
 class Size extends Model
 {
     use SoftDeletes, Userstamps;
-    
+
     protected $table = 'item_size';
     protected $primaryKey = 'item_size_code';
     protected $keyType = 'string';
@@ -40,11 +40,11 @@ class Size extends Model
 
     public $searching = 'item_size_name';
     public $datatable = [
-        'item_size_code' => [true => 'Code', 'width' => 50],
-        'item_size_name' => [true => 'Name','width' => 150],
+        'item_size_code' => [true => 'Code'],
+        'item_size_name' => [true => 'Name'],
         'item_size_description' => [true => 'Description'],
     ];
-    
+
     public $status    = [
         '1' => ['Enable', 'info'],
         '0' => ['Disable', 'default'],

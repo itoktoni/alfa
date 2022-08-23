@@ -3,12 +3,17 @@
     body {
         font-family: "sans-serif";
         font-size: 10px;
-        margin: 0px;
+        padding: 0px;
+        margin-bottom: 20px;
         padding: 0px;
     }
 
     table {
-        border-collapse: collapse
+        border-collapse: collapse;
+    }
+
+    .export{
+        padding: 20px;
     }
 
     .export .logo img {
@@ -67,7 +72,6 @@
     }
 
     .footer tfoot td{
-        padding-top: 50px;
     }
 
     .footer td{
@@ -82,4 +86,12 @@
         text-align: center;
         vertical-align: middle;
     }
+
+    a,a:link,a:visited{color:#000;font-weight:700;text-decoration:none}@media print{@page{margin:0;margin-top:10px;margin-bottom: 0px;}body{margin:10px}h4{margin-top:30px;margin-bottom: 0px;}.checkbox,.column-action,.column-checkbox{display:none;visibility:hidden}table{border-spacing:0!important}.header-action{display:none;visibility:hidden}}
+
 </style>
+
+
+<script>
+window.print();
+</script>

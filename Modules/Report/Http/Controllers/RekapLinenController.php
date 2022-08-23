@@ -18,6 +18,8 @@ use Modules\System\Dao\Repositories\TeamRepository;
 use Modules\System\Http\Services\ReportService;
 use Modules\System\Plugins\Helper;
 use Modules\System\Plugins\Views;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class RekapLinenController extends Controller
 {
@@ -165,7 +167,7 @@ class RekapLinenController extends Controller
         //     ]));
     }
 
-    public function kotorExport(CompanyRequest $request, ReportService $service, ReportBersihRepository $repository)
+    public function kotorExport(CompanyRequest $request, ReportService $service, ReportKotorRepository $repository)
     {
         $preview = false;
         if ($name = request()->get('name')) {
@@ -199,17 +201,33 @@ class RekapLinenController extends Controller
 
     public function bersihExport(ReportService $service, ReportBersihRepository $repository)
     {
-        $repository = new ReportBersihRepository();
-        $preview = false;
-        if ($name = request()->get('name')) {
-            $preview = $repository->data()->get();
+        $preview = $repository->data()->get();
+
+        $data['model'] = $repository;
+        $data['kotor'] = $repository->data2();
+        $data['preview'] = $preview;
+        $data['include'] = __FUNCTION__;
+
+        if (request()->get('action') == 'excel') {
+            $filename =  'report_harian_bersih_' . date('Y_m_d') . '.xlsx';
+            return Excel::download(new ReportBersihRepository(),  $filename);
         }
 
-        return $service->generate([$repository, 'share' => $this->share([
-            'model' => $repository,
-            'kotor' => $repository->data2(),
-            'preview' => $preview,
-            'include' => __FUNCTION__,
-        ])], Helper::snake(__FUNCTION__));
+        if(request()->get('action') == 'pdf'){
+
+            // $layout = request()->get('layout') ?? 'potrait';
+            // $data = $repository['share'];
+            // $data['preview'] = $repository[0]->data();
+            // $pdf = PDF::loadView(Views::pdf(config('page'), config('folder'), $name), $data)
+            //     ->setPaper('A3', $layout);
+            // return $pdf->stream(); // return $pdf->stream();
+
+            $data = array_merge($data, $this->share());
+
+            return view(Views::pdf(config('page'), config('folder'), 'bersih_export'), $data);
+
+        }
+
+        return $service->generate([$repository, 'share' => $this->share()], Helper::snake(__FUNCTION__));
     }
 }

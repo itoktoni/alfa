@@ -17,12 +17,14 @@ class ReportService
         $this->excel = $excel;
     }
 
-    public function generate($repository, $name)
+    public function generate($repository, $name, $data = null)
     {
         if (request()->get('action') == 'excel') {
             $filename = $name . '_' . date('Y_m_d') . '.xlsx';
+            $repository = array_merge($repository,$repository[1]);
             $data = $repository[0]->generate($name, $repository);
-            return $this->excel->download($data, $filename);
+
+            return $this->excel->download($repository, $filename);
         }
         if (request()->get('action') == 'preview') {
 

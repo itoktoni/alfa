@@ -71,12 +71,18 @@ $invoice = 0;
             </tr>
         </thead>
         <tbody>
+            @php
+            $total_qty = $total_kg = $total_berat = 0;
+            @endphp
             @foreach($each_product as $id => $name)
             @php
             $pro = $product->where('item_product_id', $id)->first();
             $weight = $pro->pivot->company_item_weight ?? 0;
             $qty = $preview->where('linen_grouping_detail_product_id', $id)->count() ?? 0;
+            $total_qty = $total_qty + $qty;
             $total_weight = $weight * $qty;
+            $total_berat = $total_berat + $weight;
+            $total_kg = $total_berat + $total_weight;
             $price = $pro->pivot->company_item_price ?? 0;
             $total_price = $price * $total_weight;
             $invoice = $invoice + $total_price;
@@ -113,10 +119,28 @@ $invoice = 0;
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="{{ $periode->count() + 6 }}">
+                <td colspan="{{ $periode->count() }}">
                     <p class="small">Grand Total</p>
                 </td>
-                <td style="text-align: right;" colspan="">
+                @foreach($periode as $date)
+                <td width="50">
+                    @php
+                    $value = $detail[$date->format('d-m')] ?? false;
+                    $total = $value ? $value->count() : 0;
+                    @endphp
+                    <p class="small text-center">{{ $total }}</p>
+                </td>
+                @endforeach
+                <td style="text-align: center;" colspan="">
+                    <p class="small">{{ $total_qty }}</p>
+                </td>
+                <td style="text-align: center;" colspan="">
+                    <p class="small">{{ $total_berat }}</p>
+                </td>
+                <td style="text-align: center;" colspan="">
+                    <p class="small">{{ $total_kg }}</p>
+                </td>
+                <td style="text-align: right;" colspan="2">
                     <p class="small">{{ number_format($invoice) }}</p>
                 </td>
             </tr>

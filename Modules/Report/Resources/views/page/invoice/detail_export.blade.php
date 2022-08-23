@@ -119,7 +119,7 @@ $invoice = 0;
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="{{ $periode->count() }}">
+                <td colspan="2">
                     <p class="small">Grand Total</p>
                 </td>
                 @foreach($periode as $date)

@@ -66,8 +66,8 @@ $invoice = 0;
                 <td style="width: 30px;text-align:center"><span class="small">Qty</span></td>
                 <td style="width: 30px;text-align:center"><span class="small">Berat (Kg)</span></td>
                 <td style="width: 30px;text-align:center"><span class="small">Total (Kg)</span></td>
-                <td style="width: 40px;text-align:right"><span class="small">Harga</span></td>
-                <td style="width: 40px;text-align:right"><span class="small">Total Invoice</span></td>
+                <td style="width: 40px;text-align:center"><span class="small">Harga</span></td>
+                <td style="width: 40px;text-align:center"><span class="small">Total Invoice</span></td>
             </tr>
         </thead>
         <tbody>
@@ -109,10 +109,10 @@ $invoice = 0;
                     <p class="small text-center">{{ $total_weight }}</p>
                 </td>
                 <td>
-                    <p class="small text-right">{{ number_format($price) }}</p>
+                    <p class="small text-center">{{ number_format($price) }}</p>
                 </td>
                 <td>
-                    <p class="small text-right">{{ number_format($total_price) }}</p>
+                    <p class="small text-center">{{ number_format($total_price) }}</p>
                 </td>
             </tr>
             @endforeach
@@ -140,7 +140,7 @@ $invoice = 0;
                 <td style="text-align: center;" colspan="">
                     <p class="small">{{ $total_kg }}</p>
                 </td>
-                <td style="text-align: right;" colspan="2">
+                <td style="text-align: center;" colspan="2">
                     <p class="small">{{ number_format($invoice) }}</p>
                 </td>
             </tr>

@@ -118,7 +118,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
             @endforeach
 
             <tr>
-                <td></td>
+                <td>{{ $product->count() + 1 }}</td>
                 <td>TOTAL SERAH TERIMA</td>
 
                 @foreach($location as $loc)

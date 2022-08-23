@@ -150,28 +150,27 @@ class RekapLinenController extends Controller
                 'preview' => $preview,
                 'include' => __FUNCTION__,
             ]));
-
-        // $preview = $bersih = false;
-        // if ($name = request()->get('name')) {
-        //     $preview = $repository->generate($name, $this->share([
-        //     ]))->data();
-        //     $bersih = $repository->data2();
-        // }
-
-        // return view(Views::form(__FUNCTION__, config('page'), config('folder')))
-        //     ->with($this->share([
-        //         'model' => $repository,
-        //         'preview' => $preview,
-        //         'bersih' => $bersih,
-        //         'include' => __FUNCTION__,
-        //     ]));
     }
 
     public function kotorExport(CompanyRequest $request, ReportService $service, ReportKotorRepository $repository)
     {
-        $preview = false;
-        if ($name = request()->get('name')) {
-            $preview = $repository->data();
+        $preview = $repository->data();
+
+        $data['model'] = $repository;
+        $data['kotor'] = $repository->data2();
+        $data['preview'] = $preview;
+        $data['include'] = __FUNCTION__;
+
+        if (request()->get('action') == 'excel') {
+            $filename =  'report_harian_kotor_' . date('Y_m_d') . '.xlsx';
+            return Excel::download(new ReportKotorRepository(),  $filename);
+        }
+
+        if(request()->get('action') == 'pdf'){
+
+            $data = array_merge($data, $this->share());
+            return view(Views::pdf(config('page'), config('folder'), 'kotor_export'), $data);
+
         }
 
         return $service->generate([$repository, 'share' => $this->share([
@@ -215,15 +214,7 @@ class RekapLinenController extends Controller
 
         if(request()->get('action') == 'pdf'){
 
-            // $layout = request()->get('layout') ?? 'potrait';
-            // $data = $repository['share'];
-            // $data['preview'] = $repository[0]->data();
-            // $pdf = PDF::loadView(Views::pdf(config('page'), config('folder'), $name), $data)
-            //     ->setPaper('A3', $layout);
-            // return $pdf->stream(); // return $pdf->stream();
-
             $data = array_merge($data, $this->share());
-
             return view(Views::pdf(config('page'), config('folder'), 'bersih_export'), $data);
 
         }

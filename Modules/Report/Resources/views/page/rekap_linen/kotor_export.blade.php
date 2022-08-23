@@ -8,7 +8,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
 
     @if(request()->get('action') == 'pdf')
     <div class="logo">
-        <img src="{{ Helper::print('logo/logo.png') }}">
+        <img src="{{ Helper::asset('files/logo/logo.png') }}">
     </div>
 
     <x-print />
@@ -116,10 +116,9 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                 </td>
             </tr>
             @endforeach
-        </tbody>
-        <tfoot>
+
             <tr>
-                <td></td>
+                <td>{{ $product->count() + 1}}</td>
                 <td>TOTAL SERAH TERIMA</td>
 
                 @foreach($location as $loc)
@@ -142,7 +141,8 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                 <td  data="total kotor">{{ $total_kotor_bawah ?? 0 }}</td>
                 <td  data="selisih">{{ $total_bersih_bawah - $total_kotor_bawah ?? 0 }}</td>
             </tr>
-        </tfoot>
+
+        </tbody>
     </table>
 
     @if(request()->get('action') == 'pdf')

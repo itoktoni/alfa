@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Repositories\OutstandingRepository;
 use Modules\Report\Dao\Interfaces\GenerateReport;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
@@ -40,6 +41,8 @@ class ReportOutstandingRepository extends OutstandingRepository implements FromV
     {
         $send = $this->share['share'];
         $send['preview'] = $this->data();
+        $list_status = TransactionStatus::getOptions();
+        $send['list_status'] = $list_status;
         return view('Report::page.' . config('page') . '.' . $this->name, $send);
     }
 

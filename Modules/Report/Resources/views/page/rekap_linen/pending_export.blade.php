@@ -1,3 +1,6 @@
+@php
+$list_status = TransactionStatus::getOptions();
+@endphp
 <div class="export">
 
     @if(request()->get('action') == 'pdf')

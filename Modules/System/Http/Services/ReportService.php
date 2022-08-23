@@ -22,8 +22,7 @@ class ReportService
         if (request()->get('action') == 'excel') {
             $filename = $name . '_' . date('Y_m_d') . '.xlsx';
             $data = $repository[0]->generate($name, $repository);
-
-            return $this->excel->download($repository, $filename);
+            return $this->excel->download($data, $filename);
         }
         if (request()->get('action') == 'preview') {
 

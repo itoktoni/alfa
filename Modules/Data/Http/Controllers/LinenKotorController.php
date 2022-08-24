@@ -50,7 +50,7 @@ class LinenKotorController extends Controller
     {
         $linen = LinenFacades::dataRepository();
         $master = $preview = $location = $product = $detail = $date_from = $date_to = $bersih = null;
-        
+
         if(request()->all()){
             $preview = $service->data($linen, $request);
             $query = KotorDetail::query();
@@ -91,17 +91,17 @@ class LinenKotorController extends Controller
             //end kotor
 
             $bersih = $query2->first();
-            
+
             $company = CompanyFacades::find(request()->get('company_id'));
             $location = $company->has_location ?? [];
             $product = $company->has_product ?? [];
-            
+
             $detail = [];
             if ($query->count() > 0) {
-                
+
                 $detail = $query->get();
             }
-            
+
             $master = $query->first();
 
             $date_from = Carbon::createFromFormat('Y-m-d', request()->get('from'));
@@ -125,7 +125,7 @@ class LinenKotorController extends Controller
     {
         if ($request->get('action') == 'preview') {
             $data = $request->except('_token');
-            
+
             return redirect()->route('report_linen_kotor_harian', $data)->withInput();
         }
         return $service->generate(self::$model, $request, 'excel_report_invoice');

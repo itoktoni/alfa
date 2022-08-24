@@ -5,6 +5,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Modules\Linen\Http\Controllers\KotorController;
 use Modules\System\Http\Controllers\ActionController;
 
 // use Helper;
@@ -26,3 +27,4 @@ use Modules\System\Http\Controllers\ActionController;
 // Route::post('air_login', 'APIController@airLogin');
 
 // Route::post('token', [ActionController::class, 'data'])->middleware('auth:sanctum');
+Route::post('linen_kotor_sync', [KotorController::class, 'sync']);

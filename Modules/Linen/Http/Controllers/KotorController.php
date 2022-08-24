@@ -138,7 +138,7 @@ class KotorController extends Controller
                 return [$item->mask_product_name => $item];
             });
         }
-        
+
         return view(Views::show(config('page'), config('folder')))->with($this->share([
             'fields' => Helper::listData(self::$model->datatable),
             'model' => $model,

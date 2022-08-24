@@ -27,4 +27,5 @@ use Modules\System\Http\Controllers\ActionController;
 // Route::post('air_login', 'APIController@airLogin');
 
 // Route::post('token', [ActionController::class, 'data'])->middleware('auth:sanctum');
-Route::post('linen_sync', [KotorController::class, 'sync']);
+Route::post('linen_kotor/sync', [KotorController::class, 'sync']);
+// Route::post('linen_sync', [KotorController::class, 'sync']);

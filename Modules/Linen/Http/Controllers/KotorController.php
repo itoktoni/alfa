@@ -88,7 +88,7 @@ class KotorController extends Controller
     public function sync(KotorSyncRequest $request, KotorSyncService $service)
     {
         $data = $service->save(self::$model, $request);
-        return Response::redirectBack($data);
+        return $data;
     }
 
     public function data(KotorDataService $service)

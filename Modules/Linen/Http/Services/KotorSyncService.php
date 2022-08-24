@@ -31,9 +31,12 @@ class KotorSyncService
                 foreach ($data['kotor'] as $key => $kotor) {
                     $master_kotor = KotorFacades::find($key);
                     if (empty($master_kotor)) {
-                        $kotor['linen_created_name'] = auth()->user()->name;
-                        $kotor['linen_kotor_total'] = count($kotor['detail']);
-                        $repository->saveRepository($kotor);
+                        $merge = [
+                            'linen_created_name' => auth()->user()->name ?? null,
+                            'linen_kotor_total' => count($kotor['detail']) ?? 0,
+                        ];
+
+                        $repository->saveRepository(array_merge($kotor, $merge));
                     }
 
                     KotorDetail::upsert($kotor['detail'], [
@@ -74,8 +77,8 @@ class KotorSyncService
                         'item_linen_detail_description' => LinenStatus::getDescription($item['linen_description_id']),
                         'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                         'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
-                        'item_linen_detail_updated_by' => auth()->user()->id,
-                        'item_linen_detail_created_by' => auth()->user()->id,
+                        'item_linen_detail_updated_by' => auth()->user()->id ?? '',
+                        'item_linen_detail_created_by' => auth()->user()->id ?? '',
                     ];
 
                     LinenDetailFacades::create($linen_detail);
@@ -109,8 +112,8 @@ class KotorSyncService
                             'item_linen_detail_description' => LinenStatus::getDescription($item['linen_description_id']),
                             'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
                             'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
-                            'item_linen_detail_updated_by' => auth()->user()->id,
-                            'item_linen_detail_created_by' => auth()->user()->id,
+                            'item_linen_detail_updated_by' => auth()->user()->id ?? '',
+                            'item_linen_detail_created_by' => auth()->user()->id ?? '',
                         ];
 
                         LinenDetailFacades::insert($linen_detail);

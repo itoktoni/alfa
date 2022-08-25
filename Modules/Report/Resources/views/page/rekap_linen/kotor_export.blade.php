@@ -59,7 +59,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
         </thead>
         <tbody>
             @php
-            $total_bersih_bawah = $total_pcs_bawah = $total_kotor_bawah = 0;
+            $total_bersih_bawah = $total_kg_bawah = $total_kotor_bawah = 0;
             @endphp
 
             @foreach($product->sortBy('item_product_name') as $item)
@@ -72,47 +72,46 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                 <td>{{ $loop->iteration }} </td>
                 <td>{{ $item->item_product_name ?? '' }} </td>
                 @foreach($location as $loc)
-                <td>
+                <td id="total_location">
                     @php
-                    $group_bersih = $preview
+                    $kotor_location = $preview
                     ->where('linen_kotor_detail_product_id', $item->item_product_id)
                     ->where('linen_kotor_detail_ori_location_id', $loc->location_id)
                     ->where('linen_kotor_detail_description', LinenStatus::LinenKotor)
                     ->count();
-                    $total_bersih_bawah = $total_bersih_bawah + $group_bersih;
                     @endphp
-                    {{ $group_bersih }}
+                    {{ $kotor_location }}
                 </td>
                 @endforeach
-                <td>
+                <td id="totalkotorpcs">
                     @php
-                    $group_bersih_kanan = $preview
+                    $total_kotor_kanan = $preview
                     ->where('linen_kotor_detail_product_id', $item->item_product_id)
                     ->where('linen_kotor_detail_description', LinenStatus::LinenKotor)
                     ->count();
-                    $total_bersih_bawah = $total_bersih_bawah + $group_bersih;
+                    $total_kotor_bawah = $total_kotor_bawah + $total_kotor_kanan;
                     @endphp
-                    {{ $group_bersih_kanan }}
+                    {{ $total_kotor_kanan }}
                 </td>
-                <td>
+                <td id="kgbersih">
                     @php
-                    $pcs_bersih = $group_bersih_kanan * $pivot_berat;
-                    $total_pcs_bawah = $total_pcs_bawah + $pcs_bersih;
+                    $kg_bersih = $total_kotor_kanan * $pivot_berat;
+                    $total_kg_bawah = $total_kg_bawah + $kg_bersih;
                     @endphp
-                    {{ $pcs_bersih }}
+                    {{ $kg_bersih }}
                 </td>
-                <td>
+                <td id="totalbersih">
                     @php
-                    $group_kotor = $kotor
+                    $total_bersih_kanan = $kotor
                     ->where('linen_grouping_detail_product_id', $item->item_product_id)
                     ->where('linen_grouping_detail_description', LinenStatus::LinenKotor)
                     ->count();
-                    $total_kotor_bawah = $total_kotor_bawah + $group_kotor;
+                    $total_bersih_bawah = $total_bersih_bawah + $total_bersih_kanan;
                     @endphp
-                    {{ $group_kotor }}
+                    {{ $total_bersih_kanan }}
                 </td>
-                <td>
-                    {{ $group_bersih_kanan - $group_kotor ?? 0 }}
+                <td id="selisih">
+                    {{ $total_kotor_kanan - $total_bersih_kanan ?? 0 }}
                 </td>
             </tr>
             @endforeach
@@ -132,13 +131,13 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     {{ $total_bawah }}
                 </td>
                 @endforeach
-                <td data="total bersih">
-                    {{ $total_bersih_bawah }}
+                <td data="total kotor">
+                    {{ $total_kotor_bawah }}
                 </td>
                 <td data="kg bersih">
-                    {{ $total_pcs_bawah }}
+                    {{ $total_kg_bawah }}
                 </td>
-                <td  data="total kotor">{{ $total_kotor_bawah ?? 0 }}</td>
+                <td  data="total bersih">{{ $total_bersih_bawah ?? 0 }}</td>
                 <td  data="selisih">{{ $total_bersih_bawah - $total_kotor_bawah ?? 0 }}</td>
             </tr>
 

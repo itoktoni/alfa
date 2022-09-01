@@ -45,15 +45,23 @@
     <tbody class="markup">
 
         @if($register)
+        @php
+        $total_stock = $total_opname = $total_pending = $total_hilang = $total_obsesiman = $total_rs = $total_hasil_opname = 0;
+        @endphp
         @foreach ($register->sortBy('view_product_name') as $item)
         @php
+        $total_stock = $total_stock + $item->view_register;
         $qty_opname = isset($opname[$item->view_product_id]) ? $opname[$item->view_product_id]->count() : 0;
+        $total_opname = $total_opname + $qty_opname;
         $qty_pending = $qty_hilang = 0;
         if($outstanding){
-        $qty_pending = $outstanding->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
-        $qty_hilang = $hilang->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
+            $qty_pending = $outstanding->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
+            $qty_hilang = $hilang->where('linen_outstanding_product_id', $item->view_product_id)->count() ?? 0;
         }
+        $total_pending = $total_pending + $qty_pending;
+        $total_obsesiman = $total_obsesiman + $qty_hilang;
         $qty_hilang_rs = $item->view_register - ($qty_opname + $qty_pending + $qty_hilang);
+        $total_rs = $total_rs + $qty_hilang_rs;
         @endphp
         <tr>
             <td>{{ $loop->iteration }}</td>
@@ -66,7 +74,14 @@
         </tr>
         @endforeach
         @endisset
-
+        <tr>
+            <td colspan="2">TOTAL</td>
+            <td>{{ $total_stock ?? '' }}</td>
+            <td>{{ $total_opname ?? '' }}</td>
+            <td>{{ $total_pending ?? '' }}</td>
+            <td>{{ $total_obsesiman ?? '' }}</td>
+            <td>{{ $total_rs ?? '' }}</td>
+        </tr>
     </tbody>
 </table>
 

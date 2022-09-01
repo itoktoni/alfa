@@ -60,7 +60,7 @@
         }
         $total_pending = $total_pending + $qty_pending;
         $total_obsesiman = $total_obsesiman + $qty_hilang;
-        $qty_hilang_rs = $item->view_register - ($qty_opname + $qty_pending + $qty_hilang);
+        $qty_hilang_rs = ($qty_opname + $qty_pending + $qty_hilang) - $item->view_register;
         $total_rs = $total_rs + $qty_hilang_rs;
         @endphp
         <tr>
@@ -70,7 +70,7 @@
             <td>{{ $qty_opname ?? '' }}</td>
             <td>{{ $qty_pending ?? '' }}</td>
             <td>{{ $qty_hilang ?? '' }}</td>
-            <td>{{ abs($qty_hilang_rs) ?? '' }}</td>
+            <td>{{ $qty_hilang_rs ?? '' }}</td>
         </tr>
         @endforeach
         @endisset

@@ -90,7 +90,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     ->where('linen_grouping_detail_product_id', $item->item_product_id)
                     ->where('linen_grouping_detail_description', LinenStatus::LinenKotor)
                     ->count();
-                    $total_bersih_bawah = $total_bersih_bawah + $group_bersih;
+                    $total_bersih_bawah = $total_bersih_bawah + $group_bersih_kanan;
                     @endphp
                     {{ $group_bersih_kanan }}
                 </td>
@@ -132,7 +132,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     {{ $total_bawah }}
                 </td>
                 @endforeach
-                <td data="total bersih">
+                <td>
                     {{ $total_bersih_bawah }}
                 </td>
                 <td>

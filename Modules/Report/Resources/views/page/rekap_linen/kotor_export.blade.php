@@ -72,7 +72,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                 <td>{{ $loop->iteration }} </td>
                 <td>{{ $item->item_product_name ?? '' }} </td>
                 @foreach($location as $loc)
-                <td id="total_location">
+                <td>
                     @php
                     $kotor_location = $preview
                     ->where('linen_kotor_detail_product_id', $item->item_product_id)
@@ -83,7 +83,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     {{ $kotor_location }}
                 </td>
                 @endforeach
-                <td id="totalkotorpcs">
+                <td>
                     @php
                     $total_kotor_kanan = $preview
                     ->where('linen_kotor_detail_product_id', $item->item_product_id)
@@ -93,14 +93,14 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     @endphp
                     {{ $total_kotor_kanan }}
                 </td>
-                <td id="kgbersih">
+                <td>
                     @php
                     $kg_bersih = $total_kotor_kanan * $pivot_berat;
                     $total_kg_bawah = $total_kg_bawah + $kg_bersih;
                     @endphp
                     {{ $kg_bersih }}
                 </td>
-                <td id="totalbersih">
+                <td>
                     @php
                     $total_bersih_kanan = $kotor
                     ->where('linen_grouping_detail_product_id', $item->item_product_id)
@@ -110,7 +110,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     @endphp
                     {{ $total_bersih_kanan }}
                 </td>
-                <td id="selisih">
+                <td>
                     {{ $total_kotor_kanan - $total_bersih_kanan ?? 0 }}
                 </td>
             </tr>
@@ -131,14 +131,14 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     {{ $total_bawah }}
                 </td>
                 @endforeach
-                <td data="total kotor">
+                <td>
                     {{ $total_kotor_bawah }}
                 </td>
-                <td data="kg bersih">
+                <td>
                     {{ $total_kg_bawah }}
                 </td>
-                <td  data="total bersih">{{ $total_bersih_bawah ?? 0 }}</td>
-                <td  data="selisih">{{ $total_bersih_bawah - $total_kotor_bawah ?? 0 }}</td>
+                <td>{{ $total_bersih_bawah ?? 0 }}</td>
+                <td>{{ $total_bersih_bawah - $total_kotor_bawah ?? 0 }}</td>
             </tr>
 
         </tbody>

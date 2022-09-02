@@ -29,13 +29,13 @@
     <table id="datatable" class="responsive table-striped table-condensed table-bordered table-hover">
         <thead>
             <tr>
-                <td width="30">No.</td>
-                <td width="150">Nama Rumah Sakit</td>
-                <td width="100">Nama Ruangan</td>
-                <td width="200">Nama Linen</td>
+                <td width="20">No.</td>
+                <td>Nama Rumah Sakit</td>
+                <td>Nama Ruangan</td>
+                <td>Nama Linen</td>
                 <td width="80">Register Linen</td>
-                <td width="120">Stock Rumah Sakit</td>
-                <td width="120">Stock Obsesiman</td>
+                <td width="80">Stock Rumah Sakit</td>
+                <td width="80">Stock Obsesiman</td>
                 <td width="50">Kotor</td>
                 <td width="50">Retur</td>
                 <td width="50">Rewash</td>

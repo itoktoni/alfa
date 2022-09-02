@@ -44,7 +44,20 @@
             </tr>
         </thead>
         <tbody>
+            @php
+            $total_register = $total_qty = $total_cuci = $total_kotor = $total_retur = $total_rewash = $total_pending = $total_hilang = 0;
+            @endphp
             @foreach($preview as $data)
+            @php
+            $total_register = $total_register + $data->view_register;
+            $total_qty = $total_qty + $data->view_qty;
+            $total_cuci = $total_cuci + $data->view_cuci;
+            $total_kotor = $total_kotor + $data->view_kotor;
+            $total_retur = $total_retur + $data->view_retur;
+            $total_rewash = $total_rewash + $data->view_rewash;
+            $total_pending = $total_pending + $data->view_pending;
+            $total_hilang = $total_hilang + $data->view_hilang;
+            @endphp
             <tr>
                 <td>{{ $loop->iteration }} </td>
                 <td>{{ $data->view_company_name ?? '' }} </td>
@@ -60,6 +73,17 @@
                 <td align="left">{{ $data->view_hilang ?? '' }} </td>
             </tr>
             @endforeach
+            <tr>
+                <td colspan="4">Total</td>
+                <td align="left">{{ $total_register ?? '' }} </td>
+                <td align="left">{{ $total_qty ?? '' }} </td>
+                <td align="left">{{ $total_cuci ?? '' }} </td>
+                <td align="left">{{ $total_kotor ?? '' }} </td>
+                <td align="left">{{ $total_retur ?? '' }} </td>
+                <td align="left">{{ $total_rewash ?? '' }} </td>
+                <td align="left">{{ $total_pending ?? '' }} </td>
+                <td align="left">{{ $total_hilang ?? '' }} </td>
+            </tr>
         </tbody>
     </table>
 </div>

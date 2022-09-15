@@ -192,7 +192,7 @@ class OpnameController extends Controller
             return $service->generate([$repository, 'share' => $share], 'excel_report_location');
         }
 
-        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
+        return view(Views::form(__FUNCTION__, config('page'), config('folder')))->with($this->share($share));
     }
 
     public function pending($code = null, ReportService $service, ReportOpnameRepository $repository)
@@ -228,7 +228,7 @@ class OpnameController extends Controller
             return $service->generate([$repository, 'share' => $share], 'excel_report_pending');
         }
 
-        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
+        return view(Views::form(__FUNCTION__, config('page'), config('folder')))->with($this->share($share));
     }
 
     public function hilang($code = null, ReportService $service, ReportOpnameRepository $repository)
@@ -257,7 +257,7 @@ class OpnameController extends Controller
             return $service->generate([$repository, 'share' => $share], 'excel_report_hilang');
         }
 
-        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
+        return view(Views::form(__FUNCTION__, config('page'), config('folder')))->with($this->share($share));
     }
 
     public function rs($code = null, ReportService $service, ReportOpnameRepository $repository)
@@ -307,7 +307,7 @@ class OpnameController extends Controller
             return $service->generate([$repository, 'share' => $share], 'excel_report_rs');
         }
 
-        return view(Views::form(__function__, config('page'), config('folder')))->with($this->share($share));
+        return view(Views::form(__FUNCTION__, config('page'), config('folder')))->with($this->share($share));
     }
 
     public function get($code = null, $relation = ['has_detail'])

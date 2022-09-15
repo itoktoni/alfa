@@ -67,9 +67,9 @@ class LinenRepository extends Linen implements CrudInterface
         }
         return $this->withTrashed()->findOrFail($code);
     }
-    
+
     public function rfidRepository($code){
-        
+
         return $this->with(['has_location', 'has_product', 'has_company'])->find($code);
     }
 

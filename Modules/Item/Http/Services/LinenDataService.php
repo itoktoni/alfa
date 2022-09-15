@@ -51,7 +51,7 @@ class LinenDataService extends DataService
         if($latest = $request['latest']){
             $filter = $filter->where('item_linen_latest', $latest);
         }
-        
+
         $this->datatable = Datatables::of($this->filter);
         $this->setAction();
         $this->setStatus();

@@ -97,7 +97,7 @@ class Linen extends Model
         'item_linen_location_name' => [true => 'Location'],
         'item_linen_session' => [false => 'Key'],
         'item_linen_created_name' => [false => 'Key'],
-        'item_linen_counter' => [true => 'Cuci', 'width' => 30],
+        'item_linen_counter' => [false => 'Cuci', 'width' => 30],
         'item_linen_created_at' => [false => 'Created At'],
         'item_linen_updated_at' => [false => 'Created At'],
         'item_linen_ganti_at' => [false => 'Created At'],
@@ -259,10 +259,14 @@ class Linen extends Model
         $this->attributes[$this->mask_counter()] = $value;
     }
 
-    public function getMaskCounterAttribute()
-    {
-        return $this->{$this->mask_counter()};
-    }
+    // public function getMaskCounterAttribute()
+    // {
+    //     return $this->has_detail->where('item_linen_status', LinenStatus::Bersih)->count() ?? 0;
+    // }
+
+    // public function getItemLinenCounterAttribute(){
+    //     return $this->has_detail->where('item_linen_status', LinenStatus::Bersih)->count() ?? 0;
+    // }
 
 
     /**

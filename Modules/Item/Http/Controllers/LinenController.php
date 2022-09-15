@@ -139,7 +139,8 @@ class LinenController extends Controller
                 self::$model->mask_status() => LinenStatus::class,
                 self::$model->mask_rent() => LinenStatus::class,
                 self::$model->mask_latest() => LinenStatus::class,
-            ])->make();
+            ])
+            ->make();
     }
 
     public function edit($code)

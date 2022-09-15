@@ -27,7 +27,7 @@
                             </tr>
                             <tr>
                                 <th class="col-lg-2">Berapa X Cuci</th>
-                                <td>{{ $model->mask_counter }}</td>
+                                <td>{{ $detail->where('item_linen_detail_status', LinenStatus::Bersih)->count() }}</td>
                             </tr>
 
                         </tbody>

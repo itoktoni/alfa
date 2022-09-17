@@ -23,7 +23,7 @@ class StockDataService extends DataService
         if($key = $request['linen_stock_item_product_id']){
             $filter = $filter->where('view_product_id', $key);
         }
-        if($key = $request['linen_stock_item_location_id']){
+        if($key = $request['view_company_name']){
             $filter = $filter->where('view_location_id', $key);
         }
 

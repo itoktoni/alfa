@@ -18,10 +18,10 @@ class StockDataService extends DataService
         $filter = $this->filter;
 
         if($key = $request['linen_stock_company_id']){
-            $filter = $filter->where('linen_stock_company_id', $key);
+            $filter = $filter->where('view_company_id', $key);
         }
         if($key = $request['linen_stock_item_product_id']){
-            $filter = $filter->where('linen_stock_item_product_id', $key);
+            $filter = $filter->where('view_product_id', $key);
         }
 
         $this->datatable = Datatables::of($this->filter);

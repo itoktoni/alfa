@@ -46,7 +46,7 @@ class StockController extends Controller
         $location = Views::option(new LocationRepository());
         $company = Views::option(new CompanyRepository());
         $user = Views::option(new TeamRepository());
-        
+
         $view = [
             'status' => $status,
             'description' => $description,
@@ -55,7 +55,7 @@ class StockController extends Controller
             'company' => $company,
             'user' => $user,
         ];
-        
+
         return array_merge($view, $data);
     }
 

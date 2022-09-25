@@ -61,7 +61,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
             @php
             $total_bersih_bawah = $total_pcs_bawah = $total_kotor_bawah = 0;
             @endphp
-
+            @if(!empty($product))
             @foreach($product->sortBy('item_product_name') as $item)
 
             @php
@@ -81,7 +81,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     ->count();
                     $total_bersih_bawah = $total_bersih_bawah + $group_bersih;
                     @endphp
-                    {{ $group_bersih }}
+                    {{ Helper::echoNumber($group_bersih) }}
                 </td>
                 @endforeach
                 <td>
@@ -91,14 +91,14 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     ->where('linen_grouping_detail_description', LinenStatus::LinenKotor)
                     ->count();
                     @endphp
-                    {{ $group_bersih_kanan }}
+                    {{ Helper::echoNumber($group_bersih_kanan) }}
                 </td>
                 <td>
                     @php
                     $pcs_bersih = $group_bersih_kanan * $pivot_berat;
                     $total_pcs_bawah = $total_pcs_bawah + $pcs_bersih;
                     @endphp
-                    {{ $pcs_bersih }}
+                    {{ Helper::echoNumber($pcs_bersih) }}
                 </td>
                 <td>
                     @php
@@ -108,7 +108,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     ->count();
                     $total_kotor_bawah = $total_kotor_bawah + $group_kotor;
                     @endphp
-                    {{ $group_kotor }}
+                    {{ Helper::echoNumber($group_kotor) }}
                 </td>
                 <td>
                     {{ $group_bersih_kanan - $group_kotor ?? 0 }}
@@ -140,6 +140,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                 <td>{{ $total_kotor_bawah ?? 0 }}</td>
                 <td>{{ $total_bersih_bawah - $total_kotor_bawah ?? 0 }}</td>
             </tr>
+            @endif
 
         </tbody>
     </table>

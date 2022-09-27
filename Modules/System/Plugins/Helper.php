@@ -329,7 +329,7 @@ class Helper
 
     public static function createStatus($value, $option = false)
     {
-        if (is_array($option)) 
+        if (is_array($option))
         {
             $color = 'default';
             $label = 'Unknows';
@@ -337,8 +337,8 @@ class Helper
             $label = $option[$value][0] ?? $label;
             $color = $option[$value][1] ?? $color;
             return '<span class="btn btn-xs btn-block btn-' . $color . '">' . $label . '</span>';
-        } 
-        else 
+        }
+        else
         {
             $background = $option::colors()[$value] ?? 'lightgrey';
             return '<span style="background:' . $background . ';" class="btn btn-xs btn-block btn-primary">' . $option::getDescription($value) . '</span>';
@@ -961,5 +961,10 @@ class Helper
 
         $alphabet = range('A', 'Z');
         return $alphabet[$value]; // returns D
+    }
+
+    public static function echoNumber($value){
+
+        return is_numeric($value) && $value > 0 ? $value : '';
     }
 }

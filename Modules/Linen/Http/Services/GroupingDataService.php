@@ -15,16 +15,16 @@ class GroupingDataService extends DataService
     public function make()
     {
         $this->setFilter();
-        
+
         $request = request()->all();
         $filter = $this->filter;
 
         if (!request()->ajax()) {
-            
+
             if(isset($request[GroupingFacades::mask_status()])){
                 $status = $request[GroupingFacades::mask_status()];
                 $filter = $filter->where(GroupingFacades::mask_status(), $status);
-            } 
+            }
             if(isset($request[GroupingFacades::mask_company_id()])){
                 $company = $request[GroupingFacades::mask_company_id()];
                 $filter = $filter->where(GroupingFacades::mask_company_id(), $company);

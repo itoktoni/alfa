@@ -3,6 +3,7 @@
 namespace Modules\Linen\Http\Requests;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Modules\Item\Dao\Facades\LinenFacades;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\ResponseStatus;
@@ -74,6 +75,7 @@ class KotorSyncRequest extends GeneralRequest
 
                     $mapping['linen_status'] = ResponseStatus::Exists;
                     $sync[$rfid_key] = $mapping;
+                    Log::error($rfid_key);
 
                 } else {
 

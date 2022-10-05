@@ -56,8 +56,6 @@ class CheckOutstandingPending extends Command
         ->where(OutstandingFacades::mask_process(), '!=', TransactionStatus::Grouping)
         ->get();
 
-        Log::info($outstanding->count());
-
         $rfid = $outstanding->pluck(OutstandingFacades::mask_rfid());
 
         $map = $rfid->map(function($item){

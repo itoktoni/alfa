@@ -76,7 +76,6 @@ class KotorSyncRequest extends GeneralRequest
 
                     $mapping['linen_status'] = ResponseStatus::Exists;
                     $sync[$rfid_key] = $mapping;
-                    Log::error($rfid_key);
                     DB::table()->insert([
                         'rfid' => $rfid_key
                     ]);

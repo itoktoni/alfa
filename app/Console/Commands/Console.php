@@ -37,8 +37,6 @@ class Console extends Command {
      * @return mixed
      */
     public function handle() {
-        
-        Log::debug('test');
         // copy(resource_path().'/views/vendor/console/window.blade.php', base_path().'/vendor/alkhachatryan/laravel-web-console/resources/views/window.blade.php');
         $this->info('The system has been copied successfully!');
     }

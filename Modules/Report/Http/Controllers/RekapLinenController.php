@@ -138,15 +138,16 @@ class RekapLinenController extends Controller
 
     public function kotor(ReportKotorRepository $repository)
     {
-        $preview = false;
+        $preview = $kotor = false;
         if ($name = request()->get('name')) {
+            $kotor = $repository->data2();
             $preview = $repository->data();
         }
 
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))
             ->with($this->share([
                 'model' => $repository,
-                'kotor' => $repository->data2(),
+                'kotor' => $kotor,
                 'preview' => $preview,
                 'include' => __FUNCTION__,
             ]));
@@ -184,15 +185,16 @@ class RekapLinenController extends Controller
     public function bersih(ReportBersihRepository $repository)
     {
         $repository = new ReportBersihRepository();
-        $preview = false;
+        $preview = $kotor = false;
         if ($name = request()->get('name')) {
             $preview = $repository->data()->get();
+            $kotor = $kotor;
         }
 
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))
             ->with($this->share([
                 'model' => $repository,
-                'kotor' => $repository->data2(),
+                'kotor' => $kotor,
                 'preview' => $preview,
                 'include' => __FUNCTION__,
             ]));

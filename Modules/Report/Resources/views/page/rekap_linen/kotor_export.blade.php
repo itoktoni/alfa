@@ -102,10 +102,14 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                 </td>
                 <td>
                     @php
-                    $total_bersih_kanan = $kotor
-                    ->where('linen_grouping_detail_product_id', $item->item_product_id)
-                    ->where('linen_grouping_detail_description', LinenStatus::LinenKotor)
-                    ->count();
+                    $total_bersih_kanan = 0;
+                    if($kotor){
+
+                        $total_bersih_kanan = $kotor
+                        ->where('linen_grouping_detail_product_id', $item->item_product_id)
+                        ->where('linen_grouping_detail_description', LinenStatus::LinenKotor)
+                        ->count();
+                    }
                     $total_bersih_bawah = $total_bersih_bawah + $total_bersih_kanan;
                     @endphp
                     {{ $total_bersih_kanan }}

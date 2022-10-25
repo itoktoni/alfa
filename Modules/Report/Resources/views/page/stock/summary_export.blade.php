@@ -63,26 +63,26 @@
                 <td>{{ $data->view_company_name ?? '' }} </td>
                 <td>{{ $data->view_location_name ?? '' }} </td>
                 <td>{{ $data->view_product_name ?? '' }} </td>
-                <td align="left">{{ $data->view_register ?? '' }} </td>
-                <td align="left">{{ $data->view_qty ?? '' }} </td>
-                <td align="left">{{ $data->view_cuci ?? '' }} </td>
-                <td align="left">{{ $data->view_kotor ?? '' }} </td>
-                <td align="left">{{ $data->view_retur ?? '' }} </td>
-                <td align="left">{{ $data->view_rewash ?? '' }} </td>
-                <td align="left">{{ $data->view_pending ?? '' }} </td>
-                <td align="left">{{ $data->view_hilang ?? '' }} </td>
+                <td align="left">{{ Helper::echoNumber($data->view_register) }} </td>
+                <td align="left">{{ Helper::echoNumber($data->view_qty) }} </td>
+                <td align="left">{{ Helper::echoNumber($data->view_cuci) }} </td>
+                <td align="left">{{ Helper::echoNumber($data->view_kotor) }} </td>
+                <td align="left">{{ Helper::echoNumber($data->view_retur) }} </td>
+                <td align="left">{{ Helper::echoNumber($data->view_rewash) }} </td>
+                <td align="left">{{ Helper::echoNumber($data->view_pending) }} </td>
+                <td align="left">{{ Helper::echoNumber($data->view_hilang) }} </td>
             </tr>
             @endforeach
             <tr>
                 <td colspan="4">Total</td>
-                <td align="left">{{ $total_register ?? '' }} </td>
-                <td align="left">{{ $total_qty ?? '' }} </td>
-                <td align="left">{{ $total_cuci ?? '' }} </td>
-                <td align="left">{{ $total_kotor ?? '' }} </td>
-                <td align="left">{{ $total_retur ?? '' }} </td>
-                <td align="left">{{ $total_rewash ?? '' }} </td>
-                <td align="left">{{ $total_pending ?? '' }} </td>
-                <td align="left">{{ $total_hilang ?? '' }} </td>
+                <td align="left">{{ Helper::echoNumber($total_register) }} </td>
+                <td align="left">{{ Helper::echoNumber($total_qty) }} </td>
+                <td align="left">{{ Helper::echoNumber($total_cuci) }}  </td>
+                <td align="left">{{ Helper::echoNumber($total_kotor) }} </td>
+                <td align="left">{{ Helper::echoNumber($total_retur) }} </td>
+                <td align="left">{{ Helper::echoNumber($total_rewash) }} </td>
+                <td align="left">{{ Helper::echoNumber($total_pending) }} </td>
+                <td align="left">{{ Helper::echoNumber($total_hilang) }} </td>
             </tr>
         </tbody>
     </table>

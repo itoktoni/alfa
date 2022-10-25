@@ -47,9 +47,11 @@
                                     {{ 'Rekap Linen ' }}
                                     @elseif($function_name == 'Hilang')
                                     {{ 'Rekap Pending/Hilang' }}
-                                    @else  
+                                    @elseif($data_action->system_action_code == 'linen_opname_index')
+                                    {{ 'Hasil Opname' }}
+                                    @else
                                         {{ $menu->system_module_name == 'Module' ? __($menu->system_module_name.'s') : __($menu->system_module_name) }}
-                                        {{ __(str_replace('Index', 'Data', $function_name)) }}  
+                                        {{ __(str_replace('Index', 'Data', $function_name)) }}
                                         @endif
                                     @endif
                                 </a>

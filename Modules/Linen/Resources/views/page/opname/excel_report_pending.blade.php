@@ -38,7 +38,6 @@
             <th class="text-left col-md-2">Product Name</th>
             <th class="text-left col-md-2">Tgl Register Awal</th>
             <th class="text-left col-md-1">Ruangan</th>
-            <th class="text-left col-md-1">Status</th>
             <th class="text-left col-md-2">Tgl Tembak</th>
         </tr>
     </thead>
@@ -55,7 +54,6 @@
             <td>{{ $item->mask_product_name }}</td>
             <td>{{ $tanggal_register }}</td>
             <td>{{ $item->linen_outstanding_ori_location_name }}</td>
-            <td>{{ TransactionStatus::getDescription($item->linen_outstanding_status) }}</td>
             <td>{{ $item->linen_outstanding_created_at }}</td>
         </tr>
         @endforeach

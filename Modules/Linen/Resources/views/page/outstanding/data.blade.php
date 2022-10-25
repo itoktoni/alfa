@@ -34,7 +34,7 @@
             dom: '<<t>p><"pull-left"i>',
             serverSide: true,
             order: [],
-            pageLength: {{ config('website.pagination') }},
+            pageLength: 1000,
             pagingType: 'first_last_numbers',
             ajax: {
                 url: '{{ route($route_data) }}',
@@ -63,6 +63,12 @@
                 }
             },
             columns: [
+                {
+                    data: 'rownum',
+                    name: 'rownum',
+                    orderable: false,
+                    searchable: false
+                },
                 @foreach($fields as $key => $value) {
                     data: '{{ $key }}',
                     name: '{{ $key }}',
@@ -72,12 +78,6 @@
                 @endforeach {
                     data: 'checkbox',
                     name: 'checkbox',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'action',
-                    name: 'action',
                     orderable: false,
                     searchable: false
                 }
@@ -263,16 +263,13 @@
                     <table id="datatable" class="responsive table-striped table-condensed table-bordered table-hover">
                         <thead>
                             <tr>
+                                <th width="9" class="center">No.</th>
                                 @foreach($fields as $item => $value)
                                 <th class="{{ $value['class'] ?? '' }}">
                                     <strong>{{ __($value['name']) }}</strong>
                                 </th>
                                 @endforeach
                                 <th width="9" class="center"><input id="checkAll" class="selectall" onclick="toggle(this)" type="checkbox"></th>
-
-                                <th class="text-center" width=40>
-                                    <strong>{{ __('Actions') }}</strong>
-                                </th>
                             </tr>
 
                         </thead>

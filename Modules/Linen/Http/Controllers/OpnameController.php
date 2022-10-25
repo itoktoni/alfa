@@ -134,15 +134,21 @@ class OpnameController extends Controller
             $model->where(OutstandingFacades::mask_status(), TransactionStatus::Hilang);
         })->get();
 
+        $pending = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)->where(function ($model) {
+            $model->where(OutstandingFacades::mask_status(), TransactionStatus::Pending);
+        })->get();
+
+        $kotor = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)->where(function ($model) {
+            $model
+            ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)
+            ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Pending);
+        })->get();
+
         $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
-            ->whereIn(OutstandingFacades::mask_description(), [
-                LinenStatus::LinenKotor,
-                LinenStatus::ChipRusak,
-                LinenStatus::LinenRusak,
-                LinenStatus::KelebihanStock,
-                LinenStatus::Bernoda,
-                LinenStatus::BahanUsang,
-            ])->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)->get();
+            ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)
+            ->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Pending)
+            ->get();
+
         $opname = false;
         if ($detail) {
             $opname = $detail->mapToGroups(function ($item) {
@@ -158,6 +164,8 @@ class OpnameController extends Controller
             'register' => $register,
             'opname' => $opname,
             'hilang' => $hilang,
+            'pending' => $pending,
+            'kotor' => $kotor,
             'outstanding' => $outstanding,
         ];
 
@@ -195,19 +203,41 @@ class OpnameController extends Controller
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))->with($this->share($share));
     }
 
+    public function kotor($code = null, ReportService $service, ReportOpnameRepository $repository)
+    {
+        $model = $this->get($code);
+
+        $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
+            ->where(OutstandingFacades::mask_status(), TransactionStatus::Kotor)->get();
+
+        $register = LinenFacades::where(LinenFacades::mask_company_id(), $model->mask_company_id)->get();
+        if ($register) {
+            $register = $register->mapWithKeys(function ($item) {
+                return [$item->mask_rfid => $item];
+            });
+        }
+
+        $share = [
+            'fields' => Helper::listData(self::$model->datatable),
+            'model' => $model,
+            'register' => $register,
+            'outstanding' => $outstanding,
+        ];
+
+        if (request()->get('action')) {
+            $share['action'] = 'excel';
+            return $service->generate([$repository, 'share' => $share], 'excel_report_kotor');
+        }
+
+        return view(Views::form(__FUNCTION__, config('page'), config('folder')))->with($this->share($share));
+    }
+
     public function pending($code = null, ReportService $service, ReportOpnameRepository $repository)
     {
         $model = $this->get($code);
 
         $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
-            ->whereIn(OutstandingFacades::mask_description(), [
-                LinenStatus::LinenKotor,
-                LinenStatus::ChipRusak,
-                LinenStatus::LinenRusak,
-                LinenStatus::KelebihanStock,
-                LinenStatus::BahanUsang,
-                LinenStatus::Bernoda,
-            ])->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)->get();
+            ->where(OutstandingFacades::mask_status(), TransactionStatus::Pending)->get();
 
         $register = LinenFacades::where(LinenFacades::mask_company_id(), $model->mask_company_id)->get();
         if ($register) {
@@ -265,34 +295,23 @@ class OpnameController extends Controller
         $model = $this->get($code, ['has_detail']);
         $detail = $model->has_detail ?? false; // hasil opname 8
         $outstanding = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
-            ->whereIn(OutstandingFacades::mask_description(), [
-                LinenStatus::LinenKotor,
-                LinenStatus::ChipRusak,
-                LinenStatus::LinenRusak,
-                LinenStatus::KelebihanStock,
-                LinenStatus::BahanUsang,
-                LinenStatus::Bernoda,
-            ])->where(OutstandingFacades::mask_status(), '!=', TransactionStatus::Hilang)->get(); //5
+            ->get();
 
-        $hilang = OutstandingFacades::where(OutstandingFacades::mask_company_ori(), $model->mask_company_id)
-            ->where(OutstandingFacades::mask_status(), TransactionStatus::Hilang)->get(); //5
-
-        $register = LinenFacades::where(LinenFacades::mask_company_id(), $model->mask_company_id)->get(); //11
+        $rfid = [];
+        if($outstanding){
+            $rfid = $outstanding->pluck('linen_outstanding_rfid')->toArray();
+            // dd($rfid); 39
+        }
 
         if ($detail) {
-            $detail_rfid = $detail->pluck('linen_opname_detail_rfid')->toArray();
-            $register = $register->whereNotIn(LinenFacades::mask_rfid(), $detail_rfid);
+            $rfid = array_merge($rfid, $detail->pluck('linen_opname_detail_rfid')->toArray());
+            // dd($detail->pluck('linen_opname_detail_rfid')->toArray()); 3817 + 39 = 56
         }
 
-        if ($outstanding) {
-            $outstanding_rfid = $outstanding->pluck(OutstandingFacades::mask_rfid())->toArray();
-            $register = $register->whereNotIn(LinenFacades::mask_rfid(), $outstanding_rfid);
-        }
 
-        if ($hilang) {
-            $hilang_rfid = $hilang->pluck(OutstandingFacades::mask_rfid())->toArray();
-            $register = $register->whereNotIn(LinenFacades::mask_rfid(), $hilang_rfid);
-        }
+        $register = LinenFacades::where(LinenFacades::mask_company_id(), $model->mask_company_id)
+        ->WhereNotIn('item_linen_rfid', $rfid)
+        ->get(); //11
 
         $share = [
             'fields' => Helper::listData(self::$model->datatable),

@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    
+
     {!! Form::label('name', __('Rumah Sakit'), ['class' => 'col-md-1 col-sm-1 control-label']) !!}
     <div class="col-md-3 col-sm-3 {{ $errors->has('view_company_id') ? 'has-error' : ''}}">
         {{ Form::select('view_company_id', $list_company, request()->get('view_company_id') ?? null, ['class'=> 'form-control ']) }}

@@ -80,6 +80,8 @@ class KotorSyncRequest extends GeneralRequest
                     //     'rfid' => $rfid_key
                     // ]);
 
+                    Log::info($rfid_key);
+
                 } else {
 
                     $mapping['linen_status'] = ResponseStatus::Create;

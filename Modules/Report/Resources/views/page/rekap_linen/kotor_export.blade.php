@@ -80,7 +80,7 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     ->where('linen_kotor_detail_description', LinenStatus::LinenKotor)
                     ->count();
                     @endphp
-                    {{ $kotor_location }}
+                    {{ Helper::echoNumber($kotor_location) }}
                 </td>
                 @endforeach
                 <td>
@@ -91,14 +91,14 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     ->count();
                     $total_kotor_bawah = $total_kotor_bawah + $total_kotor_kanan;
                     @endphp
-                    {{ $total_kotor_kanan }}
+                    {{ Helper::echoNumber($total_kotor_kanan) }}
                 </td>
                 <td>
                     @php
                     $kg_bersih = $total_kotor_kanan * $pivot_berat;
                     $total_kg_bawah = $total_kg_bawah + $kg_bersih;
                     @endphp
-                    {{ $kg_bersih }}
+                    {{ Helper::echoNumber($kg_bersih) }}
                 </td>
                 <td>
                     @php
@@ -112,10 +112,13 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                     }
                     $total_bersih_bawah = $total_bersih_bawah + $total_bersih_kanan;
                     @endphp
-                    {{ $total_bersih_kanan }}
+                    {{ Helper::echoNumber($total_bersih_kanan) }}
                 </td>
                 <td>
-                    {{ $total_kotor_kanan - $total_bersih_kanan ?? 0 }}
+                    @php
+                    $pengurangan = $total_kotor_kanan - $total_bersih_kanan ?? 0;
+                    @endphp
+                    {{ $pengurangan }}
                 </td>
             </tr>
             @endforeach
@@ -132,17 +135,17 @@ $date_to = Carbon\Carbon::createFromFormat('Y-m-d', request()->get('to'));
                         ->where('linen_kotor_detail_description', LinenStatus::LinenKotor)
                         ->count();
                     @endphp
-                    {{ $total_bawah }}
+                    {{ Helper::echoNumber($total_bawah) }}
                 </td>
                 @endforeach
                 <td>
-                    {{ $total_kotor_bawah }}
+                    {{ Helper::echoNumber($total_kotor_bawah) }}
                 </td>
                 <td>
-                    {{ $total_kg_bawah }}
+                    {{ Helper::echoNumber($total_kg_bawah) }}
                 </td>
-                <td>{{ $total_bersih_bawah ?? 0 }}</td>
-                <td>{{ $total_bersih_bawah - $total_kotor_bawah ?? 0 }}</td>
+                <td>{{ Helper::echoNumber($total_bersih_bawah) }}</td>
+                <td>{{ $total_bersih_bawah - $total_kotor_bawah ?? '' }}</td>
             </tr>
 
         </tbody>

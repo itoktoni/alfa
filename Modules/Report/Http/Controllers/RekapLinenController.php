@@ -169,7 +169,7 @@ class RekapLinenController extends Controller
 
         if(request()->get('action') == 'pdf'){
 
-            $data = array_merge($data, $this->share());
+            $data = array_merge($this->share(), $data);
             return view(Views::pdf(config('page'), config('folder'), 'kotor_export'), $data);
 
         }
@@ -188,7 +188,7 @@ class RekapLinenController extends Controller
         $preview = $kotor = false;
         if ($name = request()->get('name')) {
             $preview = $repository->data()->get();
-            $kotor = $kotor;
+            $kotor = $repository->data2();
         }
 
         return view(Views::form(__FUNCTION__, config('page'), config('folder')))

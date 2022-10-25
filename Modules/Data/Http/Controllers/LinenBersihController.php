@@ -16,6 +16,7 @@ use Modules\System\Http\Services\ReportService;
 use Modules\System\Http\Services\SingleService;
 use Modules\System\Plugins\Views;
 use Modules\Report\Http\Requests\LinenRequest;
+use Modules\System\Http\Requests\GeneralRequest;
 
 class LinenBersihController extends Controller
 {
@@ -44,12 +45,12 @@ class LinenBersihController extends Controller
         return array_merge($view, $data);
     }
 
-    public function harian(Request $request, PreviewService $service)
+    public function harian(GeneralRequest $request, PreviewService $service)
     {
         $linen = LinenFacades::dataRepository();
-        
+
         $master = $location = $preview = $product = $detail = $date_from = $date_to = $kotor = $company = null;
-        
+
         if (request()->all()) {
             $preview = $service->data($linen, $request);
             $query = self::$model->dataRepository()->with('has_detail');

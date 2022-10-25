@@ -2,6 +2,7 @@
 
 namespace Modules\Linen\Http\Services;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Http\Resources\LinenCollection;
 use Modules\Linen\Http\Resources\OutstandingCollection;
@@ -82,7 +83,14 @@ class OutstandingDataService extends DataService
             $filter = $filter->where('linen_outstanding_description', $description);
         }
 
-        $this->datatable = Datatables::of($this->filter);
+        DB::statement(DB::raw('set @rownum=0'));
+        $addNumber = $this->filter->addSelect(DB::raw('@rownum  := @rownum  + 1 AS rownum'));
+
+        // if ($keyword = request()->get('search')['value']) {
+        //     $datatables->filterColumn('rownum', 'whereRaw', '@rownum  + 1 like ?', ["%{$keyword}%"]);
+        // }
+
+        $this->datatable = Datatables::of($addNumber);
         $this->setAction();
         $this->setStatus();
         $this->setImage();

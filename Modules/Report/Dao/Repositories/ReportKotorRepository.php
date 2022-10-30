@@ -39,7 +39,7 @@ class ReportKotorRepository extends KotorDetail implements FromView, WithColumnF
         }
 
         if ($company = request()->get('view_company_id')) {
-            $query = $query->where('linen_kotor_detail_scan_company_id', $company);
+            $query = $query->where('linen_kotor_detail_ori_company_id', $company);
         }
 
         return $query->get();

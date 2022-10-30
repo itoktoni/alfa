@@ -53,7 +53,7 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
     {
         $query = KotorDetailFacades::query();
 
-        if ($company_id = request()->get('company_id')) {
+        if ($company_id = request()->get('view_company_id')) {
             $query->where('linen_kotor_detail_ori_company_id', $company_id);
         }
 

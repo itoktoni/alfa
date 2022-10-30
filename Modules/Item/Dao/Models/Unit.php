@@ -24,7 +24,7 @@ class Unit extends Model
     public $incrementing = false;
     public $rules = [
         'item_unit_code' => 'required',
-        'item_unit_name' => 'required|min:3',
+        'item_unit_name' => 'required',
     ];
 
     const CREATED_AT = 'item_unit_created_at';
@@ -36,7 +36,7 @@ class Unit extends Model
         'item_unit_name' => [true => 'Name','width' => 150],
         'item_unit_description' => [true => 'Description'],
     ];
-    
+
     public $status    = [
         '1' => ['Enable', 'info'],
         '0' => ['Disable', 'default'],

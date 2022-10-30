@@ -28,7 +28,7 @@ class Size extends Model
     public $incrementing = false;
     public $rules = [
         'item_size_code' => 'required',
-        'item_size_name' => 'required|min:3',
+        'item_size_name' => 'required',
     ];
 
     const CREATED_AT = 'item_size_created_at';

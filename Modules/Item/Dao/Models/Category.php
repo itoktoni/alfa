@@ -27,7 +27,7 @@ class Category extends Model
     public $timestamps = true;
     public $incrementing = true;
     public $rules = [
-        'item_category_name' => 'required|min:3',
+        'item_category_name' => 'required',
     ];
 
     const CREATED_AT = 'item_category_created_at';

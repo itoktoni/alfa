@@ -37,7 +37,7 @@ class Product extends Model
     public $timestamps = true;
     public $incrementing = true;
     public $rules = [
-        'item_product_name' => 'required|min:3',
+        'item_product_name' => 'required',
         'item_product_sku' => 'unique:item_product',
     ];
 
@@ -63,7 +63,7 @@ class Product extends Model
         'item_product_updated_at' => 'datetime:Y-m-d',
         'item_product_deleted_at' => 'datetime:Y-m-d',
     ];
-    
+
     public function mask_category_id()
     {
         return 'item_product_category_id';

@@ -15,7 +15,7 @@
                         <tbody>
                             <tr>
                                 <th class="col-lg-2">Nama Product</th>
-                                <td>{{ $model->has_product->mask_product_name ?? '' }}</td>
+                                <td>{{ $model->item_linen_product_name ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th class="col-lg-2">Rumah Sakit</th>

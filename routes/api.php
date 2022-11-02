@@ -5,6 +5,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Modules\Item\Http\Controllers\LinenController;
 use Modules\Linen\Http\Controllers\KotorController;
 use Modules\System\Http\Controllers\ActionController;
 
@@ -28,4 +29,5 @@ use Modules\System\Http\Controllers\ActionController;
 
 // Route::post('token', [ActionController::class, 'data'])->middleware('auth:sanctum');
 Route::post('linen_kotor/sync', [KotorController::class, 'sync']);
+Route::match(['POST', 'GET'],'item_linen/data', [LinenController::class, 'data'])->name('item_linen_data_api');
 // Route::post('linen_sync', [KotorController::class, 'sync']);

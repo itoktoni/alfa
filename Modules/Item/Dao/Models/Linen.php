@@ -31,6 +31,7 @@ class Linen extends Model
         'item_linen_location_id',
         'item_linen_company_id',
         'item_linen_product_id',
+        'item_linen_rfid',
         'item_linen_status',
         'item_linen_created_by',
         'item_linen_updated_at',

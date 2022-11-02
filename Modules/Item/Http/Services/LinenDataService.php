@@ -3,9 +3,12 @@
 namespace Modules\Item\Http\Services;
 
 use Illuminate\Support\Facades\DB;
+use Modules\Item\Dao\Models\Linen;
 use Modules\Item\Http\Resources\LinenCollection;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\System\Http\Services\DataService;
+use Modules\System\Plugins\Notes;
+use Modules\System\Plugins\Response;
 
 class LinenDataService extends DataService
 {
@@ -13,17 +16,30 @@ class LinenDataService extends DataService
     {
         $this->setFilter();
 
+        $request = request()->all();
+        $filter = $this->filter;
+
         if (!request()->ajax()) {
 
             $pagination = request()->get('page') ? $this->filter->paginate(request()->get('limit') ?? config('website.pagination')) : $this->filter->get();
+            if(isset($request['item_linen_rfid']) && $rfid = $request['item_linen_rfid']){
+                $pagination = Linen::find($rfid);
+                return [
+                    'status' => true,
+                    'code' => 200,
+                    'name' => 'list',
+                    'message' => 'Data berhasil di ambil',
+                    'data' => [
+                        'total' => 1,
+                        'data' => $pagination,
+                    ]
+                ];
+                // return Notes::data(['total' => 1, 'data' => $pagination]);
+            }
             return new LinenCollection($pagination);
         }
-        DB::enableQueryLog();
 
-        $request = request()->all();
-        $filter = $this->filter;
         $filter = $filter->filter();
-
         if($rfid = $request['item_linen_rfid']){
             $filter = $filter->where('item_linen_rfid', $rfid);
         }

@@ -13,6 +13,8 @@ use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\Linen\Dao\Models\KotorDetail;
 use Modules\Linen\Dao\Repositories\DeliveryRepository;
 use Modules\Report\Dao\Interfaces\GenerateReport;
+use Modules\System\Dao\Repositories\CompanyRepository;
+use Modules\System\Plugins\Views;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class ReportInvoiceRepository extends GroupingDetail implements FromView, WithColumnFormatting, WithColumnWidths, GenerateReport
@@ -50,6 +52,8 @@ class ReportInvoiceRepository extends GroupingDetail implements FromView, WithCo
     {
         $send = $this->share['share'];
         $send['preview'] = $this->data();
+        $list_company = Views::option(new CompanyRepository());
+        $send['list_company'] = $list_company;
         return view('Report::page.' . config('page') . '.' . $this->name, $send);
     }
 

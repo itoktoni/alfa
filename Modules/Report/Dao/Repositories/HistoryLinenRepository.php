@@ -8,6 +8,8 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Modules\Report\Dao\Interfaces\GenerateReport;
 use Modules\Report\Dao\Models\HistoryLinen;
+use Modules\System\Dao\Repositories\CompanyRepository;
+use Modules\System\Plugins\Views;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class HistoryLinenRepository extends HistoryLinen implements FromView, WithColumnFormatting, WithColumnWidths, GenerateReport
@@ -40,6 +42,8 @@ class HistoryLinenRepository extends HistoryLinen implements FromView, WithColum
     {
         $send = $this->share['share'];
         $send['preview'] = $this->data();
+        $list_company = Views::option(new CompanyRepository());
+        $send['list_company'] = $list_company;
         return view('Report::page.' . config('page') . '.' . $this->name, $send);
     }
 

@@ -17,6 +17,8 @@ use Modules\Report\Dao\Interfaces\GenerateReport;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Excel;
 use Modules\System\Dao\Facades\CompanyFacades;
+use Modules\System\Dao\Repositories\CompanyRepository;
+use Modules\System\Plugins\Views;
 
 class ReportBersihRepository extends GroupingDetail implements FromView, WithColumnFormatting, WithColumnWidths, GenerateReport
 {
@@ -78,8 +80,9 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
         $company = CompanyFacades::find(request()->get('view_company_id'));
         $location = $company->has_location ?? [];
         $product = $company->has_product ?? [];
-
+        $list_company = Views::option(new CompanyRepository());
         $send['product'] = $product;
+        $send['list_company'] = $list_company;
         $send['location'] = $location;
         $send['kotor'] = $this->data2();
         $send['preview'] = $this->data()->get();

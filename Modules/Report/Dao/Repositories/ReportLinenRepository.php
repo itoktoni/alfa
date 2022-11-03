@@ -8,6 +8,8 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Modules\Report\Dao\Interfaces\GenerateReport;
 use Modules\Report\Dao\Models\Linen;
+use Modules\System\Dao\Repositories\CompanyRepository;
+use Modules\System\Plugins\Views;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class ReportLinenRepository extends Linen implements FromView, WithColumnFormatting, WithColumnWidths, GenerateReport
@@ -38,8 +40,10 @@ class ReportLinenRepository extends Linen implements FromView, WithColumnFormatt
 
     public function view(): View
     {
+        $list_company = Views::option(new CompanyRepository());
         $send = $this->share['share'];
         $send['preview'] = $this->data();
+        $send['list_company'] = $list_company;
         return view('Report::page.' . config('page') . '.' . $this->name, $send);
     }
 

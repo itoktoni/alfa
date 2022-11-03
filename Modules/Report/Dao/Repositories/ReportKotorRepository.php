@@ -12,6 +12,8 @@ use Modules\Linen\Dao\Facades\GroupingDetailFacades;
 use Modules\Linen\Dao\Models\KotorDetail;
 use Modules\Report\Dao\Interfaces\GenerateReport;
 use Modules\System\Dao\Facades\CompanyFacades;
+use Modules\System\Dao\Repositories\CompanyRepository;
+use Modules\System\Plugins\Views;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class ReportKotorRepository extends KotorDetail implements FromView, WithColumnFormatting, WithColumnWidths, GenerateReport
@@ -72,6 +74,8 @@ class ReportKotorRepository extends KotorDetail implements FromView, WithColumnF
         $company = CompanyFacades::find(request()->get('view_company_id'));
         $location = $company->has_location ?? [];
         $product = $company->has_product ?? [];
+        $list_company = Views::option(new CompanyRepository());
+        $send['list_company'] = $list_company;
 
         $send['product'] = $product;
         $send['location'] = $location;

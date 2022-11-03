@@ -9,6 +9,8 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Modules\Linen\Dao\Repositories\StockRepository;
 use Modules\Report\Dao\Interfaces\GenerateReport;
+use Modules\System\Dao\Repositories\CompanyRepository;
+use Modules\System\Plugins\Views;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class ReportStockRepository extends StockRepository implements FromView, WithColumnFormatting, WithColumnWidths, GenerateReport
@@ -34,6 +36,8 @@ class ReportStockRepository extends StockRepository implements FromView, WithCol
     {
         $send = $this->share['share'];
         $send['preview'] = $this->data();
+        $list_company = Views::option(new CompanyRepository());
+        $send['list_company'] = $list_company;
         return view('Report::page.' . config('page') . '.' . $this->name, $send);
     }
 

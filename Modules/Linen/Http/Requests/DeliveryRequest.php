@@ -25,13 +25,13 @@ class DeliveryRequest extends GeneralRequest
     public function prepareForValidation()
     {
         $company = CompanyFacades::find($this->linen_delivery_company_id);
-        
+
         $grouping = GroupingDetail::whereIn(GroupingDetailFacades::mask_barcode(), $this->barcode)->get();
         $data = $grouping->pluck(GroupingDetailFacades::mask_rfid())->unique() ?? [];
         $stock = $grouping->mapToGroups(function($item){
             return [$item->mask_product_id => $item];
         });
-        
+
         $driver = User::find($this->linen_delivery_driver_id);
 
         $startDate = Carbon::createFromFormat('Y-m-d H:i', date('Y-m-d').' 13:00');
@@ -52,7 +52,7 @@ class DeliveryRequest extends GeneralRequest
             'linen_delivery_total_detail' => count($data),
             'linen_delivery_reported_date' => $report_date->format('Y-m-d'),
         ]);
-        
+
     }
 
     public function withValidator($validator)

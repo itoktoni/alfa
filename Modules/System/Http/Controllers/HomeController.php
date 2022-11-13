@@ -63,7 +63,7 @@ class HomeController extends Controller
         }
 
         $username = auth()->user()->username;
-        
+
         $chart = new HomeChart();
         $chart->labels(['One', 'Two', 'Three', 'Four']);
         $chart->dataset('My dataset', 'line', [1, 2, 3, 4])->backgroundColor('#0088cc')->fill(true);

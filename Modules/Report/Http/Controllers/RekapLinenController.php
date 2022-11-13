@@ -20,6 +20,7 @@ use Modules\System\Plugins\Helper;
 use Modules\System\Plugins\Views;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Str;
 
 class RekapLinenController extends Controller
 {

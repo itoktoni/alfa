@@ -31,9 +31,9 @@ class AppServiceProvider extends ServiceProvider {
         //     Cache::forever('tables', $data);
         // }
 
-    //    if(config('website.secure')){
-    //         \Illuminate\Support\Facades\URL::forceScheme('https');
-    //    }
+       if(config('website.secure')){
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+       }
     }
 
     /**

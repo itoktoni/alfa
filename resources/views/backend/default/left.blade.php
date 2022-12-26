@@ -4,7 +4,7 @@
             <nav id="menu" class="nav-main" role="navigation">
                 <ul id="left" class="nav nav-main">
                     <li>
-                        <a data-turbolinks="false" id=" linkMenu" href="{{ route('home') }}">
+                        <a data-turbolinks="false" id=" linkMenu" href="https://{{ route('home') }}">
                             <i class="fa fa-home" aria-hidden="true"
                                 style="font-size: 23px;margin-left:-2px;margin-right:5px"></i>
                             <span>Home</span>
@@ -14,7 +14,7 @@
                     @foreach ($menu_list as $menu)
                     @if($menu->system_module_single == "1")
                     <li>
-                        <a id="linkMenu" href="{{ $menu->system_module_link }}">
+                        <a id="linkMenu" href="https://{{ $menu->system_module_link }}">
                             <i class="fa fa-external-link" aria-hidden="true"></i>
                             <span>{{ __($menu->system_module_name) }} </span>
                         </a>
@@ -31,7 +31,7 @@
                             @if($menu->system_module_code === $data_action->system_module_code && $data_action->system_action_show == '1')
                             <li onclick="rmSidebar()"
                                 {{ $action_code == $data_action->system_action_code ? 'class=nav-active' : '' }}>
-                                <a id="childMenu" href="{!! route($data_action->system_action_code) !!}">
+                                <a id="childMenu" href="https://{!! route($data_action->system_action_code) !!}">
                                     {{ __($data_action->system_action_name) }}
                                 </a>
                             </li>

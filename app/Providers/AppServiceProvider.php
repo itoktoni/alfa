@@ -25,15 +25,15 @@ class AppServiceProvider extends ServiceProvider {
         //     $tables = $schema->databaseWrapper->getTables();
         //     $data = [];
         //     foreach ($tables as $key => $value) {
-                
+
         //         $data[$value] = \Schema::getColumnListing($value);
         //     }
         //     Cache::forever('tables', $data);
         // }
-         
-       if(config('website.secure')){
-            \Illuminate\Support\Facades\URL::forceScheme('https');
-       } 
+
+    //    if(config('website.secure')){
+    //         \Illuminate\Support\Facades\URL::forceScheme('https');
+    //    }
     }
 
     /**

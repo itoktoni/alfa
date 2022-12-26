@@ -29,7 +29,7 @@ class Helper
     }
     public static function secure()
     {
-        return env('ENABLE_HTTPS');
+        return config('website.secure');
     }
 
     public static function asset($path)

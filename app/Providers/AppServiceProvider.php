@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider {
         // }
 
        if(env('ENABLE_HTTPS')){
-            \Illuminate\Support\Facades\URL::forceScheme('https');
+            // \Illuminate\Support\Facades\URL::forceScheme('https');
        }
     }
 

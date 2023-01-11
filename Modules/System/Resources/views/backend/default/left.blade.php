@@ -7,7 +7,7 @@
                         <a href="{{ route('home') }}">
                             <i class="fa fa-home" aria-hidden="true"
                                 style="font-size: 23px;margin-left:-2px;margin-right:5px"></i>
-                            <span>{{ __('Home') }}</span>
+                            <span>{{ __('Dashboard') }}</span>
                         </a>
                     </li>
                     @if(isset($menu_list))

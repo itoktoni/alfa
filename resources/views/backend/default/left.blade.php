@@ -7,7 +7,7 @@
                         <a data-turbolinks="false" id=" linkMenu" href="https://{{ route('home') }}">
                             <i class="fa fa-home" aria-hidden="true"
                                 style="font-size: 23px;margin-left:-2px;margin-right:5px"></i>
-                            <span>Home</span>
+                            <span>Dashboard</span>
                         </a>
                     </li>
                     @if(isset($menu_list))

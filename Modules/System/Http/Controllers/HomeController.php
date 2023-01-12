@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Modules\System\Dao\Facades\GroupUserFacades;
+use Modules\System\Dao\Repositories\CompanyRepository;
 use Modules\System\Http\Charts\HomeChart;
 use Modules\System\Http\Charts\KotorBersihChart;
 use Modules\System\Http\Charts\StockChart;
@@ -131,6 +132,7 @@ class HomeController extends Controller
 
 
         return view(Views::form('dashboard', 'home'))->with([
+            'rs' => Views::option(new CompanyRepository()),
             'pemakaian_chart' => $pemakaian_chart,
             'stock_chart' => $stock_chart,
             'kotor_bersih_chart' => $kotor_bersih_chart,

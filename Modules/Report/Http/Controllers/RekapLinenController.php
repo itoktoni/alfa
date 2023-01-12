@@ -88,6 +88,7 @@ class RekapLinenController extends Controller
         $preview = false;
         $list_status = TransactionStatus::getOptions([
             TransactionStatus::Transaction,
+            TransactionStatus::Bersih,
             TransactionStatus::Kotor,
             TransactionStatus::Retur,
             TransactionStatus::Rewash,

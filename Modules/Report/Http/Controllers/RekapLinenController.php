@@ -88,7 +88,6 @@ class RekapLinenController extends Controller
         $preview = false;
         $list_status = TransactionStatus::getOptions([
             TransactionStatus::Transaction,
-            TransactionStatus::Bersih,
             TransactionStatus::Kotor,
             TransactionStatus::Retur,
             TransactionStatus::Rewash,
@@ -220,6 +219,48 @@ class RekapLinenController extends Controller
 
             $data = array_merge($data, $this->share());
             return view(Views::pdf(config('page'), config('folder'), 'bersih_export'), $data);
+
+        }
+
+        return $service->generate([$repository, 'share' => $this->share()], Helper::snake(__FUNCTION__));
+    }
+
+    public function detail(ReportBersihRepository $repository)
+    {
+        $repository = new ReportBersihRepository();
+        $preview = $kotor = false;
+        if ($name = request()->get('name')) {
+            $preview = $repository->data()->get();
+            $kotor = $repository->data2();
+        }
+
+        return view(Views::form(__FUNCTION__, config('page'), config('folder')))
+            ->with($this->share([
+                'model' => $repository,
+                'kotor' => $kotor,
+                'preview' => $preview,
+                'include' => __FUNCTION__,
+            ]));
+    }
+
+    public function detailExport(ReportService $service, ReportBersihRepository $repository)
+    {
+        $preview = $repository->data()->get();
+
+        $data['model'] = $repository;
+        $data['kotor'] = $repository->data2();
+        $data['preview'] = $preview;
+        $data['include'] = __FUNCTION__;
+
+        if (request()->get('action') == 'excel') {
+            $filename =  'report_harian_detail_' . date('Y_m_d') . '.xlsx';
+            return Excel::download(new ReportBersihRepository(),  $filename);
+        }
+
+        if(request()->get('action') == 'pdf'){
+
+            $data = array_merge($data, $this->share());
+            return view(Views::pdf(config('page'), config('folder'), 'detail_export'), $data);
 
         }
 

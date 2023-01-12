@@ -13,7 +13,7 @@ use Modules\System\Plugins\Notes;
 class OutstandingRepository extends Outstanding implements CrudInterface
 {
     use PowerJoins;
-    
+
     public function dataRepository()
     {
         $list = Helper::dataColumn($this->datatable);

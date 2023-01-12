@@ -44,32 +44,49 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
             $query = $query->whereDate('linen_grouping_detail_reported_date', '<=', $kotor_to);
         }
 
-        if ($company = request()->get('view_company_id')) {
+        if ($company = request()->get('company_id')) {
             $query = $query->where('linen_grouping_detail_ori_company_id', $company);
         }
+
+        if ($location_id = request()->get('location_id')) {
+            $query->where('linen_grouping_detail_ori_location_id', $location_id);
+        }
+
+        if ($product_id = request()->get('product_id')) {
+            $query->where('linen_grouping_detail_product_id', $product_id);
+        }
+
 
         return $query;
     }
 
     public function data2()
     {
-        $query = KotorDetailFacades::query();
+        $query = GroupingDetail::query();
 
-        if ($company_id = request()->get('view_company_id')) {
-            $query->where('linen_kotor_detail_ori_company_id', $company_id);
+        if ($company_id = request()->get('company_id')) {
+            $query->where('linen_grouping_detail_ori_company_id', $company_id);
         }
 
-        if ($key = request()->get('key')) {
-            $query->where('linen_kotor_detail_key', $key);
+        if ($location_id = request()->get('location_id')) {
+            $query->where('linen_grouping_detail_ori_location_id', $location_id);
+        }
+
+        if ($product_id = request()->get('product_id')) {
+            $query->where('linen_grouping_detail_product_id', $product_id);
         }
 
         if ($from = request()->get('from')) {
             $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from')) ?? null;
-            $query->whereDate('linen_kotor_detail_created_at', '>=', $kotor_from->addDay(-1)->format('Y-m-d'));
+            $query = $query->whereDate('linen_grouping_detail_reported_date', '>=', $kotor_from);
         }
         if ($to = request()->get('to')) {
             $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to')) ?? null;
-            $query->whereDate('linen_kotor_detail_created_at', '<=', $kotor_to->addDay(-1)->format('Y-m-d'));
+            $query = $query->whereDate('linen_grouping_detail_reported_date', '<=', $kotor_to);
+        }
+
+        if ($key = request()->get('key')) {
+            $query->where('linen_kotor_detail_key', $key);
         }
 
         return $query->get();
@@ -86,7 +103,7 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
         $send['location'] = $location;
         $send['kotor'] = $this->data2();
         $send['preview'] = $this->data()->get();
-        return view('Report::page.' . config('page') . '.bersih_export' , $send);
+        return view('Report::page.' . config('page') . '.detail_export' , $send);
     }
 
     public function columnFormats(): array

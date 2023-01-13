@@ -35,6 +35,7 @@
             serverSide: true,
             order: [],
             pageLength: 1000,
+            order: [[3, 'asc']],
             pagingType: 'first_last_numbers',
             ajax: {
                 url: '{{ route($route_data) }}',

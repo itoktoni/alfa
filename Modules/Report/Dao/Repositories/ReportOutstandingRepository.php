@@ -36,7 +36,7 @@ class ReportOutstandingRepository extends OutstandingRepository implements FromV
         // if ($to = request()->get('to')) {
         //     $query->whereDate('linen_outstanding_updated_at', '<=', $to);
         // }
-        return $query->get();
+        return $query->orderBy('linen_outstanding_product_name')->get();
     }
 
     public function view(): View

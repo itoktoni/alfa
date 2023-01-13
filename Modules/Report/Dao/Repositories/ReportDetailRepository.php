@@ -20,7 +20,7 @@ use Modules\System\Dao\Facades\CompanyFacades;
 use Modules\System\Dao\Repositories\CompanyRepository;
 use Modules\System\Plugins\Views;
 
-class ReportBersihRepository extends GroupingDetail implements FromView, WithColumnFormatting, WithColumnWidths, GenerateReport
+class ReportDetailRepository extends GroupingDetail implements FromView, WithColumnFormatting, WithColumnWidths, GenerateReport
 {
     public $name;
     public $share;
@@ -103,7 +103,7 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
         $send['location'] = $location;
         $send['kotor'] = $this->data2();
         $send['preview'] = $this->data()->get();
-        return view('Report::page.' . config('page') . '.bersih_export' , $send);
+        return view('Report::page.' . config('page') . '.detail_export' , $send);
     }
 
     public function columnFormats(): array

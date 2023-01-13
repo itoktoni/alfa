@@ -21,6 +21,7 @@ use Modules\System\Plugins\Views;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Str;
+use Modules\Report\Dao\Repositories\ReportDetailRepository;
 
 class RekapLinenController extends Controller
 {
@@ -225,9 +226,9 @@ class RekapLinenController extends Controller
         return $service->generate([$repository, 'share' => $this->share()], Helper::snake(__FUNCTION__));
     }
 
-    public function detail(ReportBersihRepository $repository)
+    public function detail(ReportDetailRepository $repository)
     {
-        $repository = new ReportBersihRepository();
+        $repository = new ReportDetailRepository();
         $preview = $kotor = false;
         if ($name = request()->get('name')) {
             $preview = $repository->data()->get();
@@ -243,7 +244,7 @@ class RekapLinenController extends Controller
             ]));
     }
 
-    public function detailExport(ReportService $service, ReportBersihRepository $repository)
+    public function detailExport(ReportService $service, ReportDetailRepository $repository)
     {
         $preview = $repository->data()->get();
 
@@ -254,7 +255,7 @@ class RekapLinenController extends Controller
 
         if (request()->get('action') == 'excel') {
             $filename =  'report_harian_detail_' . date('Y_m_d') . '.xlsx';
-            return Excel::download(new ReportBersihRepository(),  $filename);
+            return Excel::download(new ReportDetailRepository(),  $filename);
         }
 
         if(request()->get('action') == 'pdf'){

@@ -211,6 +211,7 @@ class RekapLinenController extends Controller
         $data['preview'] = $preview;
         $data['include'] = __FUNCTION__;
 
+
         if (request()->get('action') == 'excel') {
             $filename =  'report_harian_bersih_' . date('Y_m_d') . '.xlsx';
             return Excel::download(new ReportBersihRepository(),  $filename);

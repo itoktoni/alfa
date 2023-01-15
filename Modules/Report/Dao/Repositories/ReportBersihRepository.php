@@ -76,6 +76,16 @@ class ReportBersihRepository extends GroupingDetail implements FromView, WithCol
             $query->where('linen_kotor_detail_product_id', $product_id);
         }
 
+        if ($from = request()->get('from')) {
+            $kotor_from = Carbon::createFromFormat('Y-m-d', request()->get('from')) ?? null;
+            $query->whereDate('linen_kotor_detail_created_at', '>=', $kotor_from->addDay(-1)->format('Y-m-d'));
+        }
+
+        if ($to = request()->get('to')) {
+            $kotor_to = Carbon::createFromFormat('Y-m-d', request()->get('to')) ?? null;
+            $query->whereDate('linen_kotor_detail_created_at', '<=', $kotor_to->addDay(-1)->format('Y-m-d'));
+        }
+
         return $query->orderBy('linen_kotor_detail_product_id', 'DESC')->get();
     }
 

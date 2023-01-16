@@ -53,6 +53,7 @@ class DeliveryRequest extends GeneralRequest
             'linen_delivery_reported_date' => $report_date->format('Y-m-d'),
         ]);
 
+        dd($this->all());
     }
 
     public function withValidator($validator)

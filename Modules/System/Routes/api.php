@@ -11,8 +11,12 @@ use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Facades\OutstandingLockFacades;
+use Modules\Linen\Http\Controllers\DeliveryController;
+use Modules\Linen\Http\Requests\DeliveryRequest;
+use Modules\Linen\Http\Services\DeliveryCreateService;
 use Modules\System\Http\Controllers\TeamController;
 use Modules\System\Plugins\Notes;
+use Modules\System\Plugins\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -238,3 +242,8 @@ Route::match(['POST', 'GET'], '/deploy', function (Request $request) {
 });
 
 Route::get('download', [LinenController::class, 'download'])->name('download');
+
+Route::post('create_linen_detail', function(DeliveryRequest $request, DeliveryCreateService $service){
+    $data = $service->save(self::$model, $request);
+    return Notes::create($data);
+});

@@ -20,13 +20,13 @@ class DeliveryCreateService
     {
         $check = false;
         try {
-           
+
             $key = $data->linen_delivery_key;
             Grouping::whereIn('linen_grouping_barcode', $data->barcode)->update([
                 'linen_grouping_delivery' => $key,
                 'linen_grouping_reported_date' => $data->linen_delivery_reported_date,
             ]);
-           
+
             $detail = GroupingDetail::whereIn('linen_grouping_detail_barcode', $data->barcode)
             ->where(function($query) use($data){
                 $query->whereIn('linen_grouping_detail_rfid', $data->detail);
@@ -54,12 +54,12 @@ class DeliveryCreateService
                 $message = env('APP_DEBUG') ? $check['data'] : $check['message'];
                 Alert::error($message);
             }
-            
+
         } catch (\Throwable $th) {
             Alert::error($th->getMessage());
             return $th->getMessage();
         }
 
         return $check;
-    } 
+    }
 }

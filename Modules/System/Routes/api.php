@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Modules\Item\Dao\Facades\LinenDetailFacades;
@@ -9,11 +11,15 @@ use Modules\Item\Dao\Models\Linen;
 use Modules\Item\Http\Controllers\LinenController;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
+use Modules\Linen\Dao\Facades\GroupingDetailFacades;
 use Modules\Linen\Dao\Facades\OutstandingFacades;
 use Modules\Linen\Dao\Facades\OutstandingLockFacades;
+use Modules\Linen\Dao\Models\GroupingDetail;
+use Modules\Linen\Dao\Repositories\DeliveryRepository;
 use Modules\Linen\Http\Controllers\DeliveryController;
 use Modules\Linen\Http\Requests\DeliveryRequest;
 use Modules\Linen\Http\Services\DeliveryCreateService;
+use Modules\System\Dao\Models\Company;
 use Modules\System\Http\Controllers\TeamController;
 use Modules\System\Plugins\Notes;
 use Modules\System\Plugins\Response;
@@ -243,7 +249,39 @@ Route::match(['POST', 'GET'], '/deploy', function (Request $request) {
 
 Route::get('download', [LinenController::class, 'download'])->name('download');
 
-Route::post('create_linen_detail', function(DeliveryRequest $request, DeliveryCreateService $service){
-    $data = $service->save(self::$model, $request);
-    return Notes::create($data);
+Route::post('create_linen_detail', function(Request $request, DeliveryCreateService $service){
+    $company = Company::find($request->linen_delivery_company_id);
+
+    $grouping = GroupingDetail::whereIn(GroupingDetailFacades::mask_barcode(), $request->barcode)->get();
+    $data = $grouping->pluck(GroupingDetailFacades::mask_rfid())->unique() ?? [];
+    $stock = $grouping->mapToGroups(function($item){
+        return [$item->mask_product_id => $item];
+    });
+
+    $driver = User::find($request->linen_delivery_driver_id);
+
+        $startDate = Carbon::createFromFormat('Y-m-d H:i', date('Y-m-d').' 13:00');
+        $endDate = Carbon::createFromFormat('Y-m-d H:i', date('Y-m-d').' 23:59');
+
+        $check = Carbon::now()->between($startDate, $endDate);
+        $report_date = Carbon::now();
+        if($check){
+            $report_date = Carbon::now()->addDay(1);
+        }
+
+        $check = [
+            'detail' => $data,
+            'stock' => $stock,
+            'linen_delivery_company_name' => $company->company_name ?? '',
+            'linen_delivery_driver_name' => $driver->name ?? '',
+            'linen_delivery_total' => count($grouping),
+            'linen_delivery_total_detail' => count($data),
+            'linen_delivery_reported_date' => $report_date->format('Y-m-d'),
+        ];
+
+        $request = $request->merge($check);
+
+
+    $kirim = $service->save(new DeliveryRepository(), $request);
+    return Notes::create($kirim);
 });

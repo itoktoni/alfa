@@ -33,7 +33,7 @@ class UpdateLinenDeliveryListener
      */
     public function handle(CreateDeliveryEvent $event)
     {
-        if($rfid = $event->rfid){
+        if(isset($event->rfid) && $rfid = $event->rfid){
 
             $status = null;
             if($event->model->mask_status == TransactionStatus::Kotor){
@@ -52,20 +52,20 @@ class UpdateLinenDeliveryListener
                 LinenFacades::mask_qty() => 1,
             ]);
 
-            $map = $rfid->map(function($item) use ($status){
-                $data = [
-                    'item_linen_detail_rfid' => $item,
-                    'item_linen_detail_status' => $status,
-                    'item_linen_detail_description' => LinenStatus::getDescription($status),
-                    'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
-                    'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
-                    'item_linen_detail_updated_by' => auth()->user()->id,
-                    'item_linen_detail_created_by' => auth()->user()->id,
-                ];
-                return $data;
-            });
+            // $map = $rfid->map(function($item) use ($status){
+            //     $data = [
+            //         'item_linen_detail_rfid' => $item,
+            //         'item_linen_detail_status' => $status,
+            //         'item_linen_detail_description' => LinenStatus::getDescription($status),
+            //         'item_linen_detail_created_at' => date('Y-m-d H:i:s'),
+            //         'item_linen_detail_updated_at' => date('Y-m-d H:i:s'),
+            //         'item_linen_detail_updated_by' => auth()->user()->id,
+            //         'item_linen_detail_created_by' => auth()->user()->id,
+            //     ];
+            //     return $data;
+            // });
 
-            LinenDetailFacades::insert($map->unique()->toArray());
+            // LinenDetailFacades::insert($map->unique()->toArray());
         }
     }
 }

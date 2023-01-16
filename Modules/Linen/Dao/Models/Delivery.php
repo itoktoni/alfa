@@ -119,7 +119,7 @@ class Delivery extends Model
         return $this->linen_delivery_company_name;
     }
 
-    
+
     public function mask_driver_id()
     {
         return 'linen_delivery_company_id';
@@ -154,7 +154,7 @@ class Delivery extends Model
 
 		return $this->hasMany(GroupingDetail::class, 'linen_grouping_detail_delivery', 'linen_delivery_key');
     }
-    
+
     public static function boot()
     {
         parent::boot();
@@ -163,13 +163,13 @@ class Delivery extends Model
 
             $model->linen_delivery_company_name = CompanyFacades::find($model->mask_company_id)->company_name ?? '';
             $model->linen_delivery_driver_name = TeamFacades::find($model->mask_driver_id)->name ?? '';
-            
+
         });
 
         parent::created(function($model){
 
-            CreateDeliveryEvent::dispatch($model->{$model->getKeyName()});
+            // CreateDeliveryEvent::dispatch($model->{$model->getKeyName()});
 
         });
-    }    
+    }
 }

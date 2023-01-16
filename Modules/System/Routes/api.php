@@ -254,34 +254,39 @@ Route::post('create_linen_detail', function(Request $request, DeliveryCreateServ
 
     $grouping = GroupingDetail::whereIn(GroupingDetailFacades::mask_barcode(), $request->barcode)->get();
     $data = $grouping->pluck(GroupingDetailFacades::mask_rfid())->unique() ?? [];
+
+    $sql = LinenFacades::whereIn(LinenFacades::mask_rfid(), $data)
+    ->increment(LinenFacades::mask_counter(), 1, [
+        LinenFacades::mask_latest() =>  LinenStatus::Bersih,
+        LinenFacades::mask_qty() => 1,
+    ]);
+
     $stock = $grouping->mapToGroups(function($item){
         return [$item->mask_product_id => $item];
     });
 
     $driver = User::find($request->linen_delivery_driver_id);
 
-        $startDate = Carbon::createFromFormat('Y-m-d H:i', date('Y-m-d').' 13:00');
-        $endDate = Carbon::createFromFormat('Y-m-d H:i', date('Y-m-d').' 23:59');
+    $startDate = Carbon::createFromFormat('Y-m-d H:i', date('Y-m-d').' 13:00');
+    $endDate = Carbon::createFromFormat('Y-m-d H:i', date('Y-m-d').' 23:59');
 
-        $check = Carbon::now()->between($startDate, $endDate);
-        $report_date = Carbon::now();
-        if($check){
-            $report_date = Carbon::now()->addDay(1);
-        }
+    $check = Carbon::now()->between($startDate, $endDate);
+    $report_date = Carbon::now();
+    if($check){
+        $report_date = Carbon::now()->addDay(1);
+    }
 
-        $check = [
-            'detail' => $data,
-            'stock' => $stock,
-            'linen_delivery_company_name' => $company->company_name ?? '',
-            'linen_delivery_driver_name' => $driver->name ?? '',
-            'linen_delivery_total' => count($grouping),
-            'linen_delivery_total_detail' => count($data),
-            'linen_delivery_reported_date' => $report_date->format('Y-m-d'),
-        ];
+    $check = [
+        'detail' => $data,
+        'stock' => $stock,
+        'linen_delivery_company_name' => $company->company_name ?? '',
+        'linen_delivery_driver_name' => $driver->name ?? '',
+        'linen_delivery_total' => count($grouping),
+        'linen_delivery_total_detail' => count($data),
+        'linen_delivery_reported_date' => $report_date->format('Y-m-d'),
+    ];
 
-        $request = $request->merge($check);
-
-
+    $request = $request->merge($check);
     $kirim = $service->save(new DeliveryRepository(), $request);
     return Notes::create($kirim);
 });

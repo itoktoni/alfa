@@ -20,6 +20,7 @@ class CompanyProductRequest extends GeneralRequest
     {
         $this->merge([
             // 'content' => ''
+            'company_item_realisasi' => !empty($this->company_item_realisasi) ? $this->company_item_realisasi : 0
         ]);
     }
 

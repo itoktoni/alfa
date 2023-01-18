@@ -38,7 +38,7 @@ class CompanyConnectionItemProduct extends Model
 	];
 
 	public $incrementing = true;
-	public $timestamps = false;	
+	public $timestamps = false;
 
 	public $searching = 'system_company.company_id';
     public $datatable = [
@@ -60,7 +60,7 @@ class CompanyConnectionItemProduct extends Model
         'item_unit_name' => [false => 'Unit Name', 'width' => '80'],
         'company_item_maximal' => [false => 'Max', 'width' => '50'],
 	];
-	
+
 	public $rules = [
         'company_id' => 'required|exists:system_company',
         'product_id' => 'required|exists:item_product',
@@ -155,27 +155,27 @@ class CompanyConnectionItemProduct extends Model
     {
         return $this->{$this->mask_realisasi()};
     }
-	
+
 	public function has_company()
     {
         return $this->hasOne(Company::class, CompanyFacades::getKeyName(), CompanyFacades::getKeyName());
-	}	
+	}
 
 	public function has_location()
     {
         return $this->hasOne(Location::class, $this->mask_location_id(), LocationFacades::getKeyName());
 	}
-	
+
 	public function has_product()
     {
         return $this->hasOne(Product::class, ProductFacades::getKeyName(), $this->mask_product_id());
 	}
-	
+
 	public function has_size()
     {
         return $this->hasOne(Size::class, SizeFacades::getKeyName(), $this->mask_size_id());
 	}
-	
+
 	public function has_unit()
     {
         return $this->hasOne(Unit::class, UnitFacades::getKeyName(), $this->mask_unit_id());

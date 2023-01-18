@@ -13,7 +13,7 @@ use Modules\System\Plugins\Notes;
 class CompanyProductRepository extends CompanyConnectionItemProduct implements CrudInterface
 {
     use PowerJoins;
-    
+
     public function dataRepository()
     {
         $list = Helper::dataColumn($this->datatable);

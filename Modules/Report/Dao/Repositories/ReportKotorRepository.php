@@ -65,7 +65,6 @@ class ReportKotorRepository extends KotorDetail implements FromView, WithColumnF
             $query = $query->whereDate('linen_grouping_detail_reported_date', '<=', $kotor_to->addDay(1)->format('Y-m-d'));
         }
 
-
         return $query->get();
     }
 

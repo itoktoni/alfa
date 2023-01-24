@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody class="markup">
-        
+
         @foreach($summary as $item)
         <tr>
             <td data-title="No.">
@@ -46,7 +46,7 @@
             </td>
         </tr>
         @endforeach
-       
+
 
     </tbody>
 

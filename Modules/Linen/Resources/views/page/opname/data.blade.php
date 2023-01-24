@@ -36,6 +36,7 @@
                     d.aggregate = $('select[name=aggregate]').val();
                     d.linen_opname_key = $('input[name=linen_opname_key]').val();
                     d.linen_opname_date = $('input[name=linen_opname_date]').val();
+                    d.linen_opname_created_at = $('input[name=linen_opname_created_at]').val();
                     d.linen_opname_company_id = $('select[name=linen_opname_company_id]').val();
                     d.linen_opname_petugas_id = $('select[name=linen_opname_petugas_id]').val();
                 },
@@ -108,12 +109,21 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-5 col-sm-2 {{ $errors->has($search_code) ? 'has-error' : ''}}">
+                                <div class="col-md-4 col-sm-2 {{ $errors->has($search_code) ? 'has-error' : ''}}">
                                     <div class="row input-group filter-search space-sm">
                                     <span class="input-group-addon">
                                         {{ __('Tanggal Pelaksanaan Opname') }}
                                     </span>
-                                    {!! Form::text('linen_opname_date', old('linen_opname_date') ?? date('Y-m-d'), ['class' => 'form-control date', 'id' => 'linen_opname_date']) !!}
+                                    {!! Form::text('linen_opname_date', old('linen_opname_date') ?? null, ['class' => 'form-control date', 'id' => 'linen_opname_date']) !!}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 col-sm-2 {{ $errors->has($search_code) ? 'has-error' : ''}}">
+                                    <div class="row input-group filter-search space-sm">
+                                    <span class="input-group-addon">
+                                        {{ __('Tanggal Buat') }}
+                                    </span>
+                                    {!! Form::text('linen_opname_created_at', null, ['class' => 'form-control date', 'id' => 'linen_opname_created_at']) !!}
                                     </div>
                                 </div>
 

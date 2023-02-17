@@ -86,7 +86,6 @@ class Outstanding extends Model
     ];
 
     protected $dates = [
-        'linen_outstanding_created_at',
         'linen_outstanding_updated_at',
         'linen_outstanding_deleted_at',
     ];

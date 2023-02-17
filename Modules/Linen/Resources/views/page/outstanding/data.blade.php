@@ -71,7 +71,7 @@
                     searchable: false
                 },
                 @foreach($fields as $key => $value) {
-                    data: '{{ $key }}',
+                    data: '{{ $key == "linen_outstanding_created_at" ? "created" : $key }}',
                     name: '{{ $key }}',
                     orderable: true,
                     searchable: true

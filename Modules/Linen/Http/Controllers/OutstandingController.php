@@ -104,6 +104,9 @@ class OutstandingController extends Controller
     {
         return $service
             ->setModel(self::$model)
+            ->EditColumn([
+                OutstandingFacades::mask_created_at() => 'created',
+            ])
             ->EditStatus([
                 OutstandingFacades::mask_status() => TransactionStatus::class,
                 OutstandingFacades::mask_description() => LinenStatus::class,

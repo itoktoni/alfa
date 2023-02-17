@@ -3,6 +3,7 @@
 namespace Modules\Linen\Dao\Repositories;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Kirschbaum\PowerJoins\PowerJoins;
 use Modules\Linen\Dao\Models\MasterOutstanding;
 use Modules\Linen\Dao\Models\Outstanding;
@@ -17,7 +18,7 @@ class OutstandingRepository extends Outstanding implements CrudInterface
     public function dataRepository()
     {
         $list = Helper::dataColumn($this->datatable);
-        return $this->select($list)->leftJoinRelationship('has_user');
+        return $this->select($list)->addSelect(DB::raw('linen_outstanding_created_at as created'))->leftJoinRelationship('has_user');
     }
 
     public function saveRepository($request)

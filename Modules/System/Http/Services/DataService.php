@@ -49,7 +49,7 @@ class DataService
     }
 
     public function EditColumn($data){
-        
+
         $this->transform = $data;
         return $this;
     }
@@ -170,11 +170,11 @@ class DataService
     public function make()
     {
         $this->setFilter();
-        
+
         if (!request()->ajax()) {
             return $this->setApi();
         }
-        
+
         $this->datatable = Datatables::of($this->filter);
         $this->setAction();
         $this->setStatus();

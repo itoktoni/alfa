@@ -35,6 +35,7 @@
                 <td width="130">Lokasi Ruangan</td>
                 <td width="150">No. Seri RFID</td>
                 <td width="100">Tanggal Masuk</td>
+                <td width="100">Keterangan</td>
                 <td width="100">Status</td>
             </tr>
         </thead>
@@ -55,6 +56,9 @@
                 </td>
                 <td>
                     {{ $data->linen_outstanding_created_at }}
+                </td>
+                <td>
+                    {{ TransactionStatus::getDescription($data->linen_outstanding_description) ?? '-' }}
                 </td>
                 <td>
                     {{ $list_status[$data->linen_outstanding_status] ?? '-' }}

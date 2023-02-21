@@ -58,7 +58,7 @@
                     {{ $data->linen_outstanding_created_at }}
                 </td>
                 <td>
-                    {{ TransactionStatus::getDescription($data->linen_outstanding_description) ?? '-' }}
+                    {{ LinenStatus::getDescription($data->linen_outstanding_description) ?? '-' }}
                 </td>
                 <td>
                     {{ $list_status[$data->linen_outstanding_status] ?? '-' }}

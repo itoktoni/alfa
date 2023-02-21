@@ -280,7 +280,7 @@
                         <div class="text-right action-wrapper">
 
                             <a class="btn btn-success" href="{{ route(Route::currentRouteName()) }}">{{ __('Refresh') }}</a>
-                            <button type="submit" onclick="return confirm('Are you sure to delete data ?');" id="delete-action" value="delete" name="action" class="btn btn-danger">{{ __('Delete') }}</button>
+                            {{-- <button type="submit" onclick="return confirm('Are you sure to delete data ?');" id="delete-action" value="delete" name="action" class="btn btn-danger">{{ __('Delete') }}</button> --}}
 
                         </div>
                     </div>

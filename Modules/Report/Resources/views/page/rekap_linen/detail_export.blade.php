@@ -38,6 +38,7 @@ $list_status = TransactionStatus::getOptions();
                 <td width="130">Lokasi Ruangan</td>
                 <td width="150">No. Seri RFID</td>
                 <td width="100">Tanggal Transaksi</td>
+                <td width="100">Tanggal Report</td>
             </tr>
         </thead>
         <tbody>
@@ -57,6 +58,9 @@ $list_status = TransactionStatus::getOptions();
                 </td>
                 <td>
                     {{ $data->linen_grouping_detail_created_at }}
+                </td>
+                <td>
+                    {{ $data->linen_grouping_detail_reported_date }}
                 </td>
             </tr>
             @endforeach

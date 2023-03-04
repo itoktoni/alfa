@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -204,8 +205,7 @@ if (Cache::has('routing')) {
 
             $rfid = request()->get('rfid');
 
-            $linen = LinenFacades::whereIn(LinenFacades::getKeyName(), $rfid)->get();
-
+            $linen = LinenFacades::withCount('has_bersih')->whereIn(LinenFacades::getKeyName(), $rfid)->get();
             if ($linen) {
                 $linen = $linen->map(function ($item) {
                     return [
@@ -214,7 +214,7 @@ if (Cache::has('routing')) {
                         "linen_company_name" => $item->item_linen_company_name,
                         "linen_location_name" => $item->item_linen_location_name,
                         "linen_latest" => LinenStatus::getDescription(intval($item->item_linen_latest)) ?? 'Unknown',
-                        "linen_counter" => (String)$item->item_linen_counter,
+                        "linen_counter" => (String)$item->has_bersih_count,
                         "linen_updated_at" => $item->item_linen_updated_at->format('d-m-Y h:i:s') ?? '',
                         "linen_created_at" => $item->item_linen_created_at->format('d-m-Y h:i:s'),
                     ];

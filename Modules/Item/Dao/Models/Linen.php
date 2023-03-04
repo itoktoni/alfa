@@ -17,6 +17,8 @@ use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Events\GantiChipLinenEvent;
 use Modules\Item\Events\RegisterLinenEvent;
 use Modules\Linen\Dao\Enums\LinenStatus;
+use Modules\Linen\Dao\Facades\GroupingDetailFacades;
+use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\System\Dao\Models\Company;
 
 class Linen extends Model
@@ -398,6 +400,11 @@ class Linen extends Model
     public function has_detail()
     {
         return $this->hasMany(LinenDetail::class, LinenDetailFacades::mask_rfid(), $this->getKeyName());
+    }
+
+    public function has_bersih()
+    {
+        return $this->hasMany(GroupingDetail::class, 'linen_grouping_detail_rfid', $this->getKeyName());
     }
 
     public static function boot()

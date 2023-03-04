@@ -33,15 +33,15 @@ class ReportKotorRepository extends KotorDetail implements FromView, WithColumnF
         $query = KotorDetail::query();
 
         if ($from = request()->get('from')) {
-            $query = $query->whereDate('linen_kotor_detail_created_at', '>=', $from);
+            $query->whereDate('linen_kotor_detail_created_at', ">=", $from);
         }
 
         if ($to = request()->get('to')) {
-            $query = $query->whereDate('linen_kotor_detail_created_at', '<=', $to);
+            $query->whereDate('linen_kotor_detail_created_at', '<=', $to);
         }
 
         if ($company = request()->get('view_company_id')) {
-            $query = $query->where('linen_kotor_detail_ori_company_id', $company);
+            $query->where('linen_kotor_detail_ori_company_id', $company);
         }
 
         return $query->orderBy('linen_kotor_detail_product_id', 'DESC')->get();

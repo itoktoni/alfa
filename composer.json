@@ -11,7 +11,7 @@
         "bensampo/laravel-enum": "^3.4",
         "chriskonnertz/string-calc": "^1.0",
         "consoletvs/charts": "6.*",
-        "dietercoopman/laravel-showsql": "^1.3",
+        "dietercoopman/laravel-showsql": "^1.4",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "~4.0",
         "filp/whoops": "^2.1",

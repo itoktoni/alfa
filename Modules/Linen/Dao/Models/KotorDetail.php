@@ -44,6 +44,7 @@ class KotorDetail extends Model
         'linen_kotor_detail_form',
         'linen_kotor_detail_key',
         'linen_kotor_detail_group',
+        'linen_kotor_detail_date',
     ];
 
     // public $with = ['module'];

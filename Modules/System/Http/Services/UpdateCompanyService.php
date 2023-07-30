@@ -11,7 +11,7 @@ class UpdateCompanyService extends UpdateService
     {
         $check = $repository->updateRepository($data->all(), $code);
         if($check['status']){
-            
+
             $getData = $check['data'] ?? [];
             $location = $product = [];
             if(isset($data->locations)){

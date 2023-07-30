@@ -26,7 +26,7 @@ class Company extends Model
         'company_person',
         'company_logo',
         'company_sign',
-        'company_holding_id'
+        // 'company_holding_id'
     ];
 
     public $with = ['has_location', 'has_product'];
@@ -48,7 +48,7 @@ class Company extends Model
         'company_email' => [true => 'Email', 'width' => 350],
         'company_phone' => [true => 'Phone'],
     ];
-    
+
     public $show    = [
         '1' => ['Show', 'info'],
         '0' => ['Hide', 'warning'],
@@ -58,7 +58,7 @@ class Company extends Model
     {
         return $this->company_name;
     }
-    
+
     public function has_location()
 	{
 		return $this->belongsToMany(Location::class, CompanyConnectionLocationFacades::getTable(), CompanyFacades::GetKeyName(), LocationFacades::getKeyName());

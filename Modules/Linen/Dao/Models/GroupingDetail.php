@@ -38,7 +38,7 @@ class GroupingDetail extends Model
         'linen_grouping_detail_ori_company_id',
         'linen_grouping_detail_ori_company_name',
         'linen_grouping_detail_ori_location_id',
-        'linen_grouping_detail_ori_location_name',        
+        'linen_grouping_detail_ori_location_name',
         'linen_grouping_detail_scan_company_id',
         'linen_grouping_detail_scan_company_name',
         'linen_grouping_detail_scan_location_id',
@@ -128,7 +128,7 @@ class GroupingDetail extends Model
     }
 
     // start location
-    
+
     public function mask_location_scan()
     {
         return 'linen_grouping_detail_scan_location_id';
@@ -190,7 +190,7 @@ class GroupingDetail extends Model
     {
         return $this->linen_grouping_detail_scan_company_name;
     }
-    
+
     public function mask_company_ori()
     {
         return 'linen_grouping_detail_ori_company_id';
@@ -205,12 +205,12 @@ class GroupingDetail extends Model
     {
         return $this->{$this->mask_company_ori()};
     }
-    
+
     public function getMaskCompanyOriNameAttribute()
     {
         return $this->linen_grouping_detail_ori_company_name;
     }
-    
+
     /**
      * product id
      *
@@ -246,7 +246,7 @@ class GroupingDetail extends Model
 
 		return $this->hasOne(Delivery::class, DeliveryFacades::getKeyName(), $this->mask_delivery());
     }
-    
+
     public static function boot()
     {
         parent::boot();
@@ -268,5 +268,5 @@ class GroupingDetail extends Model
                 'linen_grouping_total' => $detail
             ]);
         });
-    }    
+    }
 }

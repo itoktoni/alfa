@@ -32,6 +32,7 @@ class DeliveryCreateService
                 $query->whereIn('linen_grouping_detail_rfid', $data->detail);
             })->update([
                 'linen_grouping_detail_delivery' => $key,
+                'linen_grouping_detail_description' => LinenStatus::LinenKotor,
                 'linen_grouping_detail_reported_date' => $data->linen_delivery_reported_date
             ]);
 

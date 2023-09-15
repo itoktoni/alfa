@@ -12,6 +12,7 @@ class GroupUserStatus extends Enum
 
     const Developer    = 'developer';
     const Admin         = 'admin';
+    const Administrator         = 'administrator';
     const Owner         = 'owner';
 
     public static function colors()

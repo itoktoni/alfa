@@ -8,6 +8,7 @@ use Modules\Item\Dao\Models\LinenDetail;
 use Modules\Linen\Dao\Models\GroupingDetail;
 use Modules\Linen\Dao\Models\KotorDetail;
 use Modules\Linen\Dao\Models\OpnameDetail;
+use Modules\Linen\Dao\Models\Outstanding;
 use Modules\System\Dao\Enums\GroupUserStatus;
 use Modules\System\Dao\Interfaces\CrudInterface;
 use Modules\System\Http\Services\DeleteService;
@@ -30,6 +31,7 @@ class DeleteLinenService extends DeleteService
             GroupingDetail::whereIn('linen_grouping_detail_rfid', $code)->delete();
             KotorDetail::whereIn('linen_kotor_detail_rfid', $code)->delete();
             OpnameDetail::whereIn('linen_opname_detail_rfid', $code)->delete();
+            Outstanding::whereIn('linen_outstanding_rfid', $code)->delete();
 
             if ($check['status']) {
 

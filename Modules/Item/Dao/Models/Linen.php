@@ -23,7 +23,7 @@ use Modules\System\Dao\Models\Company;
 
 class Linen extends Model
 {
-    use Userstamps, FilterQueryString, HasFactory, SoftDeletes;
+    use Userstamps, FilterQueryString, HasFactory;
     protected $table = 'item_linen';
     protected $primaryKey = 'item_linen_rfid';
     protected $keyType = 'string';

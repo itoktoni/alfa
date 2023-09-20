@@ -2,6 +2,7 @@
 
 namespace Modules\Linen\Http\Services;
 
+use Illuminate\Support\Facades\Log;
 use Modules\Linen\Dao\Facades\MasterOutstandingFacades;
 use Modules\System\Plugins\Alert;
 use Modules\System\Plugins\Notes;
@@ -41,10 +42,12 @@ class OutstandingBatchService
 
     public function update($repository, $data)
     {
-        $where = $data->rfid;
+        $where = $data->data;
+
+        Log::error($data);
 
         if (!is_array($where)) {
-            $where = [$data->rfid];
+            $where = [$data->data];
         }
 
         $update = $data->all();

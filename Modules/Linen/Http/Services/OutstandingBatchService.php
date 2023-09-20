@@ -44,13 +44,12 @@ class OutstandingBatchService
     {
         $where = $data->data;
 
-        Log::error($data);
-
         if (!is_array($where)) {
             $where = [$data->data];
         }
 
         $update = $data->all();
+        unset($update['data']);
         unset($update['rfid']);
         unset($update['type']);
         $pull = $repository->WhereIn('linen_outstanding_rfid', $where);

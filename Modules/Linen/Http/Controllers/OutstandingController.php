@@ -88,7 +88,6 @@ class OutstandingController extends Controller
 
     public function batch(OutstandingBatchRequest $request, OutstandingBatchService $service)
     {
-        Log::log($request->all());
         if(request()->get('type') == 'update'){
 
             $data = $service->update(self::$model, $request);

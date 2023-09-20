@@ -13,12 +13,12 @@ class OutstandingBatchService
         $check = false;
         try {
             $exists = $repository->batchSelectRepository(array_keys($data->detail))->get();
-            
+
             if(!empty($exists)){
                 $data_rfid = $exists->pluck('linen_outstanding_rfid');
                 $repository->batchDeleteRepository($data_rfid);
             }
-           
+
             $check = $repository->batchSaveRepository($data->detail);
 
             if(isset($check['status']) && $check['status']){
@@ -30,18 +30,23 @@ class OutstandingBatchService
                 $message = env('APP_DEBUG') ? $check['data'] : $check['message'];
                 Alert::error($message);
             }
-            
+
         } catch (\Throwable $th) {
             Alert::error($th->getMessage());
             return $th->getMessage();
         }
 
         return $check;
-    } 
+    }
 
     public function update($repository, $data)
     {
         $where = $data->rfid;
+
+        if (!is_array($where)) {
+            $where = [$data->rfid];
+        }
+
         $update = $data->all();
         unset($update['rfid']);
         unset($update['type']);
@@ -52,7 +57,7 @@ class OutstandingBatchService
                 $notes = Notes::update($data->all());
                 return response()->json($notes)->getData();
             }
-            
+
             Alert::update();
 
         } else {

@@ -3,6 +3,7 @@
 namespace Modules\Linen\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Modules\Item\Dao\Repositories\ProductRepository;
 use Modules\Linen\Dao\Enums\LinenStatus;
 use Modules\Linen\Dao\Enums\TransactionStatus;
@@ -87,6 +88,7 @@ class OutstandingController extends Controller
 
     public function batch(OutstandingBatchRequest $request, OutstandingBatchService $service)
     {
+        Log::log($request->all());
         if(request()->get('type') == 'update'){
 
             $data = $service->update(self::$model, $request);

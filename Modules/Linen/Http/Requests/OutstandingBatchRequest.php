@@ -27,7 +27,7 @@ class OutstandingBatchRequest extends GeneralRequest
             $status = $this->linen_outstanding_status ?? 1;
 
             $linen = LinenFacades::dataRepository()->whereIn('item_linen_rfid', $this->rfid)->get();
-            
+
             if ($linen) {
                 $linen = $linen->mapWithKeys(function ($data_linen) {
                     return [$data_linen['item_linen_rfid'] => $data_linen];
@@ -54,7 +54,7 @@ class OutstandingBatchRequest extends GeneralRequest
                 if (isset($linen[$item])) {
 
                     $slinen = $linen[$item];
-                    
+
                     if ($slinen->company_id != $company->company_id) {
                         $data = array_merge($data, [
                             'linen_outstanding_description' => 2,
@@ -65,7 +65,7 @@ class OutstandingBatchRequest extends GeneralRequest
                         $data = array_merge($data, [
                             'linen_outstanding_description' => 1,
                         ]);
-                    }  
+                    }
 
                     $data = array_merge($data, [
                         'linen_outstanding_product_id' => $slinen->item_linen_product_id ?? null,

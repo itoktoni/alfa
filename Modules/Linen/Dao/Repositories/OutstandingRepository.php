@@ -34,6 +34,9 @@ class OutstandingRepository extends Outstanding implements CrudInterface
 
     public function batchSelectRepository($code)
     {
+        if (!is_array($code)) {
+            $code = [$code];
+        }
         return $this->select('linen_outstanding_rfid')->whereIn('linen_outstanding_rfid', $code);
     }
 

@@ -13,19 +13,19 @@ class Response
 
     public static function redirectBack($data = null)
     {
-        if(request()->wantsJson()){
+        if (request()->hasHeader('authorization')) {
             return self::sentJson($data);
         }
         if(isset($data['name']) && $data['name'] == 'Update'){
             return redirect()->route(config('module').'_index');
         }
-        
+
         return redirect()->back();
     }
 
     public static function redirectBackWithInput($data = null)
     {
-        if (request()->wantsJson()) {
+        if (request()->hasHeader('authorization')) {
             return self::sentJson($data);
         }
         if(isset($data['name']) && $data['name'] == 'Update'){
@@ -36,7 +36,7 @@ class Response
 
     public static function redirectRefresh($data = null)
     {
-        if (request()->wantsJson()) {
+        if (request()->hasHeader('authorization')) {
             return self::sentJson($data);
         }
         return redirect()->refresh();
@@ -44,7 +44,7 @@ class Response
 
     public static function redirect($path, $data = null)
     {
-        if (request()->wantsJson()) {
+        if (request()->hasHeader('authorization')) {
             return self::sentJson($data);
         }
         return redirect()->away($path);

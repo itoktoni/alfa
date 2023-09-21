@@ -33,3 +33,10 @@ Route::post('linen_kotor/sync', [KotorController::class, 'sync']);
 Route::post('linen_opname/sync', [OpnameController::class, 'sync']);
 Route::match(['POST', 'GET'],'item_linen/data', [LinenController::class, 'data'])->name('item_linen_data_api');
 // Route::post('linen_sync', [KotorController::class, 'sync']);
+
+Route::post('linen/create', [LinenController::class, 'save']);
+
+// Route::post('linen/create', function(){
+//     $data = request()->all();
+//     dd($data);
+// });

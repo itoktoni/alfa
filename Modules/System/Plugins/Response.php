@@ -60,7 +60,7 @@ class Response
 
     public static function redirectToRoute($data, $route, $params = false)
     {
-        if(request()->wantsJson()){
+        if (request()->hasHeader('authorization')) {
             return self::sentJson($data);
         }
         if ($params) {

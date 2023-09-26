@@ -63,9 +63,9 @@ class LinenRepository extends Linen implements CrudInterface
     public function singleRepository($code, $relation = false)
     {
         if ($relation) {
-            return $this->withTrashed()->with($relation)->findOrFail($code);
+            return $this->with($relation)->findOrFail($code);
         }
-        return $this->withTrashed()->findOrFail($code);
+        return $this->findOrFail($code);
     }
 
     public function rfidRepository($code){

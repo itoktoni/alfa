@@ -155,6 +155,7 @@ class LinenController extends Controller
 
             return redirect()->back();
         }
+
         return view(Views::update())->with($this->share([
             'model' => $this->get($code),
         ]));

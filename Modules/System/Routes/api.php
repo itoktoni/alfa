@@ -324,7 +324,11 @@ Route::post('newregister', function(Request $request){
 
     } catch (\Throwable $th) {
         //throw $th;
+        $message = $th->getMessage();
+
+        $store = explode("for key 'PRIMARY",$message);
+
         DB::rollBack();
-        return Notes::error('Data Linen sudah ada!');
+        return Notes::error($store[0]);
     }
 });

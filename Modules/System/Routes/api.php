@@ -290,3 +290,36 @@ Route::post('create_linen_detail', function(Request $request, DeliveryCreateServ
     $kirim = $service->save(new DeliveryRepository(), $request);
     return Notes::create($kirim);
 });
+
+Route::post('newregister', function(Request $request){
+    try {
+        if (is_array($request->item_linen_rfid)) {
+
+            foreach($request->item_linen_rfid as $rfid){
+                $data = [
+                    'item_linen_rfid' => $rfid,
+                    'item_linen_location_id' => $request->item_linen_location_id,
+                    'item_linen_company_id' => $request->item_linen_company_id,
+                    'item_linen_product_id' => $request->item_linen_product_id,
+                    'item_linen_rent' => $request->item_linen_rent,
+                    'item_linen_status' => $request->item_linen_status,
+                    'item_linen_session' => $request->item_linen_session,
+                ];
+                Linen::create($data);
+            }
+
+            return Notes::create($data);
+
+        } else {
+            Linen::create(
+                $request->all()
+            );
+
+            return Notes::create($request->all());
+        }
+
+    } catch (\Throwable $th) {
+        //throw $th;
+        return Notes::error($th->getMessage());
+    }
+});

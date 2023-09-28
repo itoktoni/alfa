@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Modules\Item\Dao\Facades\LinenDetailFacades;
 use Modules\Item\Dao\Facades\LinenFacades;
@@ -292,6 +293,7 @@ Route::post('create_linen_detail', function(Request $request, DeliveryCreateServ
 });
 
 Route::post('newregister', function(Request $request){
+    DB::beginTransaction();
     try {
         if (is_array($request->item_linen_rfid)) {
 
@@ -308,6 +310,8 @@ Route::post('newregister', function(Request $request){
                 Linen::create($data);
             }
 
+            DB::commit();
+
             return Notes::create($data);
 
         } else {
@@ -320,6 +324,7 @@ Route::post('newregister', function(Request $request){
 
     } catch (\Throwable $th) {
         //throw $th;
-        return Notes::error($th->getMessage());
+        DB::rollBack();
+        return Notes::error('Data Linen sudah ada!');
     }
 });

@@ -326,9 +326,12 @@ Route::post('newregister', function(Request $request){
         //throw $th;
         $message = $th->getMessage();
 
-        $store = explode("for key 'PRIMARY",$message);
+        if (str_contains($message, "for key 'PRIMARY")) {
+            $store = explode("for key 'PRIMARY",$message);
+            $message = $store[0];
+        }
 
         DB::rollBack();
-        return Notes::error($store[0]);
+        return Notes::error($message);
     }
 });
